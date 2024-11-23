@@ -28,19 +28,19 @@ The system is designed with the following classes:
 ### Class Hierarchy
 
 ```
-+System
- |
- +-- User
- |     *-- Reserve
- |     *-- Refund
- |     *-- ViewHistory
- |
- +-- Bus
-       +-- Route
-			*-- setRoute
-       +-- Waitlist (Future)
-			*-- enQueue
-			*-- deQueue
+System
+│
+├── User
+│   ├── Reserve
+│   ├── Refund
+│   └── ViewHistory
+│
+├── Bus
+│   ├── Route
+│   │   └── setRoute
+│   └── Waitlist (Future)
+│       ├── enQueue
+│       └── deQueue
 ```
 ###  File Structure
 ```
