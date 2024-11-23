@@ -36,12 +36,12 @@ The system is designed with the following classes:
 | |     *-- ViewHistory
 | |
 | +-- Bus
-|		*-- setRoute
+|       *-- setRoute
 |      +-- Route
 |       *-- setGet
 |      +-- Waitlist (Future)
-|			*-- enQueue
-|			*-- deQueue
+|       *-- enQueue
+|       *-- deQueue
 ```
 ###  File Structure
 ```
