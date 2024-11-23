@@ -1,0 +1,24 @@
+{
+    "users": [
+        {
+            "bookingHistory": [
+                {
+                    "busID": "bus123",
+                    "reservationID": "r001",
+                    "seats": [
+                        "1A",
+                        "1B"
+                    ],
+                    "status": "confirmed"
+                }
+            ],
+            "name": "Alice",
+            "userID": "12345"
+        },
+        {
+            "bookingHistory": null,
+            "name": "Bob",
+            "userID": "67890"
+        }
+    ]
+}

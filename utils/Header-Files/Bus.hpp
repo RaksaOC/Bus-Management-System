@@ -37,7 +37,6 @@ Bus::Bus(string ID, string type, int cap, int price)
     // [TO DO] Load additional bus data if needed
 }
 
-
 void Bus::showSeatLayout()
 {
     // [TO DO]

@@ -23,6 +23,7 @@ private:
     void loadReservations(); // Loads previous reservations for refund/view history
 
 public:
+    User() = default; // Default constructor
     // Constructor to initialize user data after authentication
     User(string UID, string n, int a, string em, string pswd)
     {
@@ -42,10 +43,30 @@ public:
     string getPassword() { return password; }
 
     // Core User Methods
+    int selectService();
     void reserve();     // Method for reserving a bus ticket
     void refund();      // Method for refunding a reservation
     void viewHistory(); // Method for viewing reservation history
 };
+
+int User::selectService()
+{
+    int choice = serviceMenu();
+    switch (choice)
+    {
+    case 1:
+        reserve();
+        break;
+    case 2:
+        refund();
+        break;
+    case 3:
+        viewHistory();
+        break;
+    default:
+        break;
+    }
+}
 
 // Method for reserving a bus ticket
 void User::reserve()
@@ -62,7 +83,6 @@ void User::reserve()
     // 8. Generate reservationID and associate with the user (delegate to helper method).
     // 9. Print ticket (delegate to ticket generation logic).
 }
-
 
 // Method for refunding a reservation
 void User::refund()

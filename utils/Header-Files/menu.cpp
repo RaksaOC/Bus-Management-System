@@ -31,259 +31,7 @@ int logInOrSignUpMenu()
     return authChoice;
 }
 
-int logIn()
-{
-    string contents, email, passWord;
-    int int_personalID;
-    int foundEmail = 1;
-    int foundPass = 1;
-    int isGoingBack = 2;
-    cout << "\n\n\t\t\t       LOGGING IN\n\n";
-    int i = 0;
-    do
-    {
-        if (i > 1)
-        {
-            do
-            {
-                cout << "Do you want to sign up instead?\n";
-                cout << "1. Yes\n";
-                cout << "2. No\n";
-                cout << "(1/2) : ";
-                cin >> isGoingBack;
-                if (cin.fail() || isGoingBack < 1 || isGoingBack > 2)
-                {
-                    clearInput();
-                    cout << "\nPlease enter again...\n\n";
-                }
-                else
-                {
-                    break;
-                }
-            } while (1);
-        }
-        ifstream readContents("Info.txt"); // the need to open the file is so that the pointer position in the file is reset
-        if (!readContents.is_open())
-        {
-            cerr << "Error opening Info.txt";
-        }
-        if (isGoingBack == 2) // not going back
-        {
-            cout << "EMAIL: ";
-            cin >> email;
-            while (getline(readContents, contents))
-            {
-                if (contents == "# User Section")
-                {
-                    getline(readContents, contents);
-                    foundEmail = 1;
-                    if (contents == email)
-                    {
-                        foundEmail = 0;
-                        break;
-                    }
-                }
-            }
-            if (foundEmail == 1)
-            {
-                cout << "\nPlease enter a valid Email...\n\n";
-                i++; // if wrong more than 2 times then ask if they wanna sign up instead
-            }
-            else
-            {
-                break; // foundEmail == 0
-            }
-        }
-        else // is going back
-        {
-            isGoingBack = 1;
-            return 0;
-        }
-        readContents.close();
-    } while (1);
-    if (isGoingBack == 2 && foundEmail == 0) // not going back and email was found
-    {
-        do
-        {
-            cout << "PASSWORD: ";
-            cin >> passWord;
-            ifstream readContents("Info.txt");
-            if (!readContents.is_open())
-            {
-                cerr << "Error opening Info.txt";
-            }
-            while (getline(readContents, contents))
-            {
-                foundPass = 1;
-                if (contents == email)
-                {
-                    getline(readContents, contents); // read the line after email
-                    if (contents == passWord)
-                    {
-                        foundPass = 0;
-                        break;
-                    }
-                }
-            }
-            if (foundPass == 1)
-            {
-                cout << "\nPlease enter the correct password...\n\n";
-            }
-            else
-            {
-                cout << "\nSuccessfully logged in, proceeding to service selection menu...\n\n";
-                break;
-            }
-            readContents.close();
-        } while (1);
-    }
-
-    string contentCheck;
-    ifstream readCredentials("Info.txt");
-    if (!readCredentials.is_open())
-    {
-        cerr << "Error opening file\n";
-    }
-
-    while (getline(readCredentials, contentCheck))
-    {
-        if (contentCheck == "# User Section")
-        {
-            getline(readCredentials, contentCheck);
-            if (contentCheck == email)
-            {
-                getline(readCredentials, contentCheck);
-                if (contentCheck == passWord)
-                {
-                    getline(readCredentials, contentCheck);
-                    int_personalID = stoi(contentCheck);
-                    break;
-                }
-            }
-        }
-    }
-    readCredentials.close();
-
-    return int_personalID;
-}
-
-int signUp()
-{
-    string email, passWord1, passWord2, contents;
-    int isEmailTaken = 1;
-    int isGoingBack = 2;
-
-    cout << "\n\n\t\t\t CREATING ACCOUNT\n\n";
-    int i = 0;
-
-    do
-    {
-        if (i > 1)
-        {
-            do
-            {
-                cout << "Do you want to log in instead?\n";
-                cout << "1. Yes\n";
-                cout << "2. No\n";
-                cout << "(1/2) : ";
-                cin >> isGoingBack;
-                if (cin.fail() || isGoingBack < 1 || isGoingBack > 2)
-                {
-                    clearInput();
-                    cout << "\nPlease enter again...\n\n";
-                }
-                else
-                {
-                    break;
-                }
-            } while (1);
-        }
-
-        if (isGoingBack == 2)
-        {
-            cout << "ENTER EMAIL: ";
-            cin >> email;
-            ifstream readCredentials("Info.txt");
-            isEmailTaken = 1;
-            while (getline(readCredentials, contents))
-            {
-                if (contents == email)
-                {
-                    cout << "\nEmail is already taken, please select log in or use another email...\n\n";
-                    isEmailTaken = 0;
-                    i++;
-                    break;
-                }
-            }
-            readCredentials.close();
-        }
-        else
-        {
-            isGoingBack = 1;
-            return 0;
-        }
-
-        if (isEmailTaken == 1)
-        {
-            break;
-        }
-    } while (1);
-
-    if (isGoingBack == 2 && isEmailTaken == 1)
-    {
-        do
-        {
-            cout << "ENTER PASSWORD: ";
-            cin >> passWord1;
-            cout << "RE-ENTER PASSWORD: ";
-            cin >> passWord2;
-            if (passWord1 != passWord2)
-            {
-                cout << "\nPlease confirm your password correctly...\n\n";
-            }
-            else
-            {
-                break;
-            }
-        } while (1);
-        cout << "\nAccount successfully created, Proceeding to service selection menu...\n\n";
-    }
-
-    int highestID = 0;
-    ifstream readCredentials("Info.txt");
-
-    if (!readCredentials.is_open())
-    {
-        cerr << "Error opening file\n";
-    }
-
-    while (getline(readCredentials, contents))
-    {
-        if (contents == "# User Section")
-        {
-            getline(readCredentials, contents); // Skip email
-            getline(readCredentials, contents); // Skip password
-            getline(readCredentials, contents); // Read ID
-            int currentID = stoi(contents);
-            if (currentID > highestID)
-            {
-                highestID = currentID;
-            }
-        }
-    }
-    readCredentials.close();
-    int newID = highestID + 1;
-    ofstream writeCredentials("Info.txt", ios::app);
-    writeCredentials << "\n# User Section\n";
-    writeCredentials << email << "\n"
-                     << passWord1 << "\n"
-                     << newID << "\n";
-    writeCredentials.close();
-
-    return newID;
-}
-
-int startMenu()
+int serviceMenu()
 {
     int service;
     do
@@ -307,6 +55,30 @@ int startMenu()
     return service;
 }
 
+int bookingTypeMenu() // choose single or bulk booking
+{
+    int typeOfBooking;
+    do
+    {
+        cout << "\n\n\t\t\t    BOOKING TYPE\n\n";
+        cout << "0. Back to bus type selection menu\n";
+        cout << "1. Book one ticket\n";
+        cout << "2. Book multiple tickets\n";
+        cout << "Enter your desired booking (1/2): ";
+        cin >> typeOfBooking;
+        if (cin.fail() || typeOfBooking < 0 || typeOfBooking > 2)
+        {
+            clearInput();
+            cout << "\nPlease enter again...\n\n";
+        }
+        else
+        {
+            break;
+        }
+    } while (1);
+    return typeOfBooking;
+}
+
 void printBusManagementSystem()
 {
     cout << "\n\n\n\n";
@@ -327,5 +99,81 @@ void printBusManagementSystem()
             "           \\___ \\ V /\\___ \\ | | |  _| | |\\/| |\n"
             "            ___) || |  ___) || | | |___| |  | |\n"
             "           |____/ |_| |____/ |_| |_____|_|  |_|\n"
+         << endl;
+}
+
+void printStandardBus()
+{
+    cout << " _________________________________\n"
+            "|,----.,----.,----.,----.,----.,--.\\\n"
+            "||    ||    ||    ||    ||    ||   \\\\\n"
+            "|`----'`----'`----'`----'`----||----`.\\\n"
+            "[                       |   - ||- __||( |\n"
+            "[  ,--.                 |____ ||.--.  ||\n"
+            "=-(( `))---------------------(( `))==\n"
+            "   `--'                       `--'  \n"
+         << endl;
+}
+void printLuxaryBus()
+{
+    cout << "                         __\n"
+            " .-----------------------'  |\n"
+            "/| _ .---. .---. .---. .---.|\n"
+            "|j||||___| |___| |___| |___||\n"
+            "|=|||=======================|\n"
+            "[_|j||(O)\\__________||(O)__]"
+         << endl;
+}
+void printDoubleDeckerBus()
+{
+    cout << "   .---------------------------.\n"
+            "  /,--..---..---..---..---..--. `.\n"
+            " //___||___||___||___||___||___\\_|\n"
+            "[j__ ######################## [_|\n"
+            "   \\============================|\n"
+            " .==|  |\"\"\"||\"\"\"||\"\"\"||\"\"\"| |\"\"\"||\n"
+            "/=====\"---\"---\"---\"---\"=|  =||\n"
+            "|____    []*          ____  | ==||\n"
+            "   //  \\\\               //  \\\\ |===||\n"
+            "   \"\\__/\"---------------\"\\__/-+---+'\n"
+         << endl;
+}
+
+void printThanks()
+{
+    cout << "\n\n";
+    cout << "    _____ _   _    _    _   _ _  __ __   _____  _   _ \n"
+            "   |_   _| | | |  / \\  | \\ | | |/ / \\ \\ / / _ \\| | | |\n"
+            "     | | | |_| | / _ \\ |  \\| | ' /   \\ V / | | | | | |\n"
+            "     | | |  _  |/ ___ \\| |\\  | . \\    | || |_| | |_| |\n"
+            "     |_| |_| |_/_/   \\_\\_| \\_|_|\\_\\   |_| \\___/ \\___/"
+         << endl;
+    cout << " _____ ___  ____    ____   ___   ___  _  _____ _   _  ____ \n"
+            "|  ___/ _ \\|  _ \\  | __ ) / _ \\ / _ \\| |/ /_ _| \\ | |/ ___|\n"
+            "| |_ | | | | |_) | |  _ \\| | | | | | | ' / | ||  \\| | |  _ \n"
+            "|  _|| |_| |  _ <  | |_) | |_| | |_| | . \\ | || |\\  | |_| |\n"
+            "|_|   \\___/|_| \\_\\ |____/ \\___/ \\___/|_|\\_\\___|_| \\_|\\____|\n"
+         << endl;
+    cout << "     __        _____ _____ _   _   _   _ ____    _ \n"
+            "     \\ \\      / /_ _|_   _| | | | | | | / ___|  | |\n"
+            "      \\ \\ /\\ / / | |  | | | |_| | | | | \\___ \\  | |\n"
+            "       \\ V  V /  | |  | | |  _  | | |_| |___) | |_|\n"
+            "        \\_/\\_/  |___| |_| |_| |_|  \\___/|____/  (_)\n"
+         << endl;
+}
+
+void printThanksRefund()
+{
+    cout << " ____  _   _  ____ ____ _____ ____ ____  _____ _   _ _     _  __   __\n"
+            "/ ___|| | | |/ ___/ ___| ____/ ___/ ___||  ___| | | | |   | | \\ \\ / /\n"
+            "\\___ \\| | | | |  | |   |  _| \\___ \\___ \\| |_  | | | | |   | |  \\ V / \n"
+            " ___) | |_| | |__| |___| |___ ___) |__) |  _| | |_| | |___| |___| |  \n"
+            "|____/ \\___/ \\____\\____|_____|____/____/|_|    \\___/|_____|_____|_|  \n"
+         << endl;
+    cout << "       ____  _____ _____ _   _ _   _ ____  _____ ____    _ \n"
+            "      |  _ \\| ____|  ___| | | | \\ | |  _ \\| ____|  _ \\  | |\n"
+            "      | |_) |  _| | |_  | | | |  \\| | | | |  _| | | | | | |\n"
+            "      |  _ <| |___|  _| | |_| | |\\  | |_| | |___| |_| | |_|\n"
+            "      |_| \\_\\_____|_|    \\___/|_| \\_|____/|_____|____/  (_)\n"
          << endl;
 }
