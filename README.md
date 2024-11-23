@@ -75,7 +75,7 @@ Bus Mangement System/
    - A C++ compiler (e.g., `g++`)
 
 3. Compile the code:
-   `g++ -std=c++11 main -o main.cpp `
+   `g++ -std=c++11 main.cpp -o main`
 
 4. Run the program:
    `./main`
