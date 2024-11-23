@@ -81,3 +81,31 @@ Bus Mangement System/
 5. Follow the on-screen prompts to interact with the system (user login, bus reservation, etc.).
 
 **Happy Coding!**
+
+
+# Bus Management System
+
+## Class Hierarchy
+System
++-- User
+| +-- Reserve
+| +-- Refund
+| +-- ViewHistory
++-- Bus
++-- Route
+| +-- setRoute
++-- Waitlist (Future)
++-- enQueue
++-- deQueue
+
+
+## File Structure
+Bus Management System/ ├── main/ │ ├── main.cpp # Entry point of the application ├── utils/ ├── Header-Files/ │ ├── System.hpp # Header for the System class │ ├── User.hpp # Header for the User class │ ├── Bus.hpp # Header for the Bus class │ ├── Route.hpp # Header for the Route class │ ├── Ticket.hpp # Header for the optional Ticket class ├── menu.cpp # Contains decision-making menu and ASCII art ├── Libs/ │ ├── json.hpp # nlohmann JSON library ├── Database/ │ ├── BusData.json # Contains data for Bus │ ├── UserData.json # Contains data for User ├── test/ │ ├── test.cpp # For testing things ├── README.md # Project documentation
+
+
+### Explanation:
+- Use triple backticks (` ``` `) to wrap code blocks, which will preserve the structure and prevent Markdown from altering the formatting.
+- Use a standard Markdown list (`*` or `-`) for indentation and structure.
+- For nested directories or files, continue the indentation with spaces to reflect the hierarchy properly.
+
+This way, when rendered on platforms like GitHub, the file structure and class hierarchy will maintain their formatting without getting messed up.
