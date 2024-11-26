@@ -14,6 +14,5 @@ int main()
 {
     System sys;
     User user = sys.authenticateUser();
-    user.selectService();
     return 0;
 }

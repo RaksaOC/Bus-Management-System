@@ -51,6 +51,7 @@ bool Bus::reserveSeat(int seat)
     // - Check if the seat number is valid and available
     // - If available, mark it as reserved (1) and return true
     // - If not, return false
+    return false;
 }
 
 // Reserves multiple seats
@@ -60,6 +61,7 @@ bool Bus::reserveSeats(vector<int> seats)
     // - Iterate through the provided `seats` vector
     // - For each seat, check availability using `isSeatAvailable`
     // - Reserve seats if all are available; otherwise, return false
+    return false;
 }
 
 // Checks if a specific seat is available
@@ -68,6 +70,7 @@ bool Bus::isSeatAvailable(int seat)
     // [TO DO]
     // - Verify if `seat` index is within bounds of `seatStatus`
     // - Return true if `seatStatus[seat] == 0` (available), otherwise false
+    return false;
 }
 
 // Sets a route for the bus

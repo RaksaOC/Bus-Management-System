@@ -49,24 +49,24 @@ public:
     void viewHistory(); // Method for viewing reservation history
 };
 
-int User::selectService()
-{
-    int choice = serviceMenu();
-    switch (choice)
-    {
-    case 1:
-        reserve();
-        break;
-    case 2:
-        refund();
-        break;
-    case 3:
-        viewHistory();
-        break;
-    default:
-        break;
-    }
-}
+// int User::selectService()
+// {
+//     int choice = serviceMenu();
+//     switch (choice)
+//     {
+//     case 1:
+//         reserve();
+//         break;
+//     case 2:
+//         refund();
+//         break;
+//     case 3:
+//         viewHistory();
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
 // Method for reserving a bus ticket
 void User::reserve()
