@@ -1,3 +1,6 @@
+#ifndef MENU_hpp
+#define MENU_hpp
+
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -77,6 +80,32 @@ int bookingTypeMenu() // choose single or bulk booking
         }
     } while (1);
     return typeOfBooking;
+}
+
+int adminActionsMenu()
+{
+    int choice;
+    do
+    {
+        cout << "\n\t\t\tADMIN ACTIONS\n\n";
+        cout << "0. Back\n";
+        cout << "1. Add Admin\n";
+        cout << "2. Add Bus\n";
+        cout << "3. Change Bus Settings\n";
+        cout << "4. See all Users\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        if (cin.fail() || choice < 0 || choice > 4)
+        {
+            clearInput();
+            cout << "\nPlease enter again...\n\n";
+        }
+        else
+        {
+            break;
+        }
+    } while (1);
+    return choice;
 }
 
 void printBusManagementSystem()
@@ -177,3 +206,5 @@ void printThanksRefund()
             "      |_| \\_\\_____|_|    \\___/|_| \\_|____/|_____|____/  (_)\n"
          << endl;
 }
+
+#endif

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "Bus.hpp"
+#include "menu.hpp"
 using namespace std;
 
 // -------------------------------------------------------------------
@@ -13,9 +14,12 @@ class User
 private:
     string userID;
     string name;
+    string lastName;
+    string firstName;
     int age;
     string email;
     string password;
+    bool isAdmin;
     vector<string> resID; // Stores reservation IDs
 
     // Helper Methods
@@ -25,48 +29,100 @@ private:
 public:
     User() = default; // Default constructor
     // Constructor to initialize user data after authentication
-    User(string UID, string n, int a, string em, string pswd)
+    User(string UID, string fn, string ln, string n, int a, string em, string pswd, bool aS, vector<string> rID)
     {
         userID = UID;
+        firstName = fn;
+        lastName = ln;
         name = n;
         age = a;
         email = em;
         password = pswd;
+        isAdmin = aS;
+        resID = rID;
     }
 
     // Set and Get methods
-    void setResID(string r) { resID.push_back(r); }
     string getUID() { return userID; }
     string getName() { return name; }
+    string getFirstName() { return firstName; }
+    string getLastName() { return lastName; }
     int getAge() { return age; }
     string getEmail() { return email; }
     string getPassword() { return password; }
+    bool getAdminStatus() { return isAdmin; };
 
+    void setResID(string r) { resID.push_back(r); }
+
+    void checkUserType(); // check and redirect the user to be admin or normal user
     // Core User Methods
-    int selectService();
     void reserve();     // Method for reserving a bus ticket
     void refund();      // Method for refunding a reservation
     void viewHistory(); // Method for viewing reservation history
+    // Core Admin Methods
+    void addAdmin();
+    void addBus();
+    void changeBusSettings();
+    void getAllUsers();
+
+    // Helper Functions
+    void printUser();
 };
 
-// int User::selectService()
-// {
-//     int choice = serviceMenu();
-//     switch (choice)
-//     {
-//     case 1:
-//         reserve();
-//         break;
-//     case 2:
-//         refund();
-//         break;
-//     case 3:
-//         viewHistory();
-//         break;
-//     default:
-//         break;
-//     }
-// }
+void User::printUser()
+{
+    cout << "User ID: " << this->getUID() << endl;
+    cout << "First Name: " << this->getFirstName() << endl;
+    cout << "Last Name: " << this->getLastName() << endl;
+    cout << "Name: " << this->getName() << endl;
+    cout << "Age: " << this->getAge() << endl;
+    cout << "Email: " << this->getEmail() << endl;
+    cout << "Password: " << this->getPassword() << endl;
+    cout << "Is Admin: " << this->getAdminStatus() << endl;
+}
+
+void User::checkUserType()
+{
+    if (this->getAdminStatus()) // reference to menu.hpp
+    {
+        int choice = adminActionsMenu();
+        switch (choice)
+        {
+        case 1:
+            this->addAdmin();
+            break;
+        case 2:
+            this->addBus();
+            break;
+        case 3:
+            this->changeBusSettings();
+            break;
+        case 4:
+            this->getAllUsers();
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        int choice = serviceMenu();
+        switch (choice)
+        {
+        case 1:
+            this->reserve();
+            break;
+        case 2:
+            this->refund();
+            break;
+        case 3:
+            this->viewHistory();
+            break;
+        default:
+            break;
+        }
+    }
+}
 
 // Method for reserving a bus ticket
 void User::reserve()
@@ -128,6 +184,26 @@ void User::loadReservations()
     // LOGIC:
     // - Load and display all reservationIDs associated with the user
     // - This can be called by refund and viewHistory methods to fetch user's past reservations.
+}
+
+void User::addAdmin()
+{
+    // [TO DO] Define the functionality to add an admin
+}
+
+void User::addBus()
+{
+    // [TO DO] Define the functionality to add a bus
+}
+
+void User::changeBusSettings()
+{
+    // [TO DO] Define the functionality to change bus settings
+}
+
+void User::getAllUsers()
+{
+    // [TO DO] Define the functionality to get all users
 }
 
 #endif

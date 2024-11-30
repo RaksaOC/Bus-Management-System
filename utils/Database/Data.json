@@ -1,6 +1,68 @@
 {
-    "Age": 12,
-    "Email": "lksdjfkljsd",
-    "Name": "jsklfjkl",
-    "Password": "sdjfkljlskdjf"
+    "buses": [
+        {
+            "id": "B0001",
+            "route": "City A → City B",
+            "departureTime": "2024-12-01 08:00",
+            "seats": [
+              { "seatNum": 1, "status": "available", "reservationID": null },
+              { "seatNum": 2, "status": "reserved", "reservationID": "R0001" },
+              { "seatNum": 3, "status": "reserved", "reservationID": "R0002" }
+            ]
+        }
+    ],
+    "reservation": [
+        {
+            "id": "R0001",
+            "userID": "U000001",
+            "busID": "B0001",
+            "seatNumber": 2,
+            "status": "confirmed"
+        },
+        {
+            "id": "R0002",
+            "userID": "U000001",
+            "busID": "B0001",
+            "seatNumber": 3,
+            "status": "confirmed"
+        }
+    ],
+    "users": [
+        {
+            "age": 18,
+            "email": "ocraksa@gmail.com",
+            "id": "U000000",
+            "isAdmin": true,
+            "name": {
+                "firstName": "Raksa",
+                "lastName": "Chan"
+            },
+            "password": "20eabe5d64b0e216796e834f52d61fd0b70332fc",
+            "resID": []
+        },
+        {
+            "age": 19,
+            "email": "a;lsdjf;lasdjf@gmail.com",
+            "id": "U000001",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Raksa",
+                "lastName": "Chan"
+            },
+            "password": "20eabe5d64b0e216796e834f52d61fd0b70332fc",
+            "resID": []
+        },
+        {
+            "age": 15,
+            "email": "me@gmail.com",
+            "id": "U000002",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Me",
+                "lastName": "Me"
+            },
+            "password": "f6a7651443d5867f394fe61ab082aac01c3c25fd",
+            "resID": []
+        }
+    ]
 }
