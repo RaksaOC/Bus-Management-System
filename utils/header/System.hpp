@@ -4,13 +4,13 @@
 #include "User.hpp"
 #include "menu.hpp"
 #include "validation.cpp"
-#include "../Libs/json.hpp"
-#include "../Libs/sha1.hpp"
+#include "../libs/json.hpp"
+#include "../libs/sha1.hpp"
 
 #include <iostream>
 #include <stdexcept>
 
-#define dataFilePath "../utils/Database/Data.json"
+#define dataFilePath "../utils/database/Data.json"
 using namespace std;
 using namespace sha1;
 using json = nlohmann::json;
@@ -246,7 +246,7 @@ string System::inputEmail()
         cout << "Enter Email \n> ";
         cin >> email;
         email = toLowerInput(email);                        // ref to valid.cpp
-        if (isEmailAvailable(email) && isEmailValid(email)) // ref to valid.cpp
+        if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
         {
             break;
         }
@@ -264,10 +264,12 @@ string System::inputPassword()
     {
         cout << "Enter Password \n> ";
         cin >> pass;
-        if (isPasswordValid(pass))
-        {
-            break;
-        }
+        // UNCOMMENT THIS WHEN DONE
+        // if (isPasswordValid(pass))
+        // {
+        //     break;
+        // }
+        break; // [THIS LINE TO CHANGE]
     }
     return pass;
 }

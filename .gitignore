@@ -1,1 +1,15 @@
+# Ignore executables and binaries
+*.exe    # Windows executables
+*.out    # Executables (both macOS/Linux)
+*.bin    # Binary files (both macOS/Linux/Windows)
+
+# Ignore macOS-specific files
 .DS_Store
+
+# Ignore build and temp directories
+build/
+temp/
+
+# Ignore IDE files
+.vscode/
+.idea/

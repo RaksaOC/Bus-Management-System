@@ -3,9 +3,9 @@
 #include <stdexcept>
 #include <cctype>
 #include <string>
-#include "../Libs/json.hpp"
+#include "../libs/json.hpp"
 
-#define dataFile "../utils/Database/Data.json"
+#define dataFile "../utils/database/Data.json"
 
 using namespace std;
 using json = nlohmann::json;
