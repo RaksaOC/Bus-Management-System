@@ -185,6 +185,7 @@ string System::inputFirstName()
             break;
         }
     }
+    fName = toLowerInput(fName);
     fName = capName(fName);
 
     return fName;
@@ -203,6 +204,7 @@ string System::inputLastName()
             break;
         }
     }
+    lName = toLowerInput(lName);
     lName = capName(lName); // ref to valid.cpp
 
     return lName;
@@ -245,7 +247,7 @@ string System::inputEmail()
         }
         cout << "Enter Email \n> ";
         cin >> email;
-        email = toLowerInput(email);                        // ref to valid.cpp
+        email = toLowerInput(email);                            // ref to valid.cpp
         if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
         {
             break;
