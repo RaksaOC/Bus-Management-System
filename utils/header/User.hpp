@@ -1,10 +1,13 @@
 #ifndef User_hpp
 #define User_hpp
 
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include "Bus.hpp"
 #include "menu.hpp"
+#include <limits>
+#define dataFilePath "../utils/database/Data.json"
 using namespace std;
 
 // -------------------------------------------------------------------
@@ -21,11 +24,17 @@ private:
     string password;
     bool isAdmin;
     vector<string> resID; // Stores reservation IDs
+    json allData;
+    json userData;
+    json busData;
+    json resData;
 
     // Helper Methods
     void printSeats();       // Helper function to display seat layout
-    void loadReservations(); // Loads previous reservations for refund/view history
-
+    void loadReservationsData(); // Loads previous reservations for refund/view history
+    void loadAllData();
+    void loadBusData();
+    void loadUserData();
 public:
     User() = default; // Default constructor
     // Constructor to initialize user data after authentication
@@ -51,7 +60,6 @@ public:
     string getEmail() { return email; }
     string getPassword() { return password; }
     bool getAdminStatus() { return isAdmin; };
-
     void setResID(string r) { resID.push_back(r); }
 
     void checkUserType(); // check and redirect the user to be admin or normal user
@@ -68,7 +76,78 @@ public:
     // Helper Functions
     void printUser();
 };
+// Method for reserving a bus ticket
+void busReservationMenu(){
+    
+}
+void User::reserve()
+{   string busOrigin;
+    string busDestination;
+    string busID;
+    string busType;
+    int busCap;
+    int busPrice;
+    json seats;
+    string originDestinationChoice[2];
+    bool validOriginDestination=false;
+    do{
+        cout<<"Available Routes:\n\t1.Phnom Penh-Siemp Reap\n\t2.Phnom Penh-Kompot\n";
+        cout<<"Your origin: ";
+        cin>> originDestinationChoice[0];
+        cout<<"Desired destination: ";
+        cin>> originDestinationChoice[1];
+        for(const auto &bus : busData){
+            if (bus["route"]["from"] == originDestinationChoice[0] && bus["route"]["to"] == originDestinationChoice[1])
+            {
+                cout << "*****************************\n";
+                cout << bus["busType"]<<endl;
+                cout<<bus["seatCap"]<<endl;
+                cout<<bus["route"]["from"]<< " - "<<bus["route"]["from"]<<endl; 
+                cout<<bus["seatPrice"]<<endl;
+                validOriginDestination=true;
+                busOrigin=bus["route"]["from"];
+                busDestination=bus["route"]["to"];
+                busID = bus["id"];
+                busType = bus["busType"];
+                busCap = bus["seatCap"];
+                busPrice = bus["seatPrice"];
+                seats = bus["seats"];
+                break;
+            }
+            if(!validOriginDestination){
+                cout<<"Your input is invalid!!! Please try again"<<endl;
+            }
+        }
+    }while(!validOriginDestination);
+    Bus bus(busID, busType, busCap, busPrice, seats);
+    bus.showSeatLayout(seats);
+    int choosingSeatChoice;
+    do{
+        cout<<"Choose one of the available seats: "<<endl;
+        cin>>choosingSeatChoice;
+    }while(!bus.isSeatAvailable(choosingSeatChoice));
+    bus.reserveSeat(choosingSeatChoice);
+    cout<<"-------------------------------------------------------\n";
+    cout<<"| Bus Type: "<< busType<<endl;
+    cout<<"| Route: "<< busOrigin<<" - "<<busDestination<<endl;
+    cout<<"| Name: "<< name<<endl;
+    cout<<"| Seat's Number: "<< choosingSeatChoice<<endl;
+    cout<<"| ID"<< userID<<endl;
+    cout<<"| Price"<< busPrice<<endl;
+    cout<<"-------------------------------------------------------\n";
+    // [TO DO]
+    // LOGIC:
+    // 1. Prompt user for From, To, Date/Day (delegate to helper method).
+    // 2. Search for buses based on user input (delegate to bus search logic).
+    // 3. Display available buses and prompt user to select (delegate to helper method).
+    // 4. Show bus seat layout (delegate to helper method to display seats).
+    // 5. Ask for single or bulk booking (delegate to helper method).
+    // 6. Collect seat numbers for reservation (delegate to helper method for input).
+    // 7. Confirm the reservation and finalize (delegate to helper method to process the booking).
+    // 8. Generate reservationID and associate with the user (delegate to helper method).
+    // 9. Print ticket (delegate to ticket generation logic) name email resID busType date.
 
+}
 void User::printUser()
 {
     cout << "User ID: " << this->getUID() << endl;
@@ -124,21 +203,7 @@ void User::checkUserType()
     }
 }
 
-// Method for reserving a bus ticket
-void User::reserve()
-{
-    // [TO DO]
-    // LOGIC:
-    // 1. Prompt user for From, To, Date/Day (delegate to helper method).
-    // 2. Search for buses based on user input (delegate to bus search logic).
-    // 3. Display available buses and prompt user to select (delegate to helper method).
-    // 4. Show bus seat layout (delegate to helper method to display seats).
-    // 5. Ask for single or bulk booking (delegate to helper method).
-    // 6. Collect seat numbers for reservation (delegate to helper method for input).
-    // 7. Confirm the reservation and finalize (delegate to helper method to process the booking).
-    // 8. Generate reservationID and associate with the user (delegate to helper method).
-    // 9. Print ticket (delegate to ticket generation logic).
-}
+
 
 // Method for refunding a reservation
 void User::refund()
@@ -177,14 +242,7 @@ void User::printSeats()
     // - Indicate which seats are available/occupied
 }
 
-// Function to load and display user’s reservations (used in refund and viewHistory)
-void User::loadReservations()
-{
-    // [TO DO]
-    // LOGIC:
-    // - Load and display all reservationIDs associated with the user
-    // - This can be called by refund and viewHistory methods to fetch user's past reservations.
-}
+
 
 void User::addAdmin()
 {
@@ -206,4 +264,23 @@ void User::getAllUsers()
     // [TO DO] Define the functionality to get all users
 }
 
+// LOADING FUNCTIONS ==========================
+void User::loadAllData(){
+    ifstream readAll(dataFilePath);
+    json allDt;
+    readAll >> allDt;
+    this->allData = allDt;
+}
+
+void User::loadUserData(){
+    this->userData = this->allData["users"];
+}
+    
+
+void User::loadBusData(){
+    this->busData = this->allData["buses"];
+}
+void User::loadReservationsData(){
+    this->resData = this->allData["reservations"];
+}
 #endif

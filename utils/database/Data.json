@@ -5,136 +5,61 @@
             "departureTime": "2024-12-01 08:00",
             "id": "B0001",
             "route": {
-                "from" : "Phnom Penh",
-                "to": "Siem Reap"
+                "from" : "phnom penh",
+                "to": "siem reap"
             },
-            "seatCap": 25,
+            "seatCap": 10,
             "seatPrice": 15,
             "seats": [
                 {
                     "reservationID": null,
                     "seatNum": 1,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 2,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 3,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 4,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 5,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 6,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 7,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 8,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 9,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 10,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 11,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 12,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 13,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 14,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 15,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 16,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 17,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 18,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 19,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 20,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 21,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 22,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 23,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 24,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 25,
-                    "status": "reserved"
+                    "status": "available"
                 }
             ]
         },
@@ -143,8 +68,8 @@
             "departureTime": "2024-12-01 09:30",
             "id": "B0002",
             "route": {
-                "from" : "Phnom Penh",
-                "to": "Kampot"
+                "from" : "phnom penh",
+                "to": "kampot"
             },
             "seatCap": 30,
             "seatPrice": 10,
@@ -152,159 +77,57 @@
                 {
                     "reservationID": null,
                     "seatNum": 1,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 2,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 3,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 4,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 5,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 6,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 7,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 8,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 9,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "reservationID": null,
                     "seatNum": 10,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 11,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 12,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 13,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 14,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 15,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 16,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 17,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 18,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 19,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 20,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 21,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 22,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 23,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 24,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 25,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 26,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 27,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 28,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 29,
-                    "status": "reserved"
-                },
-                {
-                    "reservationID": null,
-                    "seatNum": 30,
-                    "status": "reserved"
+                    "status": "available"
                 }
             ]
         }
     ],
     "reservation": [
-        {
-            "_this_thing_looks_like_this DON'T FORGET TO CHANGE": [
                 {
                     "busID": "B0001",
                     "id": "R0001",
@@ -319,9 +142,7 @@
                     "status": "confirmed",
                     "userID": "U000001"
                 }
-            ]
-        }
-    ],
+        ],
     "users": [
         {
             "age": 18,
