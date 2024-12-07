@@ -113,7 +113,7 @@ User *System::signUp()
     readFile.close();
 
     json newUser;
-    newUser["id"] = generateUserID();
+    newUser["id"] = generateUserID(); 
     newUser["name"]["firstName"] = fName;
     newUser["name"]["lastName"] = lName;
     newUser["age"] = age;

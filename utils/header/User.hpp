@@ -5,7 +5,10 @@
 #include <vector>
 #include "Bus.hpp"
 #include "menu.hpp"
+#include "validation.cpp"
+
 using namespace std;
+#define dataFile "../utils/database/Data.json"
 
 // -------------------------------------------------------------------
 
@@ -25,6 +28,15 @@ private:
     // Helper Methods
     void printSeats();       // Helper function to display seat layout
     void loadReservations(); // Loads previous reservations for refund/view history
+
+    //function for supporting the add-admin function
+    string inputFirstName();
+    string inputLastName();
+    int inputAge();
+    string inputEmail();
+    string inputPassword();
+    string confirmPassword(string);
+    string generateUserID();
 
 public:
     User() = default; // Default constructor
@@ -189,6 +201,42 @@ void User::loadReservations()
 void User::addAdmin()
 {
     // [TO DO] Define the functionality to add an admin
+    string fName = inputFirstName();
+    string lName = inputLastName();
+    int age = inputAge();
+    string email = inputEmail();
+    string pass = inputPassword();
+    string passCf = confirmPassword(pass);
+    passCf = hashPassword(passCf);
+
+    ifstream readFile(dataFile);
+    if (!readFile.is_open()){
+        cerr <<"\n Error cannot open:"<<dataFile;
+    }
+    json allData;
+    readFile >> allData;
+    readFile.close();
+
+    json newUser;
+    newUser["id"] = generateUserID();
+    newUser["name"]["firstname"] = fName;
+    newUser["name"]["lasttname"] = lName;
+    newUser["age"]["age"] = age;
+    newUser["email"]["email"] = email;
+    newUser["password"]["password"] = passCf;
+    newUser["isAdmin"] = true;
+    newUser["resID"] = json::array();
+    allData["users"].push_back(newUser);
+    
+    ofstream writeFile(dataFile);
+    if (!writeFile.is_open())
+    {
+        cerr << "Error: cannot open file" << dataFile;
+    }
+    writeFile << allData.dump(4);
+    writeFile.close();
+
+    cout << "Admin user added successfully!" << endl;
 }
 
 void User::addBus()
@@ -205,5 +253,144 @@ void User::getAllUsers()
 {
     // [TO DO] Define the functionality to get all users
 }
+
+
+//for the input function
+string User::inputFirstName()
+{
+    string fName;
+
+    while (1)
+    {
+        cout << "Enter First Name \n> ";
+        cin >> fName;
+        if (isNameValid(fName, "")) // ref to valid.cpp
+        {
+            break;
+        }
+    }
+    fName = toLowerInput(fName);
+    fName = capName(fName);
+
+    return fName;
+}
+
+string User::inputLastName()
+{
+    string lName;
+
+    while (1)
+    {
+        cout << "Enter Last Name \n> ";
+        cin >> lName;
+        if (isNameValid(lName, ""))
+        {
+            break;
+        }
+    }
+    lName = toLowerInput(lName);
+    lName = capName(lName); // ref to valid.cpp
+
+    return lName;
+}
+
+int User::inputAge()
+{
+    int age;
+
+    while (true)
+    {
+        cout << "Enter Age \n> ";
+        cin >> age;
+        if (cin.fail())
+        {
+            clearInput();
+            cout << "\nPlease enter again...\n\n";
+            continue;
+        }
+
+        if (isAgeValid(age))
+        {
+            break;
+        }
+    }
+
+    return age;
+}
+
+string User::inputEmail()
+{
+    int i = 0;
+    string email;
+
+    while (1)
+    {
+        if (i >= 2)
+        {
+            cout << "\nHint: log in instead\n";
+        }
+        cout << "Enter Email \n> ";
+        cin >> email;
+        email = toLowerInput(email);                            // ref to valid.cpp
+        if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
+        {
+            break;
+        }
+        i++;
+    }
+
+    return email;
+}
+
+string User::inputPassword()
+{
+    string pass;
+
+    while (1)
+    {
+        cout << "Enter Password \n> ";
+        cin >> pass;
+        // UNCOMMENT THIS WHEN DONE
+        // if (isPasswordValid(pass))
+        // {
+        //     break;
+        // }
+        break; // [THIS LINE TO CHANGE]
+    }
+    return pass;
+}
+
+string User::confirmPassword(string pass) // password thats passed is passed as a hashed password
+{
+    string passCf;
+
+    while (true)
+    {
+        cout << "Enter Password Again\n> ";
+        cin >> passCf;
+        if (isPasswordSame(pass, passCf)) // reference to validation.cpp
+        {
+            break;
+        }
+    }
+
+    return passCf;
+}
+
+string User::generateUserID()
+{
+    int lastID = userData.size();
+    string fullID = "U000000";
+    string lastID_string = to_string(lastID);
+    int start = fullID.size() - lastID_string.size();
+
+    for (int i = 0; i < lastID_string.size(); i++)
+    {
+        fullID[start + i] = lastID_string[i];
+    }
+
+    return fullID;
+}
+
 
 #endif
