@@ -3,14 +3,14 @@
 
 #include "User.hpp"
 #include "menu.hpp"
-#include "validation.cpp"
+#include "validation.hpp"
 #include "../libs/json.hpp"
 #include "../libs/sha1.hpp"
 
 #include <iostream>
-#include <stdexcept>
 
 #define dataFilePath "../utils/database/Data.json"
+
 using namespace std;
 using namespace sha1;
 using json = nlohmann::json;
@@ -56,7 +56,7 @@ private:
     /********************************************/
 
 public:
-    System() {}               // Default-construct `User` object
+    System() {}               // Default-construct User object
     User *authenticateUser(); // Initiates the user authentication process (return a user obj)
 };
 
@@ -135,7 +135,6 @@ User *System::signUp()
     User *user = new User(generateUserID(), fName, lName, fName + " " + lName, age, email, pass, false, emptyResID);
     return user;
 }
-
 // Handles the login process
 User *System::logIn()
 {
@@ -312,15 +311,20 @@ string System::generateUserID()
 
 vector<string> System::getResID(string em)
 {
-    // [TO CHANGE]
-    vector<string> str;
-    return str;
+    vector<string> resID;
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            resID = user["resID"].get<vector<string>>();
+        }
+    }
+    return resID;
 }
 
 bool System::getAdminStatus(string em)
 {
     bool isAdmin = false;
-
     for (const auto &user : userData)
     {
         if (user["email"] == em)

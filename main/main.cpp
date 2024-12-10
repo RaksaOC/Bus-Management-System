@@ -3,7 +3,6 @@
 #include <string>
 
 #include "../utils/header/System.hpp"
-
 using namespace std;
 
 // -----------------------------------------------------------------
@@ -14,7 +13,6 @@ int main()
 {
     System sys;
     User *user = sys.authenticateUser();
-    user->printUser();
     user->checkUserType();
     return 0;
 }

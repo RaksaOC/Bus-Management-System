@@ -33,19 +33,18 @@ using json = nlohmann::json;
 
 //     // Step 3: Close the file
 int main(){
-    //read file
-    json data;
-    ifstream read("./userTest.json");
-    if(!read.is_open()){
-        std::cout<<"no file found";
-    }
-    read >> data;
-    User user;
-    std::vector<int> busNum;
-    for(int i=1;i<=25;i++){
-        busNum.push_back(i);
-    }
-    user.reserve(busNum);
-    // User use
-    // user.reserve();
+    // //read file
+    // json data;
+    // ifstream read("./userTest.json");
+    // if(!read.is_open()){
+    //     std::cout<<"no file found";
+    // }
+    // read >> data;
+    // User user;
+    // std::vector<int> busNum;
+    // for(int i=1;i<=25;i++){
+    //     busNum.push_back(i);
+    // }
+    // // User use
+    // // user.reserve();
 }

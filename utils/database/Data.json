@@ -1,148 +1,433 @@
 {
     "buses": [
         {
-            "busType": "Luxury Bus",
-            "departureTime": "2024-12-01 08:00",
+            "busType": "Standard Bus",
+            "departureTime": "2024-12-01 06:00",
             "id": "B0001",
             "route": {
-                "from" : "phnom penh",
-                "to": "siem reap"
+                "from": "Phnom Penh",
+                "to": "Siem Reap"
             },
-            "seatCap": 10,
-            "seatPrice": 15,
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 10,
             "seats": [
                 {
-                    "reservationID": null,
                     "seatNum": 1,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 2,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 3,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 4,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 5,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 6,
                     "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Luxury Bus",
+            "departureTime": "2024-12-01 07:30",
+            "id": "B0002",
+            "route": {
+                "from": "Phnom Penh",
+                "to": "Battambang"
+            },
+            "seatCap": 6,
+            "seatLeft": 5,
+            "seatPrice": 15,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "reserved"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 7,
+                    "seatNum": 2,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 8,
+                    "seatNum": 3,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 9,
+                    "seatNum": 4,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 10,
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Sleeper Bus",
+            "departureTime": "2024-12-01 09:00",
+            "id": "B0003",
+            "route": {
+                "from": "Phnom Penh",
+                "to": "Battambang"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 20,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 2,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 3,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
                     "status": "available"
                 }
             ]
         },
         {
             "busType": "Standard Bus",
-            "departureTime": "2024-12-01 09:30",
-            "id": "B0002",
+            "departureTime": "2024-12-01 11:00",
+            "id": "B0004",
             "route": {
-                "from" : "phnom penh",
-                "to": "kampot"
+                "from": "Siem Reap",
+                "to": "Kampot"
             },
-            "seatCap": 30,
-            "seatPrice": 10,
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 12,
             "seats": [
                 {
-                    "reservationID": null,
                     "seatNum": 1,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 2,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 3,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 4,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 5,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
                     "seatNum": 6,
                     "status": "available"
-                },
+                }
+            ]
+        },
+        {
+            "busType": "Luxury Bus",
+            "departureTime": "2024-12-01 13:00",
+            "id": "B0005",
+            "route": {
+                "from": "Battambang",
+                "to": "Phnom Penh"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 15,
+            "seats": [
                 {
-                    "reservationID": null,
-                    "seatNum": 7,
+                    "seatNum": 1,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 8,
+                    "seatNum": 2,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 9,
+                    "seatNum": 3,
                     "status": "available"
                 },
                 {
-                    "reservationID": null,
-                    "seatNum": 10,
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Sleeper Bus",
+            "departureTime": "2024-12-01 15:00",
+            "id": "B0006",
+            "route": {
+                "from": "Sihanoukville",
+                "to": "Siem Reap"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 22,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 2,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 3,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Standard Bus",
+            "departureTime": "2024-12-01 17:00",
+            "id": "B0007",
+            "route": {
+                "from": "Kampot",
+                "to": "Phnom Penh"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 10,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 2,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 3,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Luxury Bus",
+            "departureTime": "2024-12-01 19:00",
+            "id": "B0008",
+            "route": {
+                "from": "Siem Reap",
+                "to": "Battambang"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 14,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 2,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 3,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Sleeper Bus",
+            "departureTime": "2024-12-01 21:00",
+            "id": "B0009",
+            "route": {
+                "from": "Phnom Penh",
+                "to": "Sihanoukville"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 20,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 2,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 3,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "available"
+                }
+            ]
+        },
+        {
+            "busType": "Standard Bus",
+            "departureTime": "2024-12-01 23:00",
+            "id": "B0010",
+            "route": {
+                "from": "Battambang",
+                "to": "Kampot"
+            },
+            "seatCap": 6,
+            "seatLeft": 6,
+            "seatPrice": 18,
+            "seats": [
+                {
+                    "seatNum": 1,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 2,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 3,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 6,
                     "status": "available"
                 }
             ]
         }
     ],
-    "reservation": [
-                {
-                    "busID": "B0001",
-                    "id": "R0001",
-                    "seatNumber": 2,
-                    "status": "confirmed",
-                    "userID": "U000001"
-                },
-                {
-                    "busID": "B0001",
-                    "id": "R0002",
-                    "seatNumber": 3,
-                    "status": "confirmed",
-                    "userID": "U000001"
-                }
-        ],
+    "reservations": {
+        "bulkReservations": [],
+        "singleReservations": [
+            {
+                "busID": "B0002",
+                "id": "R000000",
+                "seatNumber": 1,
+                "userID": "U000001"
+            }
+        ]
+    },
+    "routes": [
+        {
+            "from": "Phnom Penh",
+            "to": [
+                "Siem Reap",
+                "Battambang",
+                "Sihanoukville"
+            ]
+        },
+        {
+            "from": "Siem Reap",
+            "to": [
+                "Kampot",
+                "Battambang"
+            ]
+        },
+        {
+            "from": "Battambang",
+            "to": [
+                "Phnom Penh",
+                "Kampot"
+            ]
+        },
+        {
+            "from": "Sihanoukville",
+            "to": [
+                "Siem Reap"
+            ]
+        },
+        {
+            "from": "Kampot",
+            "to": [
+                "Phnom Penh"
+            ]
+        }
+    ],
     "users": [
         {
             "age": 18,
@@ -166,7 +451,9 @@
                 "lastName": "Me"
             },
             "password": "b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8",
-            "resID": []
+            "resID": [
+                "R000000"
+            ]
         }
     ]
 }

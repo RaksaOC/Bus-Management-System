@@ -1,13 +1,16 @@
 #ifndef User_hpp
 #define User_hpp
 
-#include <fstream>
 #include <iostream>
 #include <vector>
+#include <limits>
 #include "Bus.hpp"
 #include "menu.hpp"
-#include <limits>
+#include "validation.hpp"
+
 #define dataFilePath "../utils/database/Data.json"
+
+using json = nlohmann::json;
 using namespace std;
 
 // -------------------------------------------------------------------
@@ -15,6 +18,7 @@ using namespace std;
 class User
 {
 private:
+    // user attributes =====================================================
     string userID;
     string name;
     string lastName;
@@ -24,19 +28,41 @@ private:
     string password;
     bool isAdmin;
     vector<string> resID; // Stores reservation IDs
-    json allData;
-    json userData;
-    json busData;
-    json resData;
+
+    // For initially loading data ==========================================
+    json data;
+    json users;
+    json buses;
+    json reservations;
+    json routes;
+
+    // For partially changed data to be put back to file ===================
+    json busToModify;
+    json modifiedUser;
 
     // Helper Methods
-    void printSeats();       // Helper function to display seat layout
-    void loadReservationsData(); // Loads previous reservations for refund/view history
-    void loadAllData();
-    void loadBusData();
-    void loadUserData();
+    // Working with data
+    void loadData();
+
+    // show and input from, to
+    void destinationMenu();
+    string inputFrom();
+    string inputTo(string);
+
+    // show buses and bus selection based on search
+    vector<int> showAvailableBuses(string, string);
+    int printBus(json, string, string, int); //int *);
+    Bus selectBus(vector<int>);
+
+    // After working with the bus object(reserve seat....)
+    void generateResID(int , json, int);
+    void generateTicket(int);
+    void showQRCode();
+    void storeData();
+
 public:
     User() = default; // Default constructor
+
     // Constructor to initialize user data after authentication
     User(string UID, string fn, string ln, string n, int a, string em, string pswd, bool aS, vector<string> rID)
     {
@@ -60,13 +86,15 @@ public:
     string getEmail() { return email; }
     string getPassword() { return password; }
     bool getAdminStatus() { return isAdmin; };
-    void setResID(string r) { resID.push_back(r); }
 
-    void checkUserType(); // check and redirect the user to be admin or normal user
+    // check and redirect the user to be admin or normal user
+    void checkUserType();
+
     // Core User Methods
     void reserve();     // Method for reserving a bus ticket
     void refund();      // Method for refunding a reservation
     void viewHistory(); // Method for viewing reservation history
+
     // Core Admin Methods
     void addAdmin();
     void addBus();
@@ -76,89 +104,6 @@ public:
     // Helper Functions
     void printUser();
 };
-// Method for reserving a bus ticket
-void busReservationMenu(){
-    
-}
-void User::reserve()
-{   string busOrigin;
-    string busDestination;
-    string busID;
-    string busType;
-    int busCap;
-    int busPrice;
-    json seats;
-    string originDestinationChoice[2];
-    bool validOriginDestination=false;
-    do{
-        cout<<"Available Routes:\n\t1.Phnom Penh-Siemp Reap\n\t2.Phnom Penh-Kompot\n";
-        cout<<"Your origin: ";
-        cin>> originDestinationChoice[0];
-        cout<<"Desired destination: ";
-        cin>> originDestinationChoice[1];
-        for(const auto &bus : busData){
-            if (bus["route"]["from"] == originDestinationChoice[0] && bus["route"]["to"] == originDestinationChoice[1])
-            {
-                cout << "*****************************\n";
-                cout << bus["busType"]<<endl;
-                cout<<bus["seatCap"]<<endl;
-                cout<<bus["route"]["from"]<< " - "<<bus["route"]["from"]<<endl; 
-                cout<<bus["seatPrice"]<<endl;
-                validOriginDestination=true;
-                busOrigin=bus["route"]["from"];
-                busDestination=bus["route"]["to"];
-                busID = bus["id"];
-                busType = bus["busType"];
-                busCap = bus["seatCap"];
-                busPrice = bus["seatPrice"];
-                seats = bus["seats"];
-                break;
-            }
-            if(!validOriginDestination){
-                cout<<"Your input is invalid!!! Please try again"<<endl;
-            }
-        }
-    }while(!validOriginDestination);
-    Bus bus(busID, busType, busCap, busPrice, seats);
-    bus.showSeatLayout(seats);
-    int choosingSeatChoice;
-    do{
-        cout<<"Choose one of the available seats: "<<endl;
-        cin>>choosingSeatChoice;
-    }while(!bus.isSeatAvailable(choosingSeatChoice));
-    bus.reserveSeat(choosingSeatChoice);
-    cout<<"-------------------------------------------------------\n";
-    cout<<"| Bus Type: "<< busType<<endl;
-    cout<<"| Route: "<< busOrigin<<" - "<<busDestination<<endl;
-    cout<<"| Name: "<< name<<endl;
-    cout<<"| Seat's Number: "<< choosingSeatChoice<<endl;
-    cout<<"| ID"<< userID<<endl;
-    cout<<"| Price"<< busPrice<<endl;
-    cout<<"-------------------------------------------------------\n";
-    // [TO DO]
-    // LOGIC:
-    // 1. Prompt user for From, To, Date/Day (delegate to helper method).
-    // 2. Search for buses based on user input (delegate to bus search logic).
-    // 3. Display available buses and prompt user to select (delegate to helper method).
-    // 4. Show bus seat layout (delegate to helper method to display seats).
-    // 5. Ask for single or bulk booking (delegate to helper method).
-    // 6. Collect seat numbers for reservation (delegate to helper method for input).
-    // 7. Confirm the reservation and finalize (delegate to helper method to process the booking).
-    // 8. Generate reservationID and associate with the user (delegate to helper method).
-    // 9. Print ticket (delegate to ticket generation logic) name email resID busType date.
-
-}
-void User::printUser()
-{
-    cout << "User ID: " << this->getUID() << endl;
-    cout << "First Name: " << this->getFirstName() << endl;
-    cout << "Last Name: " << this->getLastName() << endl;
-    cout << "Name: " << this->getName() << endl;
-    cout << "Age: " << this->getAge() << endl;
-    cout << "Email: " << this->getEmail() << endl;
-    cout << "Password: " << this->getPassword() << endl;
-    cout << "Is Admin: " << this->getAdminStatus() << endl;
-}
 
 void User::checkUserType()
 {
@@ -203,9 +148,68 @@ void User::checkUserType()
     }
 }
 
+// Method for reserving a bus ticket
+void User::reserve()
+{
+    loadData();
+    destinationMenu();
+    string from = inputFrom();
+    string to = inputTo(from);
+    vector<int> busIdx = showAvailableBuses(from, to);
 
+    Bus bus = selectBus(busIdx);
+    bus.printBusInfo();
+    bus.showSeatLayout();
 
-// Method for refunding a reservation
+    // [ADD A CONDITIONAL STATEMENT TO DECIDE WHETHER TO SINGLE BOOK OR BULK BOOK]
+    json chosenSeat;
+    json seatsOfBus;
+
+    int bType = bookingTypeMenu();
+    if (bType==1)
+    {
+        chosenSeat = bus.reserveSeat();
+        int seatIdx = 0;
+        for (const auto &seat : busToModify["seats"])
+        {
+            if (seat["seatNum"] == chosenSeat["seatNum"])
+        {
+            busToModify["seats"][seatIdx] = chosenSeat;
+            break;
+        }
+        seatIdx++;
+        }
+    // changing some attributes
+        int seatLeft = busToModify["seatLeft"];
+        seatLeft--;
+        busToModify["seatLeft"] = seatLeft;
+    }else if(bType==2){
+        seatsOfBus= bus.reserveSeats();
+        int seatLeft = busToModify["seatLeft"];
+        seatLeft = seatLeft - seatsOfBus.size();
+        busToModify["seatLeft"] = seatLeft;
+        int i = 0;
+        for(auto &seat : busToModify["seats"]){
+
+            if (seat["seatNum"] == seatsOfBus.at(i)["seatNum"])
+            {
+                seat = seatsOfBus.at(i);
+            }
+            i++;
+        }
+    }
+    
+    // changes the status of seat for the selected bus
+
+    // finalizing file writing and reservation
+    generateResID(chosenSeat["seatNum"], busToModify["seats"], bType);
+    showQRCode();
+    storeData();
+    generateTicket(chosenSeat["seatNum"]);
+    printThanks();
+}
+
+// // Method for refunding a reservation
 void User::refund()
 {
     // [TO DO]
@@ -231,56 +235,307 @@ void User::viewHistory()
     // [Note] : Need to consider how to retrieve detailed information based on reservation ID.
 }
 
-// Helper Methods (Private Section)
+// ADMIN ACTIONS ===================================================================
 
-// Function to display seat layout for reservation
-void User::printSeats()
+void User::addAdmin() {}
+void User::addBus() {}
+void User::changeBusSettings() {}
+void User::getAllUsers() {}
+
+// helper methods for Reserve ============================================================
+
+void User::loadData()
 {
-    // [TO DO]
-    // LOGIC:
-    // - Display bus seat layout for the user to choose seats
-    // - Indicate which seats are available/occupied
+    ifstream readData(dataFilePath);
+    if (!readData.is_open())
+    {
+        cerr << "Couldn't open file" << endl;
+        return;
+    }
+    json allData;
+    readData >> allData;
+    this->data = allData;
+    this->users = allData["users"];
+    this->buses = allData["buses"];
+    this->reservations = allData["reservations"];
+    this->routes = allData["routes"];
 }
 
-
-
-void User::addAdmin()
+void User::destinationMenu()
 {
-    // [TO DO] Define the functionality to add an admin
+    cout << "\t\t\tAVAILABLE ROUTES\n\n";
+    cout << "*****************************************************************" << endl;
+    for (const auto &route : routes)
+    {
+        for (const auto &to : route["to"])
+        {
+            cout << "*\t" << route["from"] << "\t -------> \t" << to << "\t\t*" << endl;
+        }
+    }
+    cout << "*****************************************************************" << endl;
 }
 
-void User::addBus()
+string User::inputFrom()
 {
-    // [TO DO] Define the functionality to add a bus
+    string from;
+    while (1)
+    {
+        cout << "From\n> ";
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the buffer
+        getline(cin, from);
+        if (isFromValid(from, routes))
+        {
+            break;
+        }
+        else
+        {
+            cout << "\nInvalid origin\n";
+        }
+    }
+    return from;
 }
 
-void User::changeBusSettings()
+string User::inputTo(string from)
 {
-    // [TO DO] Define the functionality to change bus settings
+    string to;
+    while (1)
+    {
+        cout << "To\n> ";
+        getline(cin, to);
+        if (isToValid(from, to, routes))
+        {
+            break;
+        }
+        else
+        {
+            cout << "\nInvalid destination\n";
+        }
+    }
+    return to;
 }
 
-void User::getAllUsers()
+vector<int> User::showAvailableBuses(string f, string t)
 {
-    // [TO DO] Define the functionality to get all users
+    vector<int> allIndex;
+    vector<int> validIndex;
+    int busIdx = 0;
+    int correctCount = 0; // Variable to count the number of correct buses
+
+    for (const auto &bus : buses)
+    {
+        allIndex.push_back(printBus(bus, f, t, busIdx)); //));
+        busIdx++;
+    }
+    // allIdx contains [-1-1-1-1-,4,5,-1-1,8] which means that the numbers that are -1 are the buses 
+    // that doesn't meet the requirement but the valid numbers are the index of the correct bus
+    // so then we refine this array to contain the valid indexes
+    int j = 0;
+    for (int i : allIndex)
+    {
+        if (i != -1)
+        {
+            validIndex.push_back(allIndex[j]);
+        }
+        j++;
+    }
+
+    return validIndex;
 }
 
-// LOADING FUNCTIONS ==========================
-void User::loadAllData(){
-    ifstream readAll(dataFilePath);
-    json allDt;
-    readAll >> allDt;
-    this->allData = allDt;
+int User::printBus(json bus, string f, string t, int i) //int *correctCount)
+{
+    if (bus["route"]["from"] == f && bus["route"]["to"] == t)
+    {
+        // correctCount++; // Increment the count of correct buses
+        cout << "Bus "<< ":\n\n";
+        cout << "*******************************************" << endl;
+        cout << "* ID: " << bus["id"] << endl;
+        cout << "* Type: " << bus["busType"] << endl;
+        cout << "* Departure: " << bus["departureTime"] << endl;
+        cout << "* Number of Seats: " << bus["seatCap"] << endl;
+        cout << "* Remaining Seats: " << bus["seatLeft"] << endl;
+        cout << "* Price: $" << bus["seatPrice"] << endl;
+        cout << "*******************************************" << endl;
+        return i; // Return the index of the correct bus
+    }
+    return -1; // Return -1 if the bus doesn't match
 }
 
-void User::loadUserData(){
-    this->userData = this->allData["users"];
-}
-    
+Bus User::selectBus(vector<int> busIdxArr)
+{
+    int choice;
+    cout << "Select a bus \n> ";
+    cin >> choice;
+    choice = choice - 1;
+    int busIndex = busIdxArr[choice];
 
-void User::loadBusData(){
-    this->busData = this->allData["buses"];
+    busToModify = buses[busIndex];
+
+    string busType = busToModify["busType"];
+    string dpTime = busToModify["departureTime"];
+    string busID = busToModify["id"];
+    json route = busToModify["route"];
+    int seatCap = busToModify["seatCap"];
+    int seatLeft = busToModify["seatLeft"];
+    int seatPrice = busToModify["seatPrice"];
+    json seats = busToModify["seats"];
+
+    Bus bus(busType, dpTime, busID, route, seatCap, seatLeft, seatPrice, seats);
+    bus.printBusInfo();
+    return bus;
 }
-void User::loadReservationsData(){
-    this->resData = this->allData["reservations"];
+
+void User::generateResID(int seatNum, json seats, int bType)
+{
+    if(bType == 1){
+        int nextID = reservations["singleReservations"].size();
+        string nextID_string = to_string(nextID);
+        string baseResID = "R000000";
+
+        int start = baseResID.size() - nextID_string.size();
+        int j = 0;
+        for (int i = start; i < baseResID.size(); i++)
+        {
+            baseResID[i] = nextID_string[j];
+            j++;
+        }
+        json newResObj;
+        newResObj["id"] = baseResID;
+        newResObj["busID"] = busToModify["id"];
+        newResObj["seatNumber"] = seatNum;
+        newResObj["userID"] = this->userID;
+
+        this->resID.push_back(baseResID);
+        reservations["singleReservations"].push_back(newResObj);
+    }else if(bType==2){
+        int nextID = reservations["bulkReservations"].size();
+        string nextID_string = to_string(nextID);
+        string baseResID = "RB000000";
+
+        int start = baseResID.size() - nextID_string.size();
+        int j = 0;
+        for (int i = start; i < baseResID.size(); i++)
+        {
+            baseResID[i] = nextID_string[j];
+            j++;
+        }
+        json newResObj;
+        newResObj["id"] = baseResID;
+        newResObj["busID"] = busToModify["id"];
+        newResObj["seatNumber"] = seatNum;
+        newResObj["userID"] = this->userID;
+
+        this->resID.push_back(baseResID);
+        reservations["bulkReservations"].push_back(newResObj);
+    }
+    // int nextID = reservations["singleReservations"].size();
+    // string nextID_string = to_string(nextID);
+    // string baseResID = "R000000";
+
+    // int start = baseResID.size() - nextID_string.size();
+    // int j = 0;
+    // for (int i = start; i < baseResID.size(); i++)
+    // {
+    //     baseResID[i] = nextID_string[j];
+    //     j++;
+    // }
+
+    // json newResObj;
+    // newResObj["id"] = baseResID;
+    // newResObj["busID"] = busToModify["id"];
+    // newResObj["seatNumber"] = seatNum;
+    // newResObj["userID"] = this->userID;
+
+    // this->resID.push_back(baseResID);
+    // reservations["singleReservations"].push_back(newResObj);
 }
+
+void User::showQRCode()
+{
+    cout << "\n\nProceeding to payment... Please scan the QR code.\n";
+    cout << "Your QR code will open now...\n";
+    system("open ../../qr.jpg");
+    cout << "After scanning, press Enter to confirm payment.\n";
+    cin.get();
+}
+
+void User::generateTicket(int seatNum)
+{
+    cout << "\n\n\t\t\t\tTICKET \n\n";
+    cout << "*******************************************" << endl;
+    cout << "* Reservation ID: " << modifiedUser["resID"][modifiedUser["resID"].size() - 1] << endl;
+    cout << "* Bus ID: " << busToModify["id"] << endl;
+    cout << "* Bus Type: " << busToModify["busType"] << endl;
+    cout << "* Departure Time: " << busToModify["departureTime"] << endl;
+
+    // Print route details
+    cout << "* From: " << busToModify["route"]["from"] << endl;
+    cout << "* To: " << busToModify["route"]["to"] << endl;
+
+    // Print seat details
+    cout << "* Seat Number: " << seatNum << endl;
+    cout << "* Total Price: $" << busToModify["seatPrice"] << endl;
+    cout << "*******************************************" << endl;
+    cout << "\n\n\n";
+}
+
+void User::storeData()
+{
+    int busIdx = 0;
+    for (const auto &bus : buses)
+    {
+        if (bus["id"] == busToModify["id"])
+        {
+            break;
+        }
+        busIdx++;
+    }
+    buses[busIdx] = busToModify;
+    modifiedUser["age"] = this->age;
+    modifiedUser["email"] = this->email;
+    modifiedUser["id"] = this->userID;
+    modifiedUser["isAdmin"] = this->isAdmin;
+    modifiedUser["name"]["firstName"] = this->firstName;
+    modifiedUser["name"]["lastName"] = this->lastName;
+    modifiedUser["password"] = this->password;
+    modifiedUser["resID"] = this->resID;
+
+    int userIdx = 0;
+    for (const auto &user : users)
+    {
+        if (user["id"] == this->userID)
+        {
+            break;
+        }
+        userIdx++;
+    }
+
+    users[userIdx] = modifiedUser;
+    data["users"] = users;
+    data["buses"] = buses;
+    data["reservations"] = reservations;
+
+    ofstream storeFile(dataFilePath);
+    if (!storeFile.is_open())
+    {
+        cerr << "Couldn't open file";
+    }
+
+    storeFile << data.dump(4);
+    storeFile.close();
+}
+
+void User::printUser()
+{
+    cout << "User ID: " << this->getUID() << endl;
+    cout << "First Name: " << this->getFirstName() << endl;
+    cout << "Last Name: " << this->getLastName() << endl;
+    cout << "Name: " << this->getName() << endl;
+    cout << "Age: " << this->getAge() << endl;
+    cout << "Email: " << this->getEmail() << endl;
+    cout << "Password: " << this->getPassword() << endl;
+    cout << "Is Admin: " << this->getAdminStatus() << endl;
+}
+// End of helper methods for Reserve =============================================================
+
 #endif
