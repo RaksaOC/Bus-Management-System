@@ -202,7 +202,7 @@ void User::reserve()
     // changes the status of seat for the selected bus
 
     // finalizing file writing and reservation
-    generateResID(chosenSeat["seatNum"], busToModify["seats"], bType);
+    generateResID(chosenSeat["seatNum"], seatsOfBus, bType);
     showQRCode();
     storeData();
     generateTicket(chosenSeat["seatNum"]);
@@ -385,7 +385,7 @@ Bus User::selectBus(vector<int> busIdxArr)
     return bus;
 }
 
-void User::generateResID(int seatNum, json seats, int bType)
+void User::generateResID(int seatNum, json seatsOfBus, int bType)
 {
     if(bType == 1){
         int nextID = reservations["singleReservations"].size();
@@ -419,10 +419,16 @@ void User::generateResID(int seatNum, json seats, int bType)
             baseResID[i] = nextID_string[j];
             j++;
         }
+        vector <int> seatNumbers;
+        for (int i = 0; i < seatsOfBus.size(); i++)
+        {
+            seatNumbers.push_back(seatsOfBus["seatNum"]);
+        }
+        
         json newResObj;
         newResObj["id"] = baseResID;
         newResObj["busID"] = busToModify["id"];
-        newResObj["seatNumber"] = seatNum;
+        newResObj["seatNumber"] = seatNumbers;
         newResObj["userID"] = this->userID;
 
         this->resID.push_back(baseResID);
