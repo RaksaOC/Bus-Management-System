@@ -208,4 +208,16 @@ bool isToValid(string f, string t, const json &routes)
     return false;
 }
 
+bool isResIDBulk(string r){
+    for (int i = 0; i < r.size(); i++)
+    {
+        if (r[i] == 'R' && r[i+1] == 'B')
+        {
+            return true;
+        }
+        
+    }
+    return false;
+}
+
 #endif

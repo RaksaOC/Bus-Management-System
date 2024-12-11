@@ -47,7 +47,7 @@
                 "to": "Battambang"
             },
             "seatCap": 6,
-            "seatLeft": 5,
+            "seatLeft": 2,
             "seatPrice": 15,
             "seats": [
                 {
@@ -56,15 +56,15 @@
                 },
                 {
                     "seatNum": 2,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 3,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 4,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 5,
@@ -85,28 +85,28 @@
                 "to": "Battambang"
             },
             "seatCap": 6,
-            "seatLeft": 6,
+            "seatLeft": 1,
             "seatPrice": 20,
             "seats": [
                 {
                     "seatNum": 1,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 2,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 3,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 4,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 5,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 6,
@@ -382,12 +382,35 @@
         }
     ],
     "reservations": {
-        "bulkReservations": [],
+        "bulkReservations": [
+            {
+                "busID": "B0003",
+                "id": "RB000000",
+                "seatNumber": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "RB000001",
+                "seatNumber": [
+                    1,
+                    2,
+                    3
+                ],
+                "userID": "U000001"
+            }
+        ],
         "singleReservations": [
             {
                 "busID": "B0002",
                 "id": "R000000",
-                "seatNumber": 1,
+                "seatNumber": 4,
                 "userID": "U000001"
             }
         ]
@@ -452,6 +475,8 @@
             },
             "password": "b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8",
             "resID": [
+                "RB000000",
+                "RB000001",
                 "R000000"
             ]
         }

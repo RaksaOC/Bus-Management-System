@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <stack>
 #include "Bus.hpp"
 #include "menu.hpp"
 #include "validation.hpp"
@@ -51,11 +52,11 @@ private:
 
     // show buses and bus selection based on search
     vector<int> showAvailableBuses(string, string);
-    int printBus(json, string, string, int); //int *);
+    int printBus(json, string, string, int); // int *);
     Bus selectBus(vector<int>);
 
     // After working with the bus object(reserve seat....)
-    void generateResID(int , json, int);
+    void generateResID(int, json, vector<int>, int);
     void generateTicket(int);
     void showQRCode();
     void storeData();
@@ -161,48 +162,42 @@ void User::reserve()
     bus.printBusInfo();
     bus.showSeatLayout();
 
-    // [ADD A CONDITIONAL STATEMENT TO DECIDE WHETHER TO SINGLE BOOK OR BULK BOOK]
     json chosenSeat;
     json seatsOfBus;
-
+    vector<int> seatsChangedArr;
+    chosenSeat["seatNum"] = -1;
     int bType = bookingTypeMenu();
-    if (bType==1)
+    if (bType == 1)
     {
         chosenSeat = bus.reserveSeat();
         int seatIdx = 0;
         for (const auto &seat : busToModify["seats"])
         {
             if (seat["seatNum"] == chosenSeat["seatNum"])
-        {
-            busToModify["seats"][seatIdx] = chosenSeat;
-            break;
+            {
+                busToModify["seats"][seatIdx] = chosenSeat;
+                break;
+            }
+            seatIdx++;
         }
-        seatIdx++;
-        }
-    // changing some attributes
+        // changing some attributes
         int seatLeft = busToModify["seatLeft"];
         seatLeft--;
         busToModify["seatLeft"] = seatLeft;
-    }else if(bType==2){
-        seatsOfBus= bus.reserveSeats();
-        int seatLeft = busToModify["seatLeft"];
-        seatLeft = seatLeft - seatsOfBus.size();
-        busToModify["seatLeft"] = seatLeft;
-        int i = 0;
-        for(auto &seat : busToModify["seats"]){
-
-            if (seat["seatNum"] == seatsOfBus.at(i)["seatNum"])
-            {
-                seat = seatsOfBus.at(i);
-            }
-            i++;
-        }
     }
-    
+    else if (bType == 2)
+    {
+        seatsOfBus = bus.reserveSeats();
+        int seatLeft = bus.getSeatLeft();
+        cout << seatLeft << endl;
+        busToModify["seats"] = seatsOfBus;
+        busToModify["seatLeft"] = seatLeft;
+        seatsChangedArr = bus.getSeatNumChanges();
+    }
     // changes the status of seat for the selected bus
 
     // finalizing file writing and reservation
-    generateResID(chosenSeat["seatNum"], seatsOfBus, bType);
+    generateResID(chosenSeat["seatNum"], seatsOfBus, seatsChangedArr, bType);
     showQRCode();
     storeData();
     generateTicket(chosenSeat["seatNum"]);
@@ -212,6 +207,7 @@ void User::reserve()
 // // Method for refunding a reservation
 void User::refund()
 {
+    
     // [TO DO]
     // LOGIC:
     // 1. Show a list of previous reservations associated with the user.
@@ -224,8 +220,78 @@ void User::refund()
 }
 
 // Method for viewing reservation history
+//  void Bus::printHistory(vector <string> seatNumber)
+// {
+//     cout << "\n\n\t\t\t\tCHOSEN BUS INFO\n\n";
+//     cout << "*******************************************" << endl;
+//     cout << "Seat Booked: ";
+//     for(int i=0;i<seatNumber.size();i++){
+//         cout<< seatNumber.at(i)<<", ";
+//     }
+//     cout<<endl;
+//     cout << "Bus ID: " << busID << endl;
+//     cout << "Bus Type: " << busType << endl;
+//     cout << "Departure Time: " << dpTime << endl;
+//     cout << "From: " << this->route["from"] << endl;
+//     cout << "To: " << this->route["to"] << endl;
+//     cout << "Seat Capacity: " << seatCap << endl;
+//     cout << "Seats Left: " << seatLeft << endl;
+//     cout << "Seat Price: " << seatPrice << endl;
+//     cout << "*******************************************" << endl;
+//     cout << "\n\n";
+// }
 void User::viewHistory()
-{
+{   
+    loadData();
+    stack<string> resIDStack;
+    for(auto &res : this->resID){
+        resIDStack.push(res);
+    }
+    while(!resIDStack.empty()){
+        string res = resIDStack.top();
+        for(int i = 0; i < resID.size(); i++){
+            if (isResIDBulk(res))
+            {
+                json bulkRes = reservations["bulkReservations"];
+                for(const auto& res : bulkRes){
+                    if (res[id] == )
+                    {
+                        /* code */
+                    }
+                    
+                }
+            }
+            
+        }
+    }
+    
+    // vector <string> storeSeatNum;
+    // vector <string> storeBusID;
+    // loadData();
+    // for(auto& user: users["resID"]){
+    //     if(user[0]=="R"&&user[1]=="B"){
+    //         for(auto& reservation: reservations["bulkReservations"]["id"]){
+    //             if(user==reservation){
+    //                 storeSeatNum.push_back(reservation["seatNumber"]);
+    //                 storeBusID.push_back(reservation["busID"]);
+    //             }
+    //         }
+    //     }else if(user[0]=="R"&&user[1]=="0"){
+    //         for(auto& reservation: reservations["bulkReservations"]["id"]){
+    //             if(user==reservation){
+    //                 storeSeatNum.push_back(reservation["seatNumber"]);
+    //                 storeBusID.push_back(reservation["busID"]);
+    //             }
+    //         }
+    //     }
+    // }
+    // for(int i=0;i<storeBusID.size();i++){
+    //     for(auto& bus: buses){
+    //         if(storeBusID.at(i)==bus["id"]){
+
+    //         }
+    //     }
+    // }
     // [TO DO]
     // LOGIC:
     // 1. Retrieve reservationIDs made by the user.
@@ -313,7 +379,6 @@ string User::inputTo(string from)
     }
     return to;
 }
-
 vector<int> User::showAvailableBuses(string f, string t)
 {
     vector<int> allIndex;
@@ -326,7 +391,7 @@ vector<int> User::showAvailableBuses(string f, string t)
         allIndex.push_back(printBus(bus, f, t, busIdx)); //));
         busIdx++;
     }
-    // allIdx contains [-1-1-1-1-,4,5,-1-1,8] which means that the numbers that are -1 are the buses 
+    // allIdx contains [-1-1-1-1-,4,5,-1-1,8] which means that the numbers that are -1 are the buses
     // that doesn't meet the requirement but the valid numbers are the index of the correct bus
     // so then we refine this array to contain the valid indexes
     int j = 0;
@@ -342,12 +407,12 @@ vector<int> User::showAvailableBuses(string f, string t)
     return validIndex;
 }
 
-int User::printBus(json bus, string f, string t, int i) //int *correctCount)
+int User::printBus(json bus, string f, string t, int i) // int *correctCount)
 {
     if (bus["route"]["from"] == f && bus["route"]["to"] == t)
     {
         // correctCount++; // Increment the count of correct buses
-        cout << "Bus "<< ":\n\n";
+        cout << "Bus " << ":\n\n";
         cout << "*******************************************" << endl;
         cout << "* ID: " << bus["id"] << endl;
         cout << "* Type: " << bus["busType"] << endl;
@@ -385,9 +450,10 @@ Bus User::selectBus(vector<int> busIdxArr)
     return bus;
 }
 
-void User::generateResID(int seatNum, json seatsOfBus, int bType)
+void User::generateResID(int seatNum, json seatsOfBus, vector<int> seatChanges, int bType)
 {
-    if(bType == 1){
+    if (bType == 1)
+    {
         int nextID = reservations["singleReservations"].size();
         string nextID_string = to_string(nextID);
         string baseResID = "R000000";
@@ -407,7 +473,9 @@ void User::generateResID(int seatNum, json seatsOfBus, int bType)
 
         this->resID.push_back(baseResID);
         reservations["singleReservations"].push_back(newResObj);
-    }else if(bType==2){
+    }
+    else if (bType == 2)
+    {
         int nextID = reservations["bulkReservations"].size();
         string nextID_string = to_string(nextID);
         string baseResID = "RB000000";
@@ -419,12 +487,12 @@ void User::generateResID(int seatNum, json seatsOfBus, int bType)
             baseResID[i] = nextID_string[j];
             j++;
         }
-        vector <int> seatNumbers;
-        for (int i = 0; i < seatsOfBus.size(); i++)
+        vector<int> seatNumbers;
+        for (int i = 0; i < seatChanges.size(); i++)
         {
-            seatNumbers.push_back(seatsOfBus["seatNum"]);
+            seatNumbers.push_back(seatChanges.at(i));
         }
-        
+
         json newResObj;
         newResObj["id"] = baseResID;
         newResObj["busID"] = busToModify["id"];
@@ -434,28 +502,7 @@ void User::generateResID(int seatNum, json seatsOfBus, int bType)
         this->resID.push_back(baseResID);
         reservations["bulkReservations"].push_back(newResObj);
     }
-    // int nextID = reservations["singleReservations"].size();
-    // string nextID_string = to_string(nextID);
-    // string baseResID = "R000000";
-
-    // int start = baseResID.size() - nextID_string.size();
-    // int j = 0;
-    // for (int i = start; i < baseResID.size(); i++)
-    // {
-    //     baseResID[i] = nextID_string[j];
-    //     j++;
-    // }
-
-    // json newResObj;
-    // newResObj["id"] = baseResID;
-    // newResObj["busID"] = busToModify["id"];
-    // newResObj["seatNumber"] = seatNum;
-    // newResObj["userID"] = this->userID;
-
-    // this->resID.push_back(baseResID);
-    // reservations["singleReservations"].push_back(newResObj);
 }
-
 void User::showQRCode()
 {
     cout << "\n\nProceeding to payment... Please scan the QR code.\n";

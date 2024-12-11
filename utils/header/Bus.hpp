@@ -15,16 +15,17 @@ class Bus
 {
 private:
     // Attributes
-    string busType;         // Type of bus (e.g., luxury, economy)
-    string dpTime;          // departure time
-    string busID;           // Unique ID for the bus
-    json route;             // route of bus
-    int seatCap;            // Total seat capacity
-    int seatLeft;           // remaining seats
-    int seatPrice;          // Price per seat
+    string busType; // Type of bus (e.g., luxury, economy)
+    string dpTime;  // departure time
+    string busID;   // Unique ID for the bus
+    json route;     // route of bus
+    int seatCap;    // Total seat capacity
+    int seatLeft;   // remaining seats
+    int seatPrice;  // Price per seat
     json seats;
 
     bool isSeatAvailable(int seat); // Checks if a specific seat is available
+    vector<int> numOfSeatsChanged;
 
 public:
     // Constructor
@@ -41,10 +42,13 @@ public:
     };
 
     // Core Bus Methods
+    void printHistory(vector <string>);
     void printBusInfo();
-    void showSeatLayout();                // Displays seat layout of the bus
-    json reserveSeat();                   // Reserves a single seat
-    vector <json> reserveSeats(); // Reserves multiple seats
+    void showSeatLayout(); // Displays seat layout of the bus
+    json reserveSeat();    // Reserves a single seat
+    json reserveSeats();   // Reserves multiple seats
+    int getSeatLeft() { return this->seatLeft; };
+    vector<int> getSeatNumChanges() { return this->numOfSeatsChanged; };
 };
 
 void Bus::printBusInfo()
@@ -121,36 +125,49 @@ json Bus::reserveSeat()
 
     return seatToReturn;
 }
-
 // Reserves multiple seats
-vector <json> Bus::reserveSeats()
+json Bus::reserveSeats()
 {
-    vector <int> seatNumberArr;
-    vector <json> seatsArr;
+    vector<int> seatNumberArr;
+    vector<json> seatsArr;
     int seatNum;
     cout << "Enter the number of seats to book\n> ";
     int numberOfSeatToBook;
-    cin>>numberOfSeatToBook;
-    for(int i=0;i<numberOfSeatToBook;i++){
-        while(1){
-            cout << "Seat Number" << i+ 1 << ": ";
+    cin >> numberOfSeatToBook;
+    for (int i = 0; i < numberOfSeatToBook; i++)
+    {
+        while (1)
+        {
+            cout << "Seat: " << i + 1 << ": ";
             cin >> seatNum;
-            if(isSeatAvailable(seatNum)){
+            if (isSeatAvailable(seatNum))
+            {
                 seatNumberArr.push_back(seatNum);
                 break;
+            }
+            else
+            {
+                cout << "Seat Unavailable\n";
             }
         }
     }
     int i = 0;
-    for(auto &seat:seats){
-        if(seat["seatNum"] == seatNumberArr.at(i)){
-            seat["status"]="reserved";
-            seatsArr.push_back(seat);
+    for (auto &seat : seats)
+    {
+        if ((i < seatNumberArr.size()) && (seat["seatNum"] == seatNumberArr.at(i)))
+        {
+            seat["status"] = "reserved";
             i++;
         }
+        if (i >= seatNumberArr.size())
+        {
+            break;
+        }
     }
-    return seatsArr;
-    
+    this->numOfSeatsChanged = seatNumberArr;
+    this->seatLeft = this->seatLeft - numberOfSeatToBook;
+    return seats;
+
     // [TO DO]
     // - Prompt the user to input number of seats to book
     // - Let user input their seat numbers
