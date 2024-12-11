@@ -44,9 +44,9 @@ int serviceMenu()
         cout << "0. Exit Program\n";
         cout << "1. Booking\n";
         cout << "2. Refund\n";
-        cout << "Enter service (1/2): ";
+        cout << "3. View History\n> ";
         cin >> service;
-        if (cin.fail() || service < 0 || service > 2)
+        if (cin.fail() || service < 0 || service > 3)
         {
             cout << "\nPlease enter again...\n\n";
             clearInput();
