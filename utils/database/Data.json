@@ -5,7 +5,7 @@
             "departureTime": "2024-12-01 08:00",
             "id": "B0001",
             "route": {
-                "from" : "Phnom Penh",
+                "from": "Phnom Penh",
                 "to": "Siem Reap"
             },
             "seatCap": 25,
@@ -143,7 +143,7 @@
             "departureTime": "2024-12-01 09:30",
             "id": "B0002",
             "route": {
-                "from" : "Phnom Penh",
+                "from": "Phnom Penh",
                 "to": "Kampot"
             },
             "seatCap": 30,
@@ -345,6 +345,18 @@
                 "lastName": "Me"
             },
             "password": "b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8",
+            "resID": []
+        },
+        {
+            "age": 18,
+            "email": "dev1",
+            "id": "U000002",
+            "isAdmin": true,
+            "name": {
+                "firstname": "Me",
+                "lasttname": "Me"
+            },
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
             "resID": []
         }
     ]

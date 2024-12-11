@@ -1,3 +1,6 @@
+#ifndef Valid_hpp
+#define Valid_hpp
+
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -129,3 +132,4 @@ string capName(string n)
 }
 
 // VALIDATION FUNCTIONS FOR LOG IN ==================================================
+#endif

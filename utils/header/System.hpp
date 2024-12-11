@@ -3,7 +3,7 @@
 
 #include "User.hpp"
 #include "menu.hpp"
-#include "validation.cpp"
+#include "validation.hpp"
 #include "../libs/json.hpp"
 #include "../libs/sha1.hpp"
 

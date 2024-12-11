@@ -4,6 +4,7 @@ using namespace std;
 
 #include "../utils/libs/json.hpp"
 #include "../utils/Libs/sha1.hpp"
+#include "../utils/header/User.hpp"
 
 using json = nlohmann::json;
 // int main()
@@ -58,4 +59,5 @@ int main(){
     cout << pass << endl;
     cout << "Hashed pass: ";
     cout << hashedPass << endl;;
+
 }

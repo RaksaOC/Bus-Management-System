@@ -5,10 +5,11 @@
 #include <vector>
 #include "Bus.hpp"
 #include "menu.hpp"
-#include "validation.cpp"
+#include "validation.hpp"
+#include "../libs/sha1.hpp"
 
 using namespace std;
-#define dataFile "../utils/database/Data.json"
+#define dataFilePath "../utils/database/Data.json"
 
 // -------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ private:
     string password;
     bool isAdmin;
     vector<string> resID; // Stores reservation IDs
-
+    json userData;
     // Helper Methods
     void printSeats();       // Helper function to display seat layout
     void loadReservations(); // Loads previous reservations for refund/view history
@@ -37,10 +38,16 @@ private:
     string inputPassword();
     string confirmPassword(string);
     string generateUserID();
+    //function for supporting the addBus function
+    string inputBusType();
+    int inputSeatCap();
+    int inputSeatPrice();
+    string generateBusID();
 
 public:
     User() = default; // Default constructor
     // Constructor to initialize user data after authentication
+    
     User(string UID, string fn, string ln, string n, int a, string em, string pswd, bool aS, vector<string> rID)
     {
         userID = UID;
@@ -63,6 +70,7 @@ public:
     string getEmail() { return email; }
     string getPassword() { return password; }
     bool getAdminStatus() { return isAdmin; };
+    void setUserData(json);
 
     void setResID(string r) { resID.push_back(r); }
 
@@ -79,6 +87,7 @@ public:
 
     // Helper Functions
     void printUser();
+
 };
 
 void User::printUser()
@@ -200,6 +209,7 @@ void User::loadReservations()
 
 void User::addAdmin()
 {
+    cout << "\t\t\t\tNEW ADMIN\n\n";
     // [TO DO] Define the functionality to add an admin
     string fName = inputFirstName();
     string lName = inputLastName();
@@ -207,7 +217,7 @@ void User::addAdmin()
     string email = inputEmail();
     string pass = inputPassword();
     string passCf = confirmPassword(pass);
-    passCf = hashPassword(passCf);
+    passCf = hashPassword(passCf);         
 
     ifstream readFile(dataFile);
     if (!readFile.is_open()){
@@ -217,17 +227,28 @@ void User::addAdmin()
     readFile >> allData;
     readFile.close();
 
+    json userData = allData["users"];
+    int lastID = userData.size();
+    string fullID = "U000000";
+    string lastID_string = to_string(lastID);
+    int start = fullID.size() - lastID_string.size();
+
+    for (int i = 0; i < lastID_string.size(); i++)
+    {
+        fullID[start + i] = lastID_string[i];
+    }
+
     json newUser;
-    newUser["id"] = generateUserID();
+    newUser["id"] = fullID;
     newUser["name"]["firstname"] = fName;
     newUser["name"]["lasttname"] = lName;
-    newUser["age"]["age"] = age;
-    newUser["email"]["email"] = email;
-    newUser["password"]["password"] = passCf;
+    newUser["age"] = age;
+    newUser["email"] = email;
+    newUser["password"] = passCf;
     newUser["isAdmin"] = true;
     newUser["resID"] = json::array();
     allData["users"].push_back(newUser);
-    
+
     ofstream writeFile(dataFile);
     if (!writeFile.is_open())
     {
@@ -350,12 +371,10 @@ string User::inputPassword()
     {
         cout << "Enter Password \n> ";
         cin >> pass;
-        // UNCOMMENT THIS WHEN DONE
-        // if (isPasswordValid(pass))
-        // {
-        //     break;
-        // }
-        break; // [THIS LINE TO CHANGE]
+        if (isPasswordValid(pass))
+        {
+            break;
+        }
     }
     return pass;
 }
@@ -377,19 +396,38 @@ string User::confirmPassword(string pass) // password thats passed is passed as 
     return passCf;
 }
 
-string User::generateUserID()
+//input for addBus function
+string User::inputBusType()
 {
-    int lastID = userData.size();
-    string fullID = "U000000";
-    string lastID_string = to_string(lastID);
-    int start = fullID.size() - lastID_string.size();
+    string busType;
+        cout<<"Enter bus type:"<<endl;
+        cin>>busType;
 
-    for (int i = 0; i < lastID_string.size(); i++)
-    {
-        fullID[start + i] = lastID_string[i];
+    return busType;
+}
+
+int User::inputSeatCap()
+{
+    int seatcap;
+    const int MIN_CAPACITY = 8;
+    const int MAX_CAPACITY = 130;
+    while (1){
+        cout<<"Enter the bus seat capacity (from 8-130):"<<endl;
+        cin>>seatcap;
+        if (seatcap < MIN_CAPACITY || seatcap > MAX_CAPACITY){
+            cout<<"Invalid seat capacity! Please enter again.";
+            continue;
+        }
+        else{
+            break;
+        }
     }
+    return seatcap;
+}
 
-    return fullID;
+int User::inputSeatPrice()
+{
+    return 0;
 }
 
 
