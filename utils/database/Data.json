@@ -479,6 +479,30 @@
                 "RB000001",
                 "R000000"
             ]
+        },
+        {
+            "age": 18,
+            "email": "darong6126@gmail.com",
+            "id": "U000002",
+            "isAdmin": true,
+            "name": {
+                "firstName": "Darong",
+                "lastName": "Seang"
+            },
+            "password": "b1f92bd2dcbf3db129981111b1823d936fde221d",
+            "resID": []
+        },
+        {
+            "age": 18,
+            "email": "sigma@123.com",
+            "id": "U000003",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Sigma",
+                "lastName": "Boy"
+            },
+            "password": "e2e3789d0d95512d32d0aab252def877d98ae66e",
+            "resID": []
         }
     ]
 }

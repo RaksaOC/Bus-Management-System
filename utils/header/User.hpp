@@ -293,7 +293,7 @@ void User::printHistory(vector<int> seatNums, string bID)
         cout << s << " ";
     }
     cout << "\n*****************************************************************\n"
-         << endl;
+        << endl;
 }
 
 // ADMIN ACTIONS ===================================================================
@@ -301,7 +301,20 @@ void User::printHistory(vector<int> seatNums, string bID)
 void User::addAdmin() {}
 void User::addBus() {}
 void User::changeBusSettings() {}
-void User::getAllUsers() {}
+void User::getAllUsers() {
+    loadData();
+    for (const auto& user : users){
+        cout<<"ID: "<<user["id"]<<endl;
+        cout<<"Name: "<<user["name"]["firstName"]<<" "<<user["name"]["lastName"]<<endl;
+        cout<< "Age: "<< user["age"] << endl;
+        cout<< "Email: "<< user["email"] << endl;
+        cout<<"Is Admin: "<<user["isAdmin"]<<endl;
+        cout<<"Email: "<<user["email"]<<endl;
+        cout<<"Password: "<<user["password"]<<endl;
+        cout<<"Reservation: "<<user["resID"];
+        cout<<endl<<"__________________________________________________"<<endl;
+    }
+}
 
 // helper methods for Reserve ============================================================
 
