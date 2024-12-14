@@ -12,10 +12,8 @@ using namespace std;
 
 int main()
 {
-    User user;
-    user.getAllUsers();
-    // System sys;
-    // User *user = sys.authenticateUser();
-    // user->checkUserType();
+    System sys;
+    User *user = sys.authenticateUser();
+    user->checkUserType();
     return 0;
 }

@@ -302,6 +302,7 @@ void User::addAdmin() {}
 void User::addBus() {}
 void User::changeBusSettings() {}
 void User::getAllUsers() {
+cout<<endl<<endl<<"----------------------All Users-------------------------"<<endl<<endl;
     loadData();
     for (const auto& user : users){
         cout<<"ID: "<<user["id"]<<endl;
@@ -312,7 +313,7 @@ void User::getAllUsers() {
         cout<<"Email: "<<user["email"]<<endl;
         cout<<"Password: "<<user["password"]<<endl;
         cout<<"Reservation: "<<user["resID"];
-        cout<<endl<<"__________________________________________________"<<endl;
+        cout<<endl<<endl<<"__________________________________________________"<<endl<<endl;;
     }
 }
 
