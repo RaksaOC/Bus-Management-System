@@ -509,20 +509,6 @@
             },
             "password": "e2e3789d0d95512d32d0aab252def877d98ae66e",
             "resID": []
-        },
-        {
-            "age": 21,
-            "email": "seth@yaho.com",
-            "id": "U000004",
-            "isAdmin": false,
-            "name": {
-                "firstName": "Sethh",
-                "lastName": "Sokha"
-            },
-            "password": "qwer1234",
-            "resID": [
-                "R000001"
-            ]
         }
     ]
 }
