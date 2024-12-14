@@ -94,9 +94,10 @@ int adminActionsMenu()
         cout << "2. Add Bus\n";
         cout << "3. Change Bus Settings\n";
         cout << "4. See all Users\n";
+        cout << "5. Delete User\n";
         cout << "Enter your choice: ";
         cin >> choice;
-        if (cin.fail() || choice < 0 || choice > 4)
+        if (cin.fail() || choice < 0 || choice > 5)
         {
             clearInput();
             cout << "\nPlease enter again...\n\n";

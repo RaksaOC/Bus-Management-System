@@ -9,7 +9,7 @@
                 "to": "Siem Reap"
             },
             "seatCap": 6,
-            "seatLeft": 5,
+            "seatLeft": 4,
             "seatPrice": 10,
             "seats": [
                 {
@@ -22,7 +22,7 @@
                 },
                 {
                     "seatNum": 3,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 4,
@@ -418,6 +418,12 @@
                 "id": "R000001",
                 "seatNumber": 6,
                 "userID": "U000004"
+            },
+            {
+                "busID": "B0001",
+                "id": "R000002",
+                "seatNumber": 3,
+                "userID": "U000004"
             }
         ]
     },
@@ -500,15 +506,17 @@
         },
         {
             "age": 18,
-            "email": "sigma@123.com",
-            "id": "U000003",
+            "email": "abc123.com",
+            "id": "U000004",
             "isAdmin": false,
             "name": {
-                "firstName": "Sigma",
-                "lastName": "Boy"
+                "firstName": "2",
+                "lastName": "Day"
             },
-            "password": "e2e3789d0d95512d32d0aab252def877d98ae66e",
-            "resID": []
+            "password": "6367c48dd193d56ea7b0baad25b19455e529f5ee",
+            "resID": [
+                "R000002"
+            ]
         }
     ]
 }

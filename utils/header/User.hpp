@@ -130,6 +130,8 @@ void User::checkUserType()
         case 4:
             this->getAllUsers();
             break;
+        case 5:
+            this->deleteUser();
         default:
             break;
         }
@@ -342,6 +344,11 @@ void User::deleteUser() {
             cout << "Is Admin: " << (*it)["isAdmin"] << endl;
             cout << "Password: " << (*it)["password"] << endl;
             cout << "Reservation: " << (*it)["resID"] << endl;
+
+            if(!(*it)["resID"].empty()){
+                cout << "Cannot delete user " << userID << " because they have active reservations." << endl;
+                break;
+            }
 
             
             cout << "Are you sure you want to delete this user with ID " << userID << " (y/n)? ";
