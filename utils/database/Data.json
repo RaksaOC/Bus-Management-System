@@ -523,6 +523,18 @@
             "resID": [
                 "R000001"
             ]
+        },
+        {
+            "age": 19,
+            "email": "sigmaboy@gmail.com",
+            "id": "U000005",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Sigma",
+                "lastName": "Boy"
+            },
+            "password": "7369be904bdad4c235f7d7d783e7889e80bd6a11",
+            "resID": []
         }
     ]
 }
