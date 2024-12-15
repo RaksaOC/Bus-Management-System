@@ -105,6 +105,7 @@ public:
     void addBus();
     void changeBusSettings();
     void getAllUsers();
+    void deleteUser();
 
     // Helper Functions
     void printUser();
@@ -129,6 +130,8 @@ void User::checkUserType()
         case 4:
             this->getAllUsers();
             break;
+        case 5:
+            this->deleteUser();
         default:
             break;
         }
@@ -316,6 +319,71 @@ cout<<endl<<endl<<"----------------------All Users-------------------------"<<en
         cout<<endl<<endl<<"__________________________________________________"<<endl<<endl;;
     }
 }
+void User::deleteUser() {
+    string userID;
+    cout << "Please input the user ID you want to delete: " << endl;
+    cin >> userID;
+
+    
+    loadData();
+
+    bool isFound = false;
+    char confirm;
+
+    
+    for (auto it = users.begin(); it != users.end(); ++it) {
+        if ((*it)["id"] == userID) {
+            isFound = true;
+
+            
+            cout << "User found:" << endl;
+            cout << "ID: " << (*it)["id"] << endl;
+            cout << "Name: " << (*it)["name"]["firstName"] << " " << (*it)["name"]["lastName"] << endl;
+            cout << "Age: " << (*it)["age"] << endl;
+            cout << "Email: " << (*it)["email"] << endl;
+            cout << "Is Admin: " << (*it)["isAdmin"] << endl;
+            cout << "Password: " << (*it)["password"] << endl;
+            cout << "Reservation: " << (*it)["resID"] << endl;
+
+            if(!(*it)["resID"].empty()){
+                cout << "Cannot delete user " << userID << " because they have active reservations." << endl;
+                break;
+            }
+
+            
+            cout << "Are you sure you want to delete this user with ID " << userID << " (y/n)? ";
+            cin >> confirm;
+
+            if (confirm == 'y') {
+                
+                users.erase(it); 
+                cout << "User deleted successfully." << endl;
+
+                
+                data["users"] = users;
+
+                
+                ofstream writeData(dataFilePath);
+                if (!writeData.is_open()) {
+                    cerr << "Error: Unable to save changes to file." << endl;
+                } else {
+                    writeData << data.dump(4);  
+                    writeData.close();
+                    cout << "Changes saved to file." << endl;
+                }
+            } else {
+                
+                cout << "User deletion canceled." << endl;
+            }
+            break;
+        }
+    }
+
+    if (!isFound) {
+        cout << "User does not exist." << endl;
+    }
+}
+
 
 // helper methods for Reserve ============================================================
 
