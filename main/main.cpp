@@ -13,7 +13,7 @@ using namespace std;
 int main()
 {
     User user;
-    user.getAllUsers();
+    user.changeBusSettings();
     // System sys;
     // User *user = sys.authenticateUser();
     // user->checkUserType();

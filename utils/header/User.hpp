@@ -303,7 +303,68 @@ void User::printHistory(vector<int> seatNums, string bID)
 
 void User::addAdmin() {}
 void User::addBus() {}
-void User::changeBusSettings() {}
+void User::changeBusSettings() {
+    //delete bus 
+    string busID;
+    cout<<"PLease input bus id you want to delete"<<endl;
+    cin>>busID;
+
+    bool isFound = false;
+    char confirm;
+    loadData();
+    for (auto it = buses.begin(); it != buses.end(); ++it) {
+        if ((*it)["id"] == busID) {
+            isFound = true;
+
+            
+            cout << "Bus found:" << endl;
+            cout << endl << endl << "----------------------Bus-----------------------" << endl << endl;
+            cout << "ID: " << (*it)["id"] << endl;
+            cout << "Bus Type: " << (*it)["busType"] << endl;
+            cout << "DepartureTime: " << (*it)["departureTime"] << endl;
+            cout << "route: " << (*it)["route"]["from"]<<"to " <<(*it)["route"]["to"]<< endl;
+            cout << "Seat Capacity: " << (*it)["seatCap"] << endl;
+            cout << "Seat left: " << (*it)["seatLeft"] << endl;
+            cout << "Seat price: " << (*it)["seatPrice"] << endl;
+            cout << endl << "__________________________________________________" << endl << endl;
+
+            if((*it)["seatLeft"] != (*it)["seatCap"]){
+                cout <<endl<< "Cannot delete bus " << busID << " because it have active reservations." << endl;
+                break;
+            }
+
+            cout << "Are you sure you want to delete this user with ID " << userID << " (y/n)? ";
+            cin >> confirm;
+
+            if (confirm =='y' || confirm == 'Y'){
+                buses.erase(it); 
+                cout << "Bus deleted successfully." << endl;
+
+                
+                data["buses"] = buses;
+
+                
+                ofstream writeData(dataFilePath);
+                if (!writeData.is_open()) {
+                    cerr << "Error: Unable to save changes to file." << endl;
+                } else {
+                    writeData << data.dump(4);  
+                    writeData.close();
+                    cout << "Changes saved to file." << endl;
+                }
+            }else {
+                
+                cout << "Bus deletion canceled." << endl;
+            }
+            break;
+        }
+
+    }
+    if (!isFound){
+        cout<<"Bus does not exist"<<endl;
+    }
+
+}
 
 void User::getAllUsers() {
     int option;
@@ -422,7 +483,7 @@ void User::deleteUser() {
             cout << "Are you sure you want to delete this user with ID " << userID << " (y/n)? ";
             cin >> confirm;
 
-            if (confirm == 'y') {
+            if (confirm =='y' || confirm == 'Y') {
                 
                 users.erase(it); 
                 cout << "User deleted successfully." << endl;
