@@ -304,21 +304,89 @@ void User::printHistory(vector<int> seatNums, string bID)
 void User::addAdmin() {}
 void User::addBus() {}
 void User::changeBusSettings() {}
+
 void User::getAllUsers() {
-cout<<endl<<endl<<"----------------------All Users-------------------------"<<endl<<endl;
+    int option;
+    string userID;
+    bool isFound = false;
     loadData();
-    for (const auto& user : users){
-        cout<<"ID: "<<user["id"]<<endl;
-        cout<<"Name: "<<user["name"]["firstName"]<<" "<<user["name"]["lastName"]<<endl;
-        cout<< "Age: "<< user["age"] << endl;
-        cout<< "Email: "<< user["email"] << endl;
-        cout<<"Is Admin: "<<user["isAdmin"]<<endl;
-        cout<<"Email: "<<user["email"]<<endl;
-        cout<<"Password: "<<user["password"]<<endl;
-        cout<<"Reservation: "<<user["resID"];
-        cout<<endl<<endl<<"__________________________________________________"<<endl<<endl;;
+
+    // Option selection loop
+    while (true) {
+        cout << "Please input option (1/2):" << endl;
+        cout << "1/ View one user by input their ID." << endl;
+        cout << "2/ View all the existing users." << endl;
+        cout << "Input here: ";
+        cin >> option;
+
+        // Check if the option is valid
+        if (option < 1 || option > 2) {
+            cout << "Invalid option, please try again." << endl;
+            continue;
+        }
+        break;  // Exit the loop if option is valid
+    }
+
+    // Option 1: View a user by ID
+    if (option == 1) {
+        while (true) {
+            cout << "Please input user ID: ";
+            cin >> userID;
+
+            // Validate userID length and format
+            if (userID.length() != 7) {
+                cerr << "Invalid length: " << userID << endl;
+                continue;
+            }
+            if (userID[0] != 'U') {
+                cerr << "Invalid format: Does not start with 'U'" << endl;
+                continue;
+            }
+
+            //for search for the user
+            isFound = false;
+            for (auto it = users.begin(); it != users.end(); ++it) {
+                if ((*it)["id"] == userID) {
+                    isFound = true;
+                    // Print user information if found
+                    cout << "\n\nUser found:\n" << endl;
+                    cout << endl << endl << "----------------------Users-----------------------" << endl << endl;
+                    cout << "ID: " << (*it)["id"] << endl;
+                    cout << "Name: " << (*it)["name"]["firstName"] << " " << (*it)["name"]["lastName"] << endl;
+                    cout << "Age: " << (*it)["age"] << endl;
+                    cout << "Email: " << (*it)["email"] << endl;
+                    cout << "Is Admin: " << (*it)["isAdmin"] << endl;
+                    cout << "Password: " << (*it)["password"] << endl;
+                    cout << "Reservation: " << (*it)["resID"] << endl;
+                    cout << endl << "__________________________________________________" << endl << endl;
+                    break;  // Break loop after finding the user
+                }
+            }
+
+            if (!isFound) {
+                cout << "User does not exist." << endl<<"Please try again"<<endl;
+                continue;
+            }
+            break;
+        }
+    } 
+    // Option 2: View all users
+    else {
+        cout << endl << endl << "----------------------All Users-------------------------" << endl << endl;
+        for (const auto& user : users) {
+            cout << "ID: " << user["id"] << endl;
+            cout << "Name: " << user["name"]["firstName"] << " " << user["name"]["lastName"] << endl;
+            cout << "Age: " << user["age"] << endl;
+            cout << "Email: " << user["email"] << endl;
+            cout << "Is Admin: " << user["isAdmin"] << endl;
+            cout << "Password: " << user["password"] << endl;
+            cout << "Reservation: " << user["resID"] << endl;
+            cout << endl << "__________________________________________________" << endl << endl;
+        }
     }
 }
+
+
 void User::deleteUser() {
     string userID;
     cout << "Please input the user ID you want to delete: " << endl;
