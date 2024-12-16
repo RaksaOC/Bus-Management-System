@@ -325,7 +325,7 @@ void User::changeBusSettings() {
             cout << "route: " << (*it)["route"]["from"]<<"to " <<(*it)["route"]["to"]<< endl;
             cout << "Seat Capacity: " << (*it)["seatCap"] << endl;
             cout << "Seat left: " << (*it)["seatLeft"] << endl;
-            cout << "Seat price: " << (*it)["seatPrice"] << endl;
+            cout << "Seat price: " << (*it)["seatPrice"] <<"$"<< endl;
             cout << endl << "__________________________________________________" << endl << endl;
 
             if((*it)["seatLeft"] != (*it)["seatCap"]){
