@@ -68,32 +68,41 @@ User *System::authenticateUser() // Prompts the user to choose between login and
     while (true)
     {
         int choice = this->logInOrSignUp();
-        if (choice == 0)
+        while (true)
         {
-            cout << "Press any key to exit..." << endl;
-            getchar();
-            return;
-        }
-
-        loadUser();
-        switch (choice)
-        {
-        case 1:
-            return this->logIn();
-            if (this->logIn() == nullptr)
+            if (choice == 0)
             {
-                break;
+                cout << "Press any key to exit..." << endl;
+                getchar();
+                exit(0);
             }
-            break;
-        case 2:
-            return this->signUp();
-            break;
-        default:
-            // will never get here
-            break;
+
+            loadUser();
+            if (choice == 1)
+            {
+                User *userLogIn = this->logIn();
+                if (userLogIn == nullptr)
+                {
+                    // Handle the case where log in failed, if needed
+                    // For now, we simply break to continue the loop
+                    break;
+                }
+                return userLogIn;
+            }
+            else if (choice == 2)
+            {
+                User *userSignUp = this->signUp();
+                if (userSignUp == nullptr)
+                {
+                    // Handle the case where sign up failed, if needed
+                    // For now, we simply break to continue the loop
+                    break;
+                }
+                return userSignUp;
+            }
         }
-        return nullptr;
     }
+    return nullptr;
 }
 
 //  CORE METHODS ==============================================================================
@@ -109,6 +118,10 @@ User *System::signUp()
 {
     /*Get attributes*/
     string fName = inputFirstName();
+    if (fName == "-b")
+    {
+        return nullptr;
+    }
     string lName = inputLastName();
     int age = inputAge();
     string email = inputEmail();
@@ -153,6 +166,11 @@ User *System::logIn()
 {
     /*Get attributes*/
     string email = getEmail();
+    if (email == "-b")
+    {
+        return nullptr;
+    }
+
     string password = getPassword(email);
     string fName = getFirstName(email);
     string lName = getLastName(email);
@@ -192,6 +210,10 @@ string System::inputFirstName()
     {
         cout << "Enter First Name \n> ";
         cin >> fName;
+        if (fName == "-b")
+        {
+            return "-b";
+        }
         if (isNameValid(fName, "")) // ref to valid.cpp
         {
             break;
@@ -383,6 +405,11 @@ string System::getEmail()
                 break;
             }
         }
+        if (email == "-b")
+        {
+            return "-b";
+        }
+
         if (foundEmail)
         {
             return email;

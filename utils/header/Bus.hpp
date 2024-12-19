@@ -55,6 +55,7 @@ public:
     // For Refund
     json refundSeat(vector<int> seatNumsToRefund);
     json refundSeats(vector<int> seatNumsToRefund);
+    void setSeatLeft(int s) { this->seatLeft = s; }
 
     int getSeatLeft() { return this->seatLeft; };
     vector<int> getWantedSeatNums() { return this->wantedSeatNums; };

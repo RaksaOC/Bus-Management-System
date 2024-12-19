@@ -107,9 +107,9 @@ public:
     void checkUserType();
 
     // Core User Methods
-    void reserve();     // Method for reserving a bus ticket
-    void refund();      // Method for refunding a reservation
-    void viewHistory(); // Method for viewing reservation history
+    string reserve();     // Method for reserving a bus ticket
+    string refund();      // Method for refunding a reservation
+    string viewHistory(); // Method for viewing reservation history
 
     // Core Admin Methods
     void addAdmin();
@@ -146,38 +146,59 @@ void User::checkUserType()
     }
     else
     {
-        int choice = serviceMenu();
-        switch (choice)
+        while (true)
         {
-        case 1:
-            this->reserve();
-            break;
-        case 2:
-            this->refund();
-            break;
-        case 3:
-            this->viewHistory();
-            break;
-        default:
-            break;
+            int choice = serviceMenu();
+            while (true)
+            {
+                if (choice == 1)
+                {
+                    string back = this->reserve();
+                    if (back == "-b")
+                    {
+                        break;
+                    }
+                }
+                else if (choice == 2)
+                {
+                    string back = this->refund();
+                    if (back == "-b")
+                    {
+                        break;
+                    }
+                }
+                else if (choice == 3)
+                {
+                    string back = this->viewHistory();
+                    if (back == "-b")
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }
 
 // Method for reserving a bus ticket
 
-void User::reserve()
+string User::reserve()
 {
     loadData();
     destinationMenu();
     string from = inputFrom();
+    if (from == "-b")
+    {
+        return "-b";
+    }
+
     string to = inputTo(from);
     vector<int> busIdx = showAvailableBuses(from, to);
-
     Bus bus = selectBus(busIdx);
+
     if (bus.getSeatLeft() == 0)
     {
-        return; // this is to check that its been waitListed
+        return ""; // this is to check that its been waitListed
     }
 
     bus.showSeatLayout();
@@ -232,10 +253,11 @@ void User::reserve()
     }
 
     printThanks();
+    return "";
 }
 
 // // Method for refunding a reservation
-void User::refund()
+string User::refund()
 {
     loadData();
     if (!this->resID.empty())
@@ -244,10 +266,14 @@ void User::refund()
         if (refundableResID.empty())
         {
             cout << "Error: No refundable tickets\n";
-            return;
+            return "";
         }
 
         int choice = inputRefund();
+        if (choice == -1)
+        {
+            return "-b";
+        }
 
         string resIDToRefund = refundableResID.at(choice - 1);
         vector<int> seatNumsToRefund = getSeatNumsToRefund(resIDToRefund);
@@ -319,7 +345,7 @@ void User::refund()
                     if (waitlist.processWaitlistSingle(busID, seatNumRefunded))
                     {
                         cout << "Your seat has been taken by a wait listed user\n";
-                        return;
+                        return "";
                     }
                 }
                 else
@@ -360,8 +386,9 @@ void User::refund()
     else
     {
         cout << "Error: No reservation history\n";
-        return;
+        return "";
     }
+    return "";
 }
 
 vector<int> User::getSeatNumsToRefund(string resID)
@@ -536,6 +563,11 @@ int User::inputRefund()
     {
         cout << "Select the ticket to refund\n> ";
         cin >> choice;
+        if (choice == -1)
+        {
+            return -1;
+        }
+
         if (choice <= 0 || choice > this->resID.size())
         {
             cout << "Error: Invalid choice" << endl;
@@ -549,7 +581,7 @@ int User::inputRefund()
     return choice;
 }
 
-void User::viewHistory()
+string User::viewHistory()
 {
     loadData();
     stack<string> resIDStack;
@@ -562,7 +594,7 @@ void User::viewHistory()
     if (resIDStack.empty())
     {
         cout << "Error: No reservation history\n";
-        return;
+        return "";
     }
 
     // Process each reservation ID from the stack
@@ -606,6 +638,10 @@ void User::viewHistory()
 
         resIDStack.pop();
     }
+    string back;
+    cout << "> ";
+    cin >> back;
+    return back;
 }
 
 void User::printHistory(vector<int> seatNums, string bID, string status)
@@ -687,6 +723,11 @@ string User::inputFrom()
         cout << "From\n> ";
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the buffer
         getline(cin, from);
+        if (from == "-b")
+        {
+            return "-b";
+        }
+
         if (isFromValid(from, routes))
         {
             break;
@@ -695,7 +736,7 @@ string User::inputFrom()
         {
             cout << invalidInputMessage;
         }
-    } 
+    }
     return from;
 }
 
@@ -771,6 +812,13 @@ Bus User::selectBus(vector<int> busIdxArr)
     {
         cout << "Select a bus \n> ";
         cin >> choice;
+        if (choice == -1)
+        {
+            Bus bus;
+            bus.setSeatLeft(-1);
+            return bus.getSeatLeft();
+        }
+        
         choice = choice - 1;
         int busIndex = busIdxArr[choice];
 

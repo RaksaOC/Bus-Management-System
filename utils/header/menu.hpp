@@ -29,10 +29,11 @@ int logInOrSignUpMenu()
     int authChoice;
     do
     {
+        cout << "\n0. Exit Program";
         cout << "\n1. Log in\n";
         cout << "2. Sign Up\n\n> ";
         cin >> authChoice;
-        if (cin.fail() || authChoice < 1 || authChoice > 2)
+        if (cin.fail() || authChoice < 0 || authChoice > 2)
         {
             cout << invalidInputMessage;
             clearInput();
@@ -56,12 +57,11 @@ int serviceMenu()
                                                 ╚═╝╚═╝╩╚═ ╚╝ ╩╚═╝╚═╝╚═╝
     )";
         cout << endl;
-        cout << "0. Exit Program\n";
         cout << "1. Booking\n";
         cout << "2. Refund\n";
         cout << "3. View History\n> ";
         cin >> service;
-        if (cin.fail() || service < 0 || service > 3)
+        if (cin.fail() || service < 1|| service > 3)
         {
             clearInput();
             cout << invalidInputMessage;
