@@ -51,7 +51,8 @@ bool isEmailAvailable(string email)
     ifstream readData(dataFile);
     if (!readData.is_open())
     {
-        cerr <<  invalidFilePath + dataFile + '\n';
+        cerr << openFileFailMessage;
+        cerr << dataFile;
         return false;
     }
 

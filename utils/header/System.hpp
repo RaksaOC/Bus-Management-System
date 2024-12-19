@@ -65,40 +65,18 @@ User *System::authenticateUser() // Prompts the user to choose between login and
 {
     // LOGIC : navigate user to whether the login page or the signup page
     printBusManagementSystem(); // ref to menu.hpp
+
     while (true)
     {
+        loadUser();
         int choice = this->logInOrSignUp();
         while (true)
         {
-<<<<<<< HEAD
-            if (choice == 0)
-=======
-            cout << "Press any key to exit..." << endl;
-            getchar();
-            exit(0);
-        }
-
-        loadUser();
-        switch (choice)
-        {
-        case 1:
-            return this->logIn();
-            if (this->logIn() == nullptr)
->>>>>>> UI-improvement
-            {
-                cout << "Press any key to exit..." << endl;
-                getchar();
-                exit(0);
-            }
-
-            loadUser();
             if (choice == 1)
             {
                 User *userLogIn = this->logIn();
                 if (userLogIn == nullptr)
                 {
-                    // Handle the case where log in failed, if needed
-                    // For now, we simply break to continue the loop
                     break;
                 }
                 return userLogIn;
@@ -108,8 +86,6 @@ User *System::authenticateUser() // Prompts the user to choose between login and
                 User *userSignUp = this->signUp();
                 if (userSignUp == nullptr)
                 {
-                    // Handle the case where sign up failed, if needed
-                    // For now, we simply break to continue the loop
                     break;
                 }
                 return userSignUp;
@@ -147,7 +123,8 @@ User *System::signUp()
     ifstream readFile(dataFilePath);
     if (!readFile.is_open())
     {
-        cerr << openFileFailMessage + dataFilePath;
+        cerr << openFileFailMessage;
+        cerr << dataFilePath;
     }
     json allData;
     readFile >> allData;
@@ -167,7 +144,8 @@ User *System::signUp()
     ofstream writeFile(dataFilePath);
     if (!writeFile.is_open())
     {
-        cerr << openFileFailMessage + dataFilePath;
+        cerr << openFileFailMessage;
+        cerr << dataFilePath;
     }
     writeFile << allData.dump(4);
     writeFile.close();
@@ -209,7 +187,8 @@ void System::loadUser()
     ifstream readData(dataFilePath);
     if (!readData.is_open())
     {
-        cerr << openFileFailMessage + dataFilePath;
+        cerr << openFileFailMessage;
+        cerr << dataFilePath;
         return;
     }
     readData >> allData;
@@ -224,7 +203,7 @@ string System::inputFirstName()
 
     while (1)
     {
-        cout << "\033[36mEnter First Name \033[0m \n> ";
+        cout << "\033[36mEnter First Name \033[0m \n\n> ";
         cin >> fName;
         if (fName == "-b")
         {
@@ -233,8 +212,10 @@ string System::inputFirstName()
         if (isNameValid(fName, "")) // ref to valid.cpp
         {
             break;
-        }else{
-            cout<<invalidNameMessage;
+        }
+        else
+        {
+            cout << invalidNameMessage;
         }
     }
     fName = toLowerInput(fName);
@@ -249,13 +230,15 @@ string System::inputLastName()
 
     while (1)
     {
-        cout << "\033[36mEnter Last Name \033[0m \n> ";
+        cout << "\033[36mEnter Last Name \033[0m \n\n> ";
         cin >> lName;
         if (isNameValid(lName, ""))
         {
             break;
-        }else{
-            cout<<invalidNameMessage;
+        }
+        else
+        {
+            cout << invalidNameMessage;
         }
     }
     lName = toLowerInput(lName);
@@ -270,7 +253,7 @@ int System::inputAge()
 
     while (true)
     {
-        cout << "\033[36mEnter Age \033[0m \n> ";
+        cout << "\033[36mEnter Age \033[0m \n\n> ";
         cin >> age;
         if (cin.fail())
         {
@@ -282,8 +265,10 @@ int System::inputAge()
         if (isAgeValid(age))
         {
             break;
-        }else{
-            cout<<invalidAgeMessage;
+        }
+        else
+        {
+            cout << invalidAgeMessage;
         }
     }
 
@@ -301,14 +286,16 @@ string System::inputEmail()
         {
             cout << "\n\033[33mHint: log in instead \033[0m\n";
         }
-        cout << "\033[36mEnter Email \033[0m \n> ";
+        cout << "\033[36mEnter Email \033[0m \n\n> ";
         cin >> email;
         email = toLowerInput(email);                            // ref to valid.cpp
         if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
         {
             break;
-        }else{
-            cout<< invalidEmailFormatMessage;
+        }
+        else
+        {
+            cout << invalidEmailFormatMessage;
         }
         i++;
     }
@@ -322,7 +309,7 @@ string System::inputPassword()
 
     while (1)
     {
-        cout << "\033[36mEnter Password \033[0m \n> ";
+        cout << "\033[36m\nEnter Password \033[0m \n\n> ";
         cin >> pass;
         // UNCOMMENT THIS WHEN DONE
         // if (isPasswordValid(pass))
@@ -342,13 +329,15 @@ string System::confirmPassword(string pass) // password thats passed is passed a
 
     while (true)
     {
-        cout << "\033[36mEnter Password Again \033[0m\n> ";
+        cout << "\033[36m\nEnter Password Again \033[0m\n\n> ";
         cin >> passCf;
         if (isPasswordSame(pass, passCf)) // reference to validation.cpp
         {
             break;
-        }else{
-            cout<< invalidPasswordMessage;
+        }
+        else
+        {
+            cout << invalidPasswordMessage;
         }
     }
 
@@ -421,7 +410,7 @@ string System::getEmail()
 
     while (1)
     {
-        cout << "\033[36mEnter Email \033[0m\n> ";
+        cout << "\033[36mEnter Email \033[0m\n\n> ";
         cin >> email;
         email = toLowerInput(email); // reference to validation.cpp
 
@@ -458,7 +447,7 @@ string System::getPassword(string email)
 
     while (1)
     {
-        cout << "\033[36mEnter Password \033[0m\n> ";
+        cout << "\033[36m\nEnter Password \033[0m\n\n> ";
         cin >> pass;
         pass = hashPassword(pass);
         for (const auto &user : userData)

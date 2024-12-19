@@ -63,7 +63,7 @@ int Waitlist::choiceToEnterWaitlist()
     int choice;
     while (1)
     {
-        cout << "\nWould you like to enter the waitlist for this bus?\n1. Yes\n2. No\n> ";
+        cout << "\nWould you like to enter the waitlist for this bus?\n1. Yes\n2. No\n\n> ";
         cin >> choice;
         if (choice < 1 || choice > 2)
         {
@@ -94,7 +94,7 @@ void Waitlist::addToWaitlist(string uID, string bID)
     int choice;
     while (1)
     {
-        cout << "Enter booking type\n1. Single\n 2. Bulk (coming soon)\n> ";
+        cout << "Enter booking type\n1. Single\n 2. Bulk (Coming Soon)\n\n> ";
         cin >> choice;
         if (choice != 1) // to change to include bulk reservaiton
         {
@@ -121,13 +121,13 @@ void Waitlist::addToWaitlistSingle()
     int waitType;
     cout << "\nWould you like to waitlist for a specific seat or any?" << endl;
     cout << "1. Specific\n";
-    cout << "2. Any Seat\n> ";
+    cout << "2. Any Seat\n\n> ";
     cin >> waitType;
     if (waitType == 1)
     {
         while (1)
         {
-            cout << "Enter seat Number\n> ";
+            cout << "Enter seat Number\n\n> ";
             cin >> seatNum;
             cout << "The cap of bus is : " << busToModify["seatCap"] << endl;
             if (seatNum <= busToModify["seatCap"] && seatNum > 0)
@@ -160,13 +160,13 @@ void Waitlist::addToWaitlistBulk()
     int waitType;
     cout << "\nWould you like to waitlist for a specific seat or any?" << endl;
     cout << "1. Specific\n";
-    cout << "2. Any Seat\n> ";
+    cout << "2. Any Seat\n\n> ";
     cin >> waitType;
     if (waitType == 1)
     {
         while (1)
         {
-            cout << "Enter the number of seats to book\n> ";
+            cout << "Enter the number of seats to book\n\n> ";
             cin >> numOfSeatsToBook;
             if (numOfSeatsToBook < 2 || numOfSeatsToBook > busToModify["seatCap"])
             {
@@ -199,7 +199,7 @@ void Waitlist::addToWaitlistBulk()
     else
     {
         int numOfSeatsToWaitlist;
-        cout << "Enter the number of seats to reserve for\n> ";
+        cout << "Enter the number of seats to reserve for\n\n> ";
         cin >> numOfSeatsToWaitlist;
         vector<int> empty;
         generateWaitlistObj(2, 2, empty, numOfSeatsToWaitlist);
@@ -325,6 +325,7 @@ void Waitlist::storeDataWaitList()
     if (!storeData.is_open())
     {
         cerr << openFileFailMessage;
+        cerr << dataFilePath;
         return;
     }
     data["reservations"] = reservations;

@@ -35,7 +35,7 @@
                 "to": "Battambang"
             },
             "seatCap": 6,
-            "seatLeft": 5,
+            "seatLeft": 3,
             "seatPrice": 15,
             "seats": [
                 {
@@ -44,11 +44,11 @@
                 },
                 {
                     "seatNum": 2,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 3,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 4,
@@ -411,6 +411,70 @@
                 "status": "active",
                 "time": "Thu Dec 19 15:41:53 2024",
                 "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000005",
+                "seatNumber": 2,
+                "status": "active",
+                "time": "Thu Dec 19 21:52:35 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000006",
+                "seatNumber": 3,
+                "status": "active",
+                "time": "Thu Dec 19 21:59:16 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000007",
+                "seatNumber": 4,
+                "status": "inactive",
+                "time": "Thu Dec 19 22:02:16 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000008",
+                "seatNumber": 5,
+                "status": "inactive",
+                "time": "Thu Dec 19 22:04:05 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000009",
+                "seatNumber": 6,
+                "status": "inactive",
+                "time": "Thu Dec 19 22:07:04 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0003",
+                "id": "R000010",
+                "seatNumber": 1,
+                "status": "inactive",
+                "time": "Thu Dec 19 22:10:07 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0003",
+                "id": "R000011",
+                "seatNumber": 2,
+                "status": "inactive",
+                "time": "Thu Dec 19 22:14:46 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0003",
+                "id": "R000012",
+                "seatNumber": 3,
+                "status": "inactive",
+                "time": "Thu Dec 19 22:15:51 2024",
+                "userID": "U000001"
             }
         ]
     },
@@ -478,7 +542,15 @@
                 "R000001",
                 "R000002",
                 "R000003",
-                "R000004"
+                "R000004",
+                "R000005",
+                "R000006",
+                "R000007",
+                "R000008",
+                "R000009",
+                "R000010",
+                "R000011",
+                "R000012"
             ]
         }
     ],
