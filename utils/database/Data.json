@@ -522,7 +522,7 @@
             "age": 19,
             "email": "sigmaboy@gmail.com",
             "id": "U000005",
-            "isAdmin": false,
+            "isAdmin": true,
             "name": {
                 "firstName": "Sigma",
                 "lastName": "Boy"
