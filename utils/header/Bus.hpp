@@ -42,16 +42,46 @@ public:
     };
 
     // Core Bus Methods
+    json refundAllSeat(vector <int>);
     void printHistory(vector <string>);
     void printBusInfo();
     void showSeatLayout(); // Displays seat layout of the bus
+    json singleRefund(vector <int>);
+    json bulkRefund(vector <int>);
     json reserveSeat();    // Reserves a single seat
     json reserveSeats();   // Reserves multiple seats
     int getSeatLeft() { return this->seatLeft; };
     vector<int> getSeatNumChanges() { return this->numOfSeatsChanged; };
 };
 
+json Bus::bulkRefund(vector <int> seatNum){
+    int choice;
+    cout<<"1. Refund all seats\n2. Refund one seat\n> ";
+    cin>>choice;
+    json seatsToChange;
+    switch(choice){
+        case 1:
+            seatsToChange= refundAllSeat(seatNum);
+            break;
+        case 2:
+        //fuck you
+            break;
+    }
+    return seatsToChange;
+}
+json Bus::refundAllSeat(vector <int> seatNum){
+    int i=0;
+    for(auto & seat: seats){
+        if(seat["seatNum"]==seatNum.at(i)){
+            seat["status"]=="available";
+            i++;
+        }
+    }
+    return seats;
+}
+
 void Bus::printBusInfo()
+
 {
     cout << "\n\n\t\t\t\tCHOSEN BUS INFO\n\n";
     cout << "*******************************************" << endl;
