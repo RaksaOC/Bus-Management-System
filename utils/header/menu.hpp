@@ -5,8 +5,121 @@
 #include <fstream>
 
 #define invalidInputMessage "\n[⚠] \033[31mError: Invalid Input\033[0m\n\n";
+#define invalidPasswordMessage "\n[⚠] \033[31mError: Invalid Password\033[0m\n\n";
+#define invalidEmailFormatMessage "\n[⚠] \033[31mError: Invalid Password\033[0m\n\n";
+#define openFileFailMessage "\n[⚠] \033[31mError: Cannot open\033[0m\n\n";
+#define invalidNameMessage "\n[⚠] \033[31mError: Invalid Name Format\033[0m\n\n";
+#define invalidNameFormatMessage "\n[⚠] \033[31mError: Invalid Name Format, Name Cannot Contain numbers\033[0m\n\n";
+#define invalidAgeMessage "\n[⚠] \033[31mError: Invalid Age\033[0m\n\n";
+#define incorrectEmailMessage "\n[⚠] \033[31mError: Incorrect Email\033[0m\n\n";
+#define incorrectPasswordMessage "\n[⚠] \033[31mError: Incorrect Password\033[0m\n\n";
+#define seatUnavailableMessage "\n[⚠] \033[31mError: Seat Unavailable\033[0m\n\n";
+#define invalidDestinationMessage "\n[⚠] \033[31mError: Invalid Destination\033[0m\n\n";
+#define tooYoungMessage "\n[⚠] \033[31mError: Invalid User Must Be Older Than 13 Years Old\033[0m\n\n";
+#define tooOldMessage "\n[⚠] \033[31mError: User Is Too Old\033[0m\n\n";
+#define invalidFilePath "\n[⚠] \033[31mError: Failed To Open file, Path: \033[0m\n\n";
+#define takenEmail "\n[⚠] \033[31mError: Email Is Taken \033[0m\n\n";
+#define passwordTooLong "\n[⚠] \033[31mError: Password Must Be Longer Than 6 Characters \033[0m\n\n";
 
 using namespace std;
+
+void historyMenu(){
+    cout << R"(            
+                                                ╦ ╦╦╔═╗╔╦╗╔═╗╦═╗╦ ╦
+                                                ╠═╣║╚═╗ ║ ║ ║╠╦╝╚╦╝
+                                                ╩ ╩╩╚═╝ ╩ ╚═╝╩╚═ ╩  
+    )" << endl;
+}
+
+void resTypeMenu(){
+    cout << R"(        
+                                  ╦═╗╔═╗╔═╗╔═╗╦═╗╦  ╦╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦ ╦╔═╗╔═╗
+                                  ╠╦╝║╣ ╚═╗║╣ ╠╦╝╚╗╔╝╠═╣ ║ ║║ ║║║║   ║ ╚╦╝╠═╝║╣ 
+                                  ╩╚═╚═╝╚═╝╚═╝╩╚═ ╚╝ ╩ ╩ ╩ ╩╚═╝╝╚╝   ╩  ╩ ╩  ╚═╝
+)" << endl;
+}
+void refundTypeMenu(){
+    cout << R"(        
+                                          ╦═╗╔═╗╔═╗╦ ╦╔╗╔╔╦╗  ╔╦╗╦ ╦╔═╗╔═╗
+                                          ╠╦╝║╣ ╠╣ ║ ║║║║ ║║   ║ ╚╦╝╠═╝║╣ 
+                                          ╩╚═╚═╝╚  ╚═╝╝╚╝═╩╝   ╩  ╩ ╩  ╚═╝
+)" << endl; 
+}
+void refundMenu(){
+    cout << R"(        
+                                                 ╦═╗╔═╗╔═╗╦ ╦╔╗╔╔╦╗
+                                                 ╠╦╝║╣ ╠╣ ║ ║║║║ ║║
+                                                 ╩╚═╚═╝╚  ╚═╝╝╚╝═╩╝
+)" << endl; 
+}
+void LoginMenu(){
+    cout << R"(        
+                                                  ╦  ╔═╗╔═╗  ╦╔╗╔
+                                                  ║  ║ ║║ ╦  ║║║║
+                                                  ╩═╝╚═╝╚═╝  ╩╝╚╝
+)" << endl;
+}
+void signupMenu(){
+    cout << R"(        
+                                                ╔═╗╦╔═╗╔╗╔  ╦ ╦╔═╗
+                                                ╚═╗║║ ╦║║║  ║ ║╠═╝
+                                                ╚═╝╩╚═╝╝╚╝  ╚═╝╩ 
+)" << endl;
+}
+void thankYouForTravelingWithUs(){
+    cout << R"(            
+                                        ╔╦╗╦ ╦╔═╗╔╗╔╦╔═  ╦ ╦╔═╗╦ ╦  ╔═╗╔═╗╦═╗     
+                                         ║ ╠═╣╠═╣║║║╠╩╗  ╚╦╝║ ║║ ║  ╠╣ ║ ║╠╦╝     
+                                         ╩ ╩ ╩╩ ╩╝╚╝╩ ╩   ╩ ╚═╝╚═╝  ╚  ╚═╝╩╚═     
+                                    ╔╦╗╦═╗╔═╗╦  ╦╔═╗╦  ╦╔╗╔╔═╗  ╦ ╦╦╔╦╗╦ ╦  ╦ ╦╔═╗
+                                     ║ ╠╦╝╠═╣╚╗╔╝║╣ ║  ║║║║║ ╦  ║║║║ ║ ╠═╣  ║ ║╚═╗
+                                     ╩ ╩╚═╩ ╩ ╚╝ ╚═╝╩═╝╩╝╚╝╚═╝  ╚╩╝╩ ╩ ╩ ╩  ╚═╝╚═╝
+)" << endl;
+}
+void seccessRefundMenu(){
+    cout << R"(            
+                               ╔═╗╦ ╦╔═╗╔═╗╔═╗╔═╗╔═╗╔═╗╦ ╦╦  ╦ ╦ ╦  ╦═╗╔═╗╔═╗╦ ╦╔╗╔╔╦╗╔═╗╔╦╗
+                               ╚═╗║ ║║  ║  ║╣ ╚═╗╚═╗╠╣ ║ ║║  ║ ╚╦╝  ╠╦╝║╣ ╠╣ ║ ║║║║ ║║║╣  ║║
+                               ╚═╝╚═╝╚═╝╚═╝╚═╝╚═╝╚═╝╚  ╚═╝╩═╝╩═╝╩   ╩╚═╚═╝╚  ╚═╝╝╚╝═╩╝╚═╝═╩╝
+)" << endl;
+}
+void addedToWaitListMenu(){
+    cout << R"(            
+                                       ╔═╗╔╦╗╔╦╗╔═╗╔╦╗  ╔╦╗╔═╗  ╦ ╦╔═╗╦╔╦╗╦  ╦╔═╗╔╦╗
+                                       ╠═╣ ║║ ║║║╣  ║║   ║ ║ ║  ║║║╠═╣║ ║ ║  ║╚═╗ ║ 
+                                       ╩ ╩═╩╝═╩╝╚═╝═╩╝   ╩ ╚═╝  ╚╩╝╩ ╩╩ ╩ ╩═╝╩╚═╝ ╩ 
+)" << endl;
+}
+void availableBusMenu(){
+    cout << R"(            
+                                        ╔═╗╦  ╦╔═╗╦╦  ╔═╗╔╗ ╦  ╔═╗  ╔╗ ╦ ╦╔═╗╔═╗╔═╗
+                                        ╠═╣╚╗╔╝╠═╣║║  ╠═╣╠╩╗║  ║╣   ╠╩╗║ ║╚═╗║╣ ╚═╗
+                                        ╩ ╩ ╚╝ ╩ ╩╩╩═╝╩ ╩╚═╝╩═╝╚═╝  ╚═╝╚═╝╚═╝╚═╝╚═╝
+)" << endl;
+}
+void resMenu(){
+    cout << R"(            
+                                            ╦═╗╔═╗╔═╗╔═╗╦═╗╦  ╦╔═╗╔╦╗╦╔═╗╔╗╔  
+                                            ╠╦╝║╣ ╚═╗║╣ ╠╦╝╚╗╔╝╠═╣ ║ ║║ ║║║║  
+                                            ╩╚═╚═╝╚═╝╚═╝╩╚═ ╚╝ ╩ ╩ ╩ ╩╚═╝╝╚╝  
+)" << endl;
+}
+void resHistoryMenu(){
+    cout << R"(            
+                                   ╦═╗╔═╗╔═╗╔═╗╦═╗╦  ╦╔═╗╔╦╗╦╔═╗╔╗╔  ╦ ╦╦╔═╗╔╦╗╔═╗╦═╗╦ ╦
+                                   ╠╦╝║╣ ╚═╗║╣ ╠╦╝╚╗╔╝╠═╣ ║ ║║ ║║║║  ╠═╣║╚═╗ ║ ║ ║╠╦╝╚╦╝
+                                   ╩╚═╚═╝╚═╝╚═╝╩╚═ ╚╝ ╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╚═╝ ╩ ╚═╝╩╚═ ╩  
+)" << endl;
+}
+void seatsMenu(){
+    cout << R"(            
+                                                    ╔═╗╔═╗╔═╗╔╦╗╔═╗
+                                                    ╚═╗║╣ ╠═╣ ║ ╚═╗
+                                                    ╚═╝╚═╝╩ ╩ ╩ ╚═╝
+)" << endl;
+}
+
+
 
 void userAuthMenu()
 {
@@ -29,9 +142,15 @@ int logInOrSignUpMenu()
     int authChoice;
     do
     {
+<<<<<<< HEAD
         cout << "\n0. Exit Program";
         cout << "\n1. Log in\n";
         cout << "2. Sign Up\n\n> ";
+=======
+        cout << "\033[31m0. \033[0m Exit Program\n";
+        cout << "\n\033[36m1. \033[0m Log in\n";
+        cout << "\033[36m2. \033[0m Sign Up\n\n> ";
+>>>>>>> UI-improvement
         cin >> authChoice;
         if (cin.fail() || authChoice < 0 || authChoice > 2)
         {
@@ -57,9 +176,15 @@ int serviceMenu()
                                                 ╚═╝╚═╝╩╚═ ╚╝ ╩╚═╝╚═╝╚═╝
     )";
         cout << endl;
+<<<<<<< HEAD
         cout << "1. Booking\n";
         cout << "2. Refund\n";
         cout << "3. View History\n> ";
+=======
+        cout << "\033[36m1. \033[0m Booking\n";
+        cout << "\033[36m2. \033[0m Refund\n";
+        cout << "\033[36m3. \033[0m View History\n> ";
+>>>>>>> UI-improvement
         cin >> service;
         if (cin.fail() || service < 1|| service > 3)
         {
@@ -80,11 +205,9 @@ int bookingTypeMenu() // choose single or bulk booking
     int typeOfBooking; 
     do
     {
-        cout << "\n\n\t\t\t    BOOKING TYPE\n\n";
-        cout << "0. Back to bus type selection menu\n";
-        cout << "1. Book one ticket\n";
-        cout << "2. Book multiple tickets\n";
-        cout << "Enter your desired booking (1/2): ";
+        cout << "\033[31m0. \033[0m Back to bus type selection menu\n";
+        cout << "\033[36m1. \033[0m Book one ticket\n";
+        cout << "\033[36m2. \033[0m Book multiple tickets\n\n> ";
         cin >> typeOfBooking;
         if (cin.fail() || typeOfBooking < 0 || typeOfBooking > 2)
         {

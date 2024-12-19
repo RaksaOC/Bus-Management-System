@@ -70,7 +70,21 @@ User *System::authenticateUser() // Prompts the user to choose between login and
         int choice = this->logInOrSignUp();
         while (true)
         {
+<<<<<<< HEAD
             if (choice == 0)
+=======
+            cout << "Press any key to exit..." << endl;
+            getchar();
+            exit(0);
+        }
+
+        loadUser();
+        switch (choice)
+        {
+        case 1:
+            return this->logIn();
+            if (this->logIn() == nullptr)
+>>>>>>> UI-improvement
             {
                 cout << "Press any key to exit..." << endl;
                 getchar();
@@ -116,6 +130,7 @@ int System::logInOrSignUp()
 // Handles the signup process
 User *System::signUp()
 {
+    signupMenu();
     /*Get attributes*/
     string fName = inputFirstName();
     if (fName == "-b")
@@ -132,7 +147,7 @@ User *System::signUp()
     ifstream readFile(dataFilePath);
     if (!readFile.is_open())
     {
-        cerr << "\nError: cannot open" << dataFilePath;
+        cerr << openFileFailMessage + dataFilePath;
     }
     json allData;
     readFile >> allData;
@@ -152,7 +167,7 @@ User *System::signUp()
     ofstream writeFile(dataFilePath);
     if (!writeFile.is_open())
     {
-        cerr << "Error: cannot open file" << dataFilePath;
+        cerr << openFileFailMessage + dataFilePath;
     }
     writeFile << allData.dump(4);
     writeFile.close();
@@ -164,6 +179,7 @@ User *System::signUp()
 // Handles the login process
 User *System::logIn()
 {
+    LoginMenu();
     /*Get attributes*/
     string email = getEmail();
     if (email == "-b")
@@ -193,7 +209,7 @@ void System::loadUser()
     ifstream readData(dataFilePath);
     if (!readData.is_open())
     {
-        cerr << "\nError: cannot open " << dataFilePath;
+        cerr << openFileFailMessage + dataFilePath;
         return;
     }
     readData >> allData;
@@ -208,7 +224,7 @@ string System::inputFirstName()
 
     while (1)
     {
-        cout << "Enter First Name \n> ";
+        cout << "\033[36mEnter First Name \033[0m \n> ";
         cin >> fName;
         if (fName == "-b")
         {
@@ -217,6 +233,8 @@ string System::inputFirstName()
         if (isNameValid(fName, "")) // ref to valid.cpp
         {
             break;
+        }else{
+            cout<<invalidNameMessage;
         }
     }
     fName = toLowerInput(fName);
@@ -231,11 +249,13 @@ string System::inputLastName()
 
     while (1)
     {
-        cout << "Enter Last Name \n> ";
+        cout << "\033[36mEnter Last Name \033[0m \n> ";
         cin >> lName;
         if (isNameValid(lName, ""))
         {
             break;
+        }else{
+            cout<<invalidNameMessage;
         }
     }
     lName = toLowerInput(lName);
@@ -250,18 +270,20 @@ int System::inputAge()
 
     while (true)
     {
-        cout << "Enter Age \n> ";
+        cout << "\033[36mEnter Age \033[0m \n> ";
         cin >> age;
         if (cin.fail())
         {
             clearInput();
-            cout << "\nPlease enter again...\n\n";
+            cout << invalidInputMessage;
             continue;
         }
 
         if (isAgeValid(age))
         {
             break;
+        }else{
+            cout<<invalidAgeMessage;
         }
     }
 
@@ -277,14 +299,16 @@ string System::inputEmail()
     {
         if (i >= 2)
         {
-            cout << "\nHint: log in instead\n";
+            cout << "\n\033[33mHint: log in instead \033[0m\n";
         }
-        cout << "Enter Email \n> ";
+        cout << "\033[36mEnter Email \033[0m \n> ";
         cin >> email;
         email = toLowerInput(email);                            // ref to valid.cpp
         if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
         {
             break;
+        }else{
+            cout<< invalidEmailFormatMessage;
         }
         i++;
     }
@@ -298,13 +322,15 @@ string System::inputPassword()
 
     while (1)
     {
-        cout << "Enter Password \n> ";
+        cout << "\033[36mEnter Password \033[0m \n> ";
         cin >> pass;
         // UNCOMMENT THIS WHEN DONE
         // if (isPasswordValid(pass))
         // {
         //     break;
-        // }
+        // }else {
+        //    cout<<invalidPasswordMessage;
+        //}
         break; // [THIS LINE TO CHANGE]
     }
     return pass;
@@ -316,11 +342,13 @@ string System::confirmPassword(string pass) // password thats passed is passed a
 
     while (true)
     {
-        cout << "Enter Password Again\n> ";
+        cout << "\033[36mEnter Password Again \033[0m\n> ";
         cin >> passCf;
         if (isPasswordSame(pass, passCf)) // reference to validation.cpp
         {
             break;
+        }else{
+            cout<< invalidPasswordMessage;
         }
     }
 
@@ -393,7 +421,7 @@ string System::getEmail()
 
     while (1)
     {
-        cout << "Enter Email\n> ";
+        cout << "\033[36mEnter Email \033[0m\n> ";
         cin >> email;
         email = toLowerInput(email); // reference to validation.cpp
 
@@ -416,7 +444,7 @@ string System::getEmail()
         }
         else
         {
-            cout << "\nError: Email not found\n\n";
+            cout << incorrectEmailMessage;
         }
     }
 
@@ -430,7 +458,7 @@ string System::getPassword(string email)
 
     while (1)
     {
-        cout << "Enter password\n> ";
+        cout << "\033[36mEnter Password \033[0m\n> ";
         cin >> pass;
         pass = hashPassword(pass);
         for (const auto &user : userData)
@@ -447,7 +475,7 @@ string System::getPassword(string email)
         }
         else
         {
-            cout << "\nError: Incorrect Password\n\n";
+            cout << incorrectPasswordMessage;
         }
     }
 

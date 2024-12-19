@@ -200,13 +200,14 @@ string User::reserve()
     {
         return ""; // this is to check that its been waitListed
     }
-
+    seatsMenu();
     bus.showSeatLayout();
 
     json chosenSeat;
     json seatsOfBus;
     vector<int> seatsChangedArr;
     chosenSeat["seatNum"] = -1;
+    resTypeMenu();
     int bType = bookingTypeMenu();
     if (bType == 1)
     {
@@ -252,8 +253,7 @@ string User::reserve()
         generateTicket(seatsChangedArr);
     }
 
-    printThanks();
-    return "";
+    thankYouForTravelingWithUs();
 }
 
 // // Method for refunding a reservation
@@ -338,7 +338,7 @@ string User::refund()
                         }
                     }
                     reservations["singleReservations"] = singleRes;
-                    printThanksRefund();
+                    seccessRefundMenu();
                     storeData();
                     Waitlist waitlist;
                     int seatNumRefunded = bus.getSeatNumChanges().at(0);
@@ -351,7 +351,6 @@ string User::refund()
                 else
                 {
                     json seatsOfModifiedBus = bus.refundSeats(seatNumsToRefund);
-                    cout << "REFUND GOT HERE" << endl;
                     busToModify["seats"] = seatsOfModifiedBus;
                     busToModify["seatLeft"] = bus.getSeatLeft();
                     vector<int> seatNumRemaining = bus.getSeatNumChanges();
@@ -384,9 +383,9 @@ string User::refund()
         }
     }
     else
-    {
-        cout << "Error: No reservation history\n";
-        return "";
+    {   
+        cout << "\033[31mError: No Reservation History \033[0m\n";
+        return;
     }
     return "";
 }
@@ -430,7 +429,7 @@ vector<string> User::refundList()
     {
         resIDStack.push(r);
     }
-    cout << "\nORDERED BY LATEST\n\n";
+    cout << "\n\033[33mError: ORDERED BY LATEST \033[0m\n\n";
     while (!resIDStack.empty())
     {
         allRes.push_back(printRefund(resIDStack.top()));
@@ -498,19 +497,19 @@ string User::printRefund(string resID)
                         if (bus["id"] == busIDToCheck)
                         {
                             cout << "Time: " << bR["time"] << "\n";
-                            cout << "\n*****************************************************************" << endl;
-                            cout << "* Reservation ID: " << resID << "\t\t" << endl;
-                            cout << "* Type: " << bus["busType"] << "\t\t" << endl;
-                            cout << "* Bus ID: " << bus["id"] << "\t\t" << endl;
-                            cout << "* Departure time: " << bus["departureTime"] << "\t\t" << endl;
-                            cout << "* From: " << bus["route"]["from"] << "\t\t" << endl;
-                            cout << "* To: " << bus["route"]["to"] << "\t\t" << endl;
-                            cout << "* Booked Seat numbers: ";
+                            cout << "\n\033[32m***************************************************************** \033[0m" << endl;
+                            cout << "\033[32m* \033[0m Reservation ID: " << resID << "\t\t" << endl;
+                            cout << "\033[32m* \033[0m Type: " << bus["busType"] << "\t\t" << endl;
+                            cout << "\033[32m* \033[0m Bus ID: " << bus["id"] << "\t\t" << endl;
+                            cout << "\033[32m* \033[0m Departure time: " << bus["departureTime"] << "\t\t" << endl;
+                            cout << "\033[32m* \033[0m From: " << bus["route"]["from"] << "\t\t" << endl;
+                            cout << "\033[32m* \033[0m To: " << bus["route"]["to"] << "\t\t" << endl;
+                            cout << "\033[32m* \033[0m Booked Seat numbers: ";
                             for (int s : seatNums)
                             {
                                 cout << s << " ";
                             }
-                            cout << "\n*****************************************************************\n"
+                            cout << "\n\033[32m***************************************************************** \033[0m\n"
                                  << endl;
                             return resID;
                         }
@@ -684,7 +683,7 @@ void User::loadData()
     ifstream readData(dataFilePath);
     if (!readData.is_open())
     {
-        cerr << "Couldn't open file" << endl;
+        cerr << openFileFailMessage + dataFilePath;
         return;
     }
     json allData;
@@ -753,13 +752,14 @@ string User::inputTo(string from)
         }
         else
         {
-            cout << "\nInvalid destination\n";
+            cout << invalidDestinationMessage;
         }
     }
     return to;
 }
 vector<int> User::showAvailableBuses(string f, string t)
 {
+    availableBusMenu();
     vector<int> allIndex;
     vector<int> validIndex;
     int busIdx = 0;
@@ -792,14 +792,14 @@ int User::printBus(json bus, string f, string t, int i) // int *correctCount)
     {
         // correctCount++; // Increment the count of correct buses
         cout << "Bus " << ":\n\n";
-        cout << "*******************************************" << endl;
-        cout << "* ID: " << bus["id"] << endl;
-        cout << "* Type: " << bus["busType"] << endl;
-        cout << "* Departure: " << bus["departureTime"] << endl;
-        cout << "* Number of Seats: " << bus["seatCap"] << endl;
-        cout << "* Remaining Seats: " << bus["seatLeft"] << endl;
-        cout << "* Price: $" << bus["seatPrice"] << endl;
-        cout << "*******************************************" << endl;
+        cout << "\033[35m******************************************* \033[0m" << endl;
+        cout << "\033[35m* \033[0m ID: " << bus["id"] << endl;
+        cout << "\033[35m* \033[0m Type: " << bus["busType"] << endl;
+        cout << "\033[35m* \033[0m Departure: " << bus["departureTime"] << endl;
+        cout << "\033[35m* \033[0m Number of Seats: " << bus["seatCap"] << endl;
+        cout << "\033[35m* \033[0m Remaining Seats: " << bus["seatLeft"] << endl;
+        cout << "\033[35m* \033[0m Price: $" << bus["seatPrice"] << endl;
+        cout << "\033[35m******************************************* \033[0m" << endl;
         return i; // Return the index of the correct bus
     }
     return -1; // Return -1 if the bus doesn't match
@@ -810,7 +810,7 @@ Bus User::selectBus(vector<int> busIdxArr)
     int choice;
     while (1)
     {
-        cout << "Select a bus \n> ";
+        cout << "\033[31mSelect A Seat \033[0m \n> ";
         cin >> choice;
         if (choice == -1)
         {
@@ -825,7 +825,7 @@ Bus User::selectBus(vector<int> busIdxArr)
         busToModify = buses[busIndex];
         if (busToModify["seatLeft"] == 0)
         {
-            cout << "There are no more seats available\n";
+            cout << "\033[31mThere are no more seats available \033[0m\n";
             Waitlist waitlist;
             int waitChoice = waitlist.choiceToEnterWaitlist();
             if (waitChoice == 1)
@@ -843,7 +843,7 @@ Bus User::selectBus(vector<int> busIdxArr)
                 bus.printBusInfo();
                 bus.showSeatLayoutBlank();
                 waitlist.addToWaitlist(this->userID, busID);
-                cout << "Added to waitlist successfully\n";
+                addedToWaitListMenu();
                 return bus;
             }
             else
@@ -941,27 +941,31 @@ void User::generateTicket(vector<int> seatNum)
 {
     int price = busToModify["seatPrice"];
     price *= seatNum.size();
-    cout << "\n\n\t\t\t\tTICKET \n\n";
-    cout << "*******************************************" << endl;
-    cout << "* Reservation ID: " << modifiedUser["resID"][modifiedUser["resID"].size() - 1] << endl;
-    cout << "* Bus ID: " << busToModify["id"] << endl;
-    cout << "* Bus Type: " << busToModify["busType"] << endl;
-    cout << "* Price per seat: $" << busToModify["seatPrice"] << endl;
-    cout << "* Departure Time: " << busToModify["departureTime"] << endl;
+    cout << R"(            
+                                   ╔╦╗╦╔═╗╦╔═╔═╗╔╦╗
+                                    ║ ║║  ╠╩╗║╣  ║ 
+                                    ╩ ╩╚═╝╩ ╩╚═╝ ╩  
+    )" << endl;
+    cout << "\033[32m******************************************* \033[0m" << endl;
+    cout << "\033[32m* \033[0m Reservation ID: " << modifiedUser["resID"][modifiedUser["resID"].size() - 1] << endl;
+    cout << "\033[32m* \033[0m Bus ID: " << busToModify["id"] << endl;
+    cout << "\033[32m* \033[0m Bus Type: " << busToModify["busType"] << endl;
+    cout << "\033[32m* \033[0m Price per seat: $" << busToModify["seatPrice"] << endl;
+    cout << "\033[32m* \033[0m Departure Time: " << busToModify["departureTime"] << endl;
 
     // Print route details
-    cout << "* From: " << busToModify["route"]["from"] << endl;
-    cout << "* To: " << busToModify["route"]["to"] << endl;
+    cout << "\033[32m* \033[0m From: " << busToModify["route"]["from"] << endl;
+    cout << "\033[32m* \033[0m To: " << busToModify["route"]["to"] << endl;
 
     // Print seat details
-    cout << "* Seat Number: ";
+    cout << "\033[32m* \033[0m Seat Number: ";
     for (int s : seatNum)
     {
         cout << s << " ";
     }
     cout << endl
-         << "* Total Price: $" << price * seatNum.size() << endl;
-    cout << "*******************************************" << endl;
+         << "\033[32m* \033[0m Total Price: $" << price * seatNum.size() << endl;
+    cout << "\033[32m******************************************* \033[0m" << endl;
     cout << "\n\n\n";
 }
 
@@ -1005,7 +1009,7 @@ void User::storeData()
     ofstream storeFile(dataFilePath);
     if (!storeFile.is_open())
     {
-        cerr << "Couldn't open file";
+        cerr << openFileFailMessage + dataFilePath;
     }
 
     storeFile << data.dump(4);
