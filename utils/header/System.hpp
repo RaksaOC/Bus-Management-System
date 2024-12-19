@@ -72,7 +72,7 @@ User *System::authenticateUser() // Prompts the user to choose between login and
         {
             cout << "Press any key to exit..." << endl;
             getchar();
-            return;
+            exit(0);
         }
 
         loadUser();

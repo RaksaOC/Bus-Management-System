@@ -11,15 +11,15 @@
 #define invalidNameMessage "\n[⚠] \033[31mError: Invalid Name Format\033[0m\n\n";
 #define invalidNameFormatMessage "\n[⚠] \033[31mError: Invalid Name Format, Name Cannot Contain numbers\033[0m\n\n";
 #define invalidAgeMessage "\n[⚠] \033[31mError: Invalid Age\033[0m\n\n";
-#define incorrectEmailMessage"\n[⚠] \033[31mError: Incorrect Email\033[0m\n\n";
-#define incorrectPasswordMessage"\n[⚠] \033[31mError: Incorrect Password\033[0m\n\n";
-#define seatUnavailableMessage"\n[⚠] \033[31mError: Seat Unavailable\033[0m\n\n";
-#define invalidDestinationMessage"\n[⚠] \033[31mError: Invalid Destination\033[0m\n\n";
-#define tooYoungMessage"\n[⚠] \033[31mError: Invalid User Must Be Older Than 13 Years Old\033[0m\n\n";
-#define tooOldMessage"\n[⚠] \033[31mError: User Is Too Old\033[0m\n\n";
-#define invalidFilePath"\n[⚠] \033[31mError: Failed To Open file, Path: \033[0m\n\n";
-#define takenEmail"\n[⚠] \033[31mError: Email Is Taken \033[0m\n\n";
-#define passwordTooLong"\n[⚠] \033[31mError: Password Must Be Longer Than 6 Characters \033[0m\n\n";
+#define incorrectEmailMessage "\n[⚠] \033[31mError: Incorrect Email\033[0m\n\n";
+#define incorrectPasswordMessage "\n[⚠] \033[31mError: Incorrect Password\033[0m\n\n";
+#define seatUnavailableMessage "\n[⚠] \033[31mError: Seat Unavailable\033[0m\n\n";
+#define invalidDestinationMessage "\n[⚠] \033[31mError: Invalid Destination\033[0m\n\n";
+#define tooYoungMessage "\n[⚠] \033[31mError: Invalid User Must Be Older Than 13 Years Old\033[0m\n\n";
+#define tooOldMessage "\n[⚠] \033[31mError: User Is Too Old\033[0m\n\n";
+#define invalidFilePath "\n[⚠] \033[31mError: Failed To Open file, Path: \033[0m\n\n";
+#define takenEmail "\n[⚠] \033[31mError: Email Is Taken \033[0m\n\n";
+#define passwordTooLong "\n[⚠] \033[31mError: Password Must Be Longer Than 6 Characters \033[0m\n\n";
 
 using namespace std;
 
