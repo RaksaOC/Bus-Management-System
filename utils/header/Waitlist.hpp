@@ -324,7 +324,7 @@ void Waitlist::storeDataWaitList()
     ofstream storeData(dataFilePath);
     if (!storeData.is_open())
     {
-        cerr << "Couldn't open file";
+        cerr << openFileFailMessage;
         return;
     }
     data["reservations"] = reservations;
@@ -447,7 +447,7 @@ bool Waitlist::processWaitlistBulk(string busID, vector<int> seatsRefunded)
         }
         else
         {
-            cout << "Cannot reserve waitListed user\n";
+            cout << "\033[31mCannot reserve waitListed user \033[0m\n";
         }
     }
     return false;
