@@ -13,49 +13,6 @@
 using namespace std;
 using json = nlohmann::json;
 
-void printJSON(const json &j, int indent = 0)
-{
-    string spacing(indent, ' ');
-
-    if (j.is_object())
-    {
-        for (auto it = j.begin(); it != j.end(); ++it)
-        {
-            cout << spacing << it.key() << ": ";
-            if (it.value().is_object() || it.value().is_array())
-            {
-                cout << endl;
-                printJSON(it.value(), indent + 4);
-            }
-            else
-            {
-                cout << it.value() << endl;
-            }
-        }
-    }
-    else if (j.is_array())
-    {
-        for (size_t i = 0; i < j.size(); ++i)
-        {
-            cout << spacing << "- ";
-            if (j[i].is_object() || j[i].is_array())
-            {
-                cout << endl;
-                printJSON(j[i], indent + 4);
-            }
-            else
-            {
-                cout << j[i] << endl;
-            }
-        }
-    }
-    else
-    {
-        // Base case: print primitive values directly
-        cout << spacing << j << endl;
-    }
-}
-
 // VALIDATION FUNCTIONS FOR SIGN UP ====================================
 
 bool isNameValid(string fName, string lName)
@@ -208,14 +165,11 @@ bool isToValid(string f, string t, const json &routes)
     return false;
 }
 
-bool isResIDBulk(string r){
-    for (int i = 0; i < r.size(); i++)
+bool isResIDBulk(string r)
+{
+    if (r[0] == 'R' && r[1] == 'B')
     {
-        if (r[i] == 'R' && r[i+1] == 'B')
-        {
-            return true;
-        }
-        
+        return true;
     }
     return false;
 }

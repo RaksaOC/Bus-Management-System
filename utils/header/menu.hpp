@@ -4,7 +4,18 @@
 #include <iostream>
 #include <fstream>
 
+#define invalidInputMessage "\n[⚠] \033[31mError: Invalid Input\033[0m\n\n";
+
 using namespace std;
+
+void userAuthMenu()
+{
+    cout << R"(
+                                  ╦ ╦╔═╗╔═╗╦═╗  ╔═╗╦ ╦╔╦╗╦ ╦╔═╗╔╗╔╦╗╦╔═╗╔═╗╔╦╗╦╔═╗╔╗╔
+                                  ║ ║╚═╗║╣ ╠╦╝  ╠═╣║ ║ ║ ╠═╣║╣ ║║║║ ║║  ╠═╣ ║ ║║ ║║║║
+                                  ╚═╝╚═╝╚═╝╩╚═  ╩ ╩╚═╝ ╩ ╩ ╩╚═╝╝╚╝╩ ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝
+    )";
+}
 
 void clearInput()
 {
@@ -14,17 +25,16 @@ void clearInput()
 
 int logInOrSignUpMenu()
 {
+    userAuthMenu();
     int authChoice;
     do
     {
-        cout << "\n\n\t\t\t  USER AUTHENTICATION\n";
-        cout << "1. Log in\n";
-        cout << "2. Sign Up\n";
-        cout << "Enter (1/2): ";
+        cout << "\n1. Log in\n";
+        cout << "2. Sign Up\n\n> ";
         cin >> authChoice;
         if (cin.fail() || authChoice < 1 || authChoice > 2)
         {
-            cout << "\nPlease enter again...\n\n";
+            cout << invalidInputMessage;
             clearInput();
         }
         else
@@ -40,7 +50,12 @@ int serviceMenu()
     int service;
     do
     {
-        cout << "\n\n\t\t\t    SERVICE SELECTION\n\n";
+        cout << R"(
+                                                ╔═╗╔═╗╦═╗╦  ╦╦╔═╗╔═╗╔═╗
+                                                ╚═╗║╣ ╠╦╝╚╗╔╝║║  ║╣ ╚═╗
+                                                ╚═╝╚═╝╩╚═ ╚╝ ╩╚═╝╚═╝╚═╝
+    )";
+        cout << endl;
         cout << "0. Exit Program\n";
         cout << "1. Booking\n";
         cout << "2. Refund\n";
@@ -48,8 +63,8 @@ int serviceMenu()
         cin >> service;
         if (cin.fail() || service < 0 || service > 3)
         {
-            cout << "\nPlease enter again...\n\n";
             clearInput();
+            cout << invalidInputMessage;
         }
         else
         {
@@ -61,7 +76,8 @@ int serviceMenu()
 
 int bookingTypeMenu() // choose single or bulk booking
 {
-    int typeOfBooking;
+    
+    int typeOfBooking; 
     do
     {
         cout << "\n\n\t\t\t    BOOKING TYPE\n\n";
@@ -73,7 +89,7 @@ int bookingTypeMenu() // choose single or bulk booking
         if (cin.fail() || typeOfBooking < 0 || typeOfBooking > 2)
         {
             clearInput();
-            cout << "\nPlease enter again...\n\n";
+            cout << invalidInputMessage;
         }
         else
         {
@@ -99,7 +115,7 @@ int adminActionsMenu()
         if (cin.fail() || choice < 0 || choice > 4)
         {
             clearInput();
-            cout << "\nPlease enter again...\n\n";
+            cout << invalidInputMessage;
         }
         else
         {
@@ -111,25 +127,22 @@ int adminActionsMenu()
 
 void printBusManagementSystem()
 {
-    cout << "\n\n\n\n";
-    cout << "                     ____  _   _ ____   \n"
-            "                    | __ )| | | / ___|  \n"
-            "                    |  _ \\| | | \\___ \\  \n"
-            "                    | |_) | |_| |___) | \n"
-            "                    |____/ \\___/|____/  \n"
-         << endl;
-    cout << " ____  _____ ____  _____ ______     ___  _____ ___ ___  _   _ \n"
-            "|  _ \\| ____/ ___|| ____|  _ \\ \\   / / \\|_   _|_ _/ _ \\| \\ | |\n"
-            "| |_) |  _| \\___ \\|  _| | |_) \\ \\ / / _ \\ | |  | | | | |  \\| |\n"
-            "|  _ <| |___ ___) | |___|  _ < \\ V / ___ \\| |  | | |_| | |\\  |\n"
-            "|_| \\_\\_____|____/|_____|_| \\_\\ \\_/_/   \\_\\_| |___\\___/|_| \\_|\n"
-         << endl;
-    cout << "            ______   ______ _____ _____ __  __ \n"
-            "           / ___\\ \\ / / ___|_   _| ____|  \\/  |\n"
-            "           \\___ \\ V /\\___ \\ | | |  _| | |\\/| |\n"
-            "            ___) || |  ___) || | | |___| |  | |\n"
-            "           |____/ |_| |____/ |_| |_____|_|  |_|\n"
-         << endl;
+    cout << R"(
+██████╗ ██╗   ██╗███████╗    ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗███╗   ███╗███████╗███╗   ██╗████████╗    
+██╔══██╗██║   ██║██╔════╝    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝    
+██████╔╝██║   ██║███████╗    ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██╔████╔██║█████╗  ██╔██╗ ██║   ██║       
+██╔══██╗██║   ██║╚════██║    ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║       
+██████╔╝╚██████╔╝███████║    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║ ╚═╝ ██║███████╗██║ ╚████║   ██║       
+╚═════╝  ╚═════╝ ╚══════╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝       
+                                                                                                                             
+                                 ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗                        
+                                 ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║                        
+                                 ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║                        
+                                 ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║                        
+                                 ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║                        
+                                 ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝                        
+                                                                                                                             
+    )";
 }
 
 void printStandardBus()

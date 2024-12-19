@@ -5,9 +5,11 @@
 #include <vector>
 #include <limits>
 #include <stack>
+#include <ctime>
 #include "Bus.hpp"
 #include "menu.hpp"
 #include "validation.hpp"
+#include "./Waitlist.hpp"
 
 #define dataFilePath "../utils/database/Data.json"
 
@@ -29,7 +31,6 @@ private:
     string password;
     bool isAdmin;
     vector<string> resID; // Stores reservation IDs
-
     // For initially loading data ==========================================
     json data;
     json users;
@@ -56,12 +57,22 @@ private:
     Bus selectBus(vector<int>);
     // ============================================
 
+    // refund helper methods ======================
+
+    bool isResIDRefunded(string);
+    int inputRefund();
+    vector<string> refundList();
+    string printRefund(string);
+    vector<int> getSeatNumsToRefund(string);
+    void generateNewResIDForRefund(string, vector<int>);
+
     // view history helper methods
-    void printHistory(vector<int>, string);
+
+    void printHistory(vector<int>, string, string);
 
     // After working with the bus object(reserve seat....)
     void generateResID(int, json, vector<int>, int);
-    void generateTicket(int);
+    void generateTicket(vector<int>);
     void showQRCode();
     void storeData();
 
@@ -154,6 +165,7 @@ void User::checkUserType()
 }
 
 // Method for reserving a bus ticket
+
 void User::reserve()
 {
     loadData();
@@ -163,7 +175,11 @@ void User::reserve()
     vector<int> busIdx = showAvailableBuses(from, to);
 
     Bus bus = selectBus(busIdx);
-    bus.printBusInfo();
+    if (bus.getSeatLeft() == 0)
+    {
+        return; // this is to check that its been waitListed
+    }
+
     bus.showSeatLayout();
 
     json chosenSeat;
@@ -204,23 +220,333 @@ void User::reserve()
     generateResID(chosenSeat["seatNum"], seatsOfBus, seatsChangedArr, bType);
     showQRCode();
     storeData();
-    generateTicket(chosenSeat["seatNum"]);
+    if (bType == 1)
+    {
+        vector<int> seatNum;
+        seatNum.push_back(chosenSeat["seatNum"]);
+        generateTicket(seatNum);
+    }
+    else
+    {
+        generateTicket(seatsChangedArr);
+    }
+
     printThanks();
 }
 
 // // Method for refunding a reservation
 void User::refund()
 {
+    loadData();
+    if (!this->resID.empty())
+    {
+        vector<string> refundableResID = refundList();
+        if (refundableResID.empty())
+        {
+            cout << "Error: No refundable tickets\n";
+            return;
+        }
 
-    // [TO DO]
-    // LOGIC:
-    // 1. Show a list of previous reservations associated with the user.
-    // 2. Prompt user to select a reservation to refund.
-    // 3. Prompt for confirmation (Are you sure you want to refund?).
-    // 4. Delete the selected reservationID from the user’s list.
-    // 5. Update data files to reflect the refund.
+        int choice = inputRefund();
 
-    // [Note] : Similar to viewHistory, but includes operations to update data.
+        string resIDToRefund = refundableResID.at(choice - 1);
+        vector<int> seatNumsToRefund = getSeatNumsToRefund(resIDToRefund);
+
+        string busIDToRefund;
+
+        // get the bus ID to refund
+        if (isResIDBulk(resIDToRefund))
+        {
+            json bulkRes = reservations["bulkReservations"];
+            for (auto &res : bulkRes)
+            {
+                if (res["id"] == resIDToRefund)
+                {
+                    busIDToRefund = res["busID"];
+                }
+            }
+        }
+        else
+        {
+            json singleRes = reservations["singleReservations"];
+            for (auto &res : singleRes)
+            {
+                if (res["id"] == resIDToRefund)
+                {
+                    busIDToRefund = res["busID"];
+                }
+            }
+        }
+
+        // traverse to that bus and delegate to the bus class
+
+        for (auto &bus : buses)
+        {
+            if (bus["id"] == busIDToRefund)
+            {
+                busToModify = bus;
+                string busType = busToModify["busType"];
+                string dpTime = busToModify["departureTime"];
+                string busID = busToModify["id"];
+                json route = busToModify["route"];
+                int seatCap = busToModify["seatCap"];
+                int seatLeft = busToModify["seatLeft"];
+                int seatPrice = busToModify["seatPrice"];
+                json seats = busToModify["seats"];
+                Bus bus(busType, dpTime, busID, route, seatCap, seatLeft, seatPrice, seats);
+                if (!isResIDBulk(resIDToRefund))
+                {
+                    json seatsOfModifiedBus = bus.refundSeat(seatNumsToRefund);
+
+                    busToModify["seats"] = seatsOfModifiedBus;
+                    int seatLeft = busToModify["seatLeft"]; // gain one seat
+                    seatLeft++;
+                    busToModify["seatLeft"] = seatLeft;
+                    json singleRes = reservations["singleReservations"];
+                    for (auto &res : singleRes)
+                    {
+                        if (res["id"] == resIDToRefund)
+                        {
+                            res["status"] = "inactive";
+                            break;
+                        }
+                    }
+                    reservations["singleReservations"] = singleRes;
+                    printThanksRefund();
+                    storeData();
+                    Waitlist waitlist;
+                    int seatNumRefunded = bus.getSeatNumChanges().at(0);
+                    if (waitlist.processWaitlistSingle(busID, seatNumRefunded))
+                    {
+                        cout << "Your seat has been taken by a wait listed user\n";
+                        return;
+                    }
+                }
+                else
+                {
+                    json seatsOfModifiedBus = bus.refundSeats(seatNumsToRefund);
+                    cout << "REFUND GOT HERE" << endl;
+                    busToModify["seats"] = seatsOfModifiedBus;
+                    busToModify["seatLeft"] = bus.getSeatLeft();
+                    vector<int> seatNumRemaining = bus.getSeatNumChanges();
+                    generateNewResIDForRefund(busIDToRefund, seatNumRemaining);
+                    json bulkRes = reservations["bulkReservations"];
+                    for (auto &res : bulkRes)
+                    {
+                        if (res["id"] == resIDToRefund)
+                        {
+                            res["status"] = "inactive";
+                            break;
+                        }
+                    }
+                    reservations["bulkReservations"] = bulkRes;
+                    printThanksRefund();
+                    storeData();
+                    // Waitlist waitlist;
+                    // if (waitlist.processWaitlistBulk(busID, seatNumsToRefund)) // for refund all
+                    // {
+                    //     cout << "Your seats has been taken by a wait listed user\n";
+                    //     return;
+                    // }
+                    // else if (waitlist.processWaitlistBulk(busID, bus.getWantedSeatNums())) // partial refund
+                    // {
+                    //     cout << "Your seats has been taken by a wait listed user\n";
+                    //     return;
+                    // }
+                }
+            }
+        }
+    }
+    else
+    {
+        cout << "Error: No reservation history\n";
+        return;
+    }
+}
+
+vector<int> User::getSeatNumsToRefund(string resID)
+{
+    vector<int> seatNumArrToReturn;
+    if (!isResIDBulk(resID))
+    {
+        json singleRes = reservations["singleReservations"];
+        for (auto &r : singleRes)
+        {
+            if (r["id"] == resID)
+            {
+                seatNumArrToReturn.push_back(r["seatNumber"]);
+                return seatNumArrToReturn;
+            }
+        }
+    }
+    else
+    {
+        json bulkRes = reservations["bulkReservations"];
+        for (auto &r : bulkRes)
+        {
+            if (r["id"] == resID)
+            {
+                seatNumArrToReturn = r["seatNumber"].get<vector<int>>();
+                return seatNumArrToReturn;
+            }
+        }
+    }
+    return seatNumArrToReturn;
+}
+
+vector<string> User::refundList()
+{
+    vector<string> allRes;
+    vector<string> validRes;
+    stack<string> resIDStack;
+    for (string r : resID)
+    {
+        resIDStack.push(r);
+    }
+    cout << "\nORDERED BY LATEST\n\n";
+    while (!resIDStack.empty())
+    {
+        allRes.push_back(printRefund(resIDStack.top()));
+        resIDStack.pop();
+    }
+    for (string i : allRes)
+    {
+        if (i != "")
+        {
+            validRes.push_back(i);
+        }
+    }
+
+    return validRes;
+}
+
+bool User::isResIDRefunded(string resID)
+{
+    if (isResIDBulk(resID))
+    {
+        json bulkRes = reservations["bulkReservations"];
+        for (const auto &res : bulkRes)
+        {
+            if (res["id"] == resID)
+            {
+                if (res["status"] == "inactive")
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    else
+    {
+        json singleRes = reservations["singleReservations"];
+        for (const auto &sR : singleRes)
+        {
+            if (sR["id"] == resID)
+            {
+                if (sR["status"] == "inactive")
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+string User::printRefund(string resID)
+{
+    if (!isResIDRefunded(resID))
+    {
+        if (isResIDBulk(resID))
+        {
+            json bulkRes = reservations["bulkReservations"];
+            for (const auto &bR : bulkRes)
+            {
+                if (bR["id"] == resID)
+                {
+                    vector<int> seatNums = bR["seatNumber"];
+                    string busIDToCheck = bR["busID"];
+                    for (const auto &bus : buses)
+                    {
+                        if (bus["id"] == busIDToCheck)
+                        {
+                            cout << "Time: " << bR["time"] << "\n";
+                            cout << "\n*****************************************************************" << endl;
+                            cout << "* Reservation ID: " << resID << "\t\t" << endl;
+                            cout << "* Type: " << bus["busType"] << "\t\t" << endl;
+                            cout << "* Bus ID: " << bus["id"] << "\t\t" << endl;
+                            cout << "* Departure time: " << bus["departureTime"] << "\t\t" << endl;
+                            cout << "* From: " << bus["route"]["from"] << "\t\t" << endl;
+                            cout << "* To: " << bus["route"]["to"] << "\t\t" << endl;
+                            cout << "* Booked Seat numbers: ";
+                            for (int s : seatNums)
+                            {
+                                cout << s << " ";
+                            }
+                            cout << "\n*****************************************************************\n"
+                                 << endl;
+                            return resID;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            json singleRes = reservations["singleReservations"];
+            for (const auto &sR : singleRes)
+            {
+                if (sR["id"] == resID)
+                {
+                    int seatNum = sR["seatNumber"];
+                    string busIDToCheck = sR["busID"];
+                    for (const auto &bus : buses)
+                    {
+                        if (bus["id"] == busIDToCheck)
+                        {
+                            cout << "Time: " << sR["time"] << "\n";
+                            cout << "\n*****************************************************************" << endl;
+                            cout << "* Reservation ID: " << resID << "\t\t" << endl;
+                            cout << "* Type: " << bus["busType"] << "\t\t" << endl;
+                            cout << "* Bus ID: " << bus["id"] << "\t\t" << endl;
+                            cout << "* Departure time: " << bus["departureTime"] << "\t\t" << endl;
+                            cout << "* From: " << bus["route"]["from"] << "\t\t" << endl;
+                            cout << "* To: " << bus["route"]["to"] << "\t\t" << endl;
+                            cout << "* Booked Seat number: " << seatNum;
+                            cout << "\n*****************************************************************\n"
+                                 << endl;
+                            return resID;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        return "";
+    }
+    return "";
+}
+
+int User::inputRefund()
+{
+    int choice;
+    while (1)
+    {
+        cout << "Select the ticket to refund\n> ";
+        cin >> choice;
+        if (choice <= 0 || choice > this->resID.size())
+        {
+            cout << "Error: Invalid choice" << endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return choice;
 }
 
 void User::viewHistory()
@@ -233,8 +559,14 @@ void User::viewHistory()
     {
         resIDStack.push(res);
     }
+    if (resIDStack.empty())
+    {
+        cout << "Error: No reservation history\n";
+        return;
+    }
 
     // Process each reservation ID from the stack
+    cout << "\n\t\t\tUSER RESERVATION HISTORY \n\n";
     cout << "\nORDERED BY LATEST\n\n";
     while (!resIDStack.empty())
     {
@@ -249,7 +581,9 @@ void User::viewHistory()
                 {
                     string busID = res["busID"];
                     vector<int> seatNums = res["seatNumber"];
-                    printHistory(seatNums, busID);
+                    string status = res["status"];
+                    cout << "Time: " << res["time"] << "\n";
+                    printHistory(seatNums, busID, status);
                 }
             }
         }
@@ -262,8 +596,10 @@ void User::viewHistory()
                 {
                     string busID = res["busID"];
                     vector<int> seatNum;
+                    string status = res["status"];
                     seatNum.push_back(res["seatNumber"]);
-                    printHistory(seatNum, busID);
+                    cout << "Time: " << res["time"] << "\n";
+                    printHistory(seatNum, busID, status);
                 }
             }
         }
@@ -272,7 +608,7 @@ void User::viewHistory()
     }
 }
 
-void User::printHistory(vector<int> seatNums, string bID)
+void User::printHistory(vector<int> seatNums, string bID, string status)
 {
     json busInfo;
     for (const auto &bus : buses)
@@ -280,7 +616,7 @@ void User::printHistory(vector<int> seatNums, string bID)
         if (bus["id"] == bID)
             busInfo = bus;
     }
-    
+
     cout << "\n*****************************************************************" << endl;
     cout << "* Type: " << busInfo["busType"] << "\t\t" << endl;
     cout << "* Bus ID: " << busInfo["id"] << "\t\t" << endl;
@@ -292,7 +628,9 @@ void User::printHistory(vector<int> seatNums, string bID)
     {
         cout << s << " ";
     }
-    cout << "\n*****************************************************************\n"
+    cout << endl
+         << "* Status: " << status << "\t\t" << endl;
+    cout << "*****************************************************************\n"
          << endl;
 }
 
@@ -324,16 +662,21 @@ void User::loadData()
 
 void User::destinationMenu()
 {
-    cout << "\t\t\tAVAILABLE ROUTES\n\n";
-    cout << "*****************************************************************" << endl;
+    cout << R"(
+                                      ╔═╗╦  ╦╔═╗╦  ╔═╗╔╗ ╦  ╔═╗  ╦═╗╔═╗╦ ╦╔╦╗╔═╗╔═╗
+                                      ╠═╣╚╗╔╝╠═╣║  ╠═╣╠╩╗║  ║╣   ╠╦╝║ ║║ ║ ║ ║║╣╚═╗
+                                      ╩ ╩ ╚╝ ╩ ╩╩═╝╩ ╩╚═╝╩═╝╚═╝  ╩╚═╚═╝╚═╝ ╩ ╚═╝╚═╝
+    )";
+    cout << "\n\n";
+    cout << "\t\t\t      \033[36m***********************************************************\033[0m" << endl;
     for (const auto &route : routes)
     {
         for (const auto &to : route["to"])
         {
-            cout << "*\t" << route["from"] << "\t -------> \t" << to << "\t\t*" << endl;
+            cout << "\t\t\t      \033[36m*\033[0m\t" << route["from"] << "\t\t\033[36m------->\033[0m\t" << to << "\033[36m\t*\033[0m" << endl;
         }
     }
-    cout << "*****************************************************************" << endl;
+    cout << "\t\t\t      \033[36m***********************************************************\033[0m" << endl;
 }
 
 string User::inputFrom()
@@ -350,9 +693,9 @@ string User::inputFrom()
         }
         else
         {
-            cout << "\nInvalid origin\n";
+            cout << invalidInputMessage;
         }
-    }
+    } 
     return from;
 }
 
@@ -424,12 +767,47 @@ int User::printBus(json bus, string f, string t, int i) // int *correctCount)
 Bus User::selectBus(vector<int> busIdxArr)
 {
     int choice;
-    cout << "Select a bus \n> ";
-    cin >> choice;
-    choice = choice - 1;
-    int busIndex = busIdxArr[choice];
+    while (1)
+    {
+        cout << "Select a bus \n> ";
+        cin >> choice;
+        choice = choice - 1;
+        int busIndex = busIdxArr[choice];
 
-    busToModify = buses[busIndex];
+        busToModify = buses[busIndex];
+        if (busToModify["seatLeft"] == 0)
+        {
+            cout << "There are no more seats available\n";
+            Waitlist waitlist;
+            int waitChoice = waitlist.choiceToEnterWaitlist();
+            if (waitChoice == 1)
+            {
+                string busType = busToModify["busType"];
+                string dpTime = busToModify["departureTime"];
+                string busID = busToModify["id"];
+                json route = busToModify["route"];
+                int seatCap = busToModify["seatCap"];
+                int seatLeft = busToModify["seatLeft"];
+                int seatPrice = busToModify["seatPrice"];
+                json seats = busToModify["seats"];
+
+                Bus bus(busType, dpTime, busID, route, seatCap, seatLeft, seatPrice, seats);
+                bus.printBusInfo();
+                bus.showSeatLayoutBlank();
+                waitlist.addToWaitlist(this->userID, busID);
+                cout << "Added to waitlist successfully\n";
+                return bus;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
 
     string busType = busToModify["busType"];
     string dpTime = busToModify["departureTime"];
@@ -447,6 +825,9 @@ Bus User::selectBus(vector<int> busIdxArr)
 
 void User::generateResID(int seatNum, json seatsOfBus, vector<int> seatChanges, int bType)
 {
+    time_t currentTime = time(nullptr);
+    string time = ctime(&currentTime); // Convert to string
+    time.pop_back();
     if (bType == 1)
     {
         int nextID = reservations["singleReservations"].size();
@@ -460,11 +841,14 @@ void User::generateResID(int seatNum, json seatsOfBus, vector<int> seatChanges, 
             baseResID[i] = nextID_string[j];
             j++;
         }
+
         json newResObj;
         newResObj["id"] = baseResID;
         newResObj["busID"] = busToModify["id"];
         newResObj["seatNumber"] = seatNum;
         newResObj["userID"] = this->userID;
+        newResObj["status"] = "active";
+        newResObj["time"] = time;
 
         this->resID.push_back(baseResID);
         reservations["singleReservations"].push_back(newResObj);
@@ -493,7 +877,8 @@ void User::generateResID(int seatNum, json seatsOfBus, vector<int> seatChanges, 
         newResObj["busID"] = busToModify["id"];
         newResObj["seatNumber"] = seatNumbers;
         newResObj["userID"] = this->userID;
-
+        newResObj["status"] = "active";
+        newResObj["time"] = time;
         this->resID.push_back(baseResID);
         reservations["bulkReservations"].push_back(newResObj);
     }
@@ -501,19 +886,19 @@ void User::generateResID(int seatNum, json seatsOfBus, vector<int> seatChanges, 
 void User::showQRCode()
 {
     cout << "\n\nProceeding to payment... Please scan the QR code.\n";
-    cout << "Your QR code will open now...\n";
     system("open ../../qr.jpg");
-    cout << "After scanning, press Enter to confirm payment.\n";
-    cin.get();
 }
 
-void User::generateTicket(int seatNum)
+void User::generateTicket(vector<int> seatNum)
 {
+    int price = busToModify["seatPrice"];
+    price *= seatNum.size();
     cout << "\n\n\t\t\t\tTICKET \n\n";
     cout << "*******************************************" << endl;
     cout << "* Reservation ID: " << modifiedUser["resID"][modifiedUser["resID"].size() - 1] << endl;
     cout << "* Bus ID: " << busToModify["id"] << endl;
     cout << "* Bus Type: " << busToModify["busType"] << endl;
+    cout << "* Price per seat: $" << busToModify["seatPrice"] << endl;
     cout << "* Departure Time: " << busToModify["departureTime"] << endl;
 
     // Print route details
@@ -521,8 +906,13 @@ void User::generateTicket(int seatNum)
     cout << "* To: " << busToModify["route"]["to"] << endl;
 
     // Print seat details
-    cout << "* Seat Number: " << seatNum << endl;
-    cout << "* Total Price: $" << busToModify["seatPrice"] << endl;
+    cout << "* Seat Number: ";
+    for (int s : seatNum)
+    {
+        cout << s << " ";
+    }
+    cout << endl
+         << "* Total Price: $" << price * seatNum.size() << endl;
     cout << "*******************************************" << endl;
     cout << "\n\n\n";
 }
@@ -538,6 +928,7 @@ void User::storeData()
         }
         busIdx++;
     }
+
     buses[busIdx] = busToModify;
     modifiedUser["age"] = this->age;
     modifiedUser["email"] = this->email;
@@ -585,5 +976,73 @@ void User::printUser()
     cout << "Is Admin: " << this->getAdminStatus() << endl;
 }
 // End of helper methods for Reserve =============================================================
+
+void User::generateNewResIDForRefund(string busID, vector<int> seatNums)
+{
+    if (seatNums.size() > 1)
+    {
+        time_t currentTime = time(nullptr);
+        string time = ctime(&currentTime); // Convert to string
+        time.pop_back();
+        json bulkRes = reservations["bulkReservations"];
+
+        // block to generate resID
+        string baseID = "RB000000";
+        int lastId = bulkRes.size();
+        string lastID_string = to_string(lastId);
+        int start = baseID.size() - lastID_string.size();
+        int j = 0;
+        for (int i = start; i < baseID.size(); i++)
+        {
+            baseID[i] = lastID_string[j];
+            j++;
+        }
+
+        json newResObj;
+        newResObj["busID"] = busID;
+        newResObj["id"] = baseID;
+        newResObj["seatNumber"] = seatNums;
+        newResObj["status"] = "active";
+        newResObj["time"] = time;
+        newResObj["userID"] = this->userID;
+        bulkRes.push_back(newResObj);
+        reservations["bulkReservations"] = bulkRes;
+        this->resID.push_back(baseID);
+    }
+    else if (seatNums.size() == 1 && seatNums.at(0) != -1)
+    {
+        time_t currentTime = time(nullptr);
+        string time = ctime(&currentTime); // Convert to string
+        time.pop_back();
+        json singleRes = reservations["singleReservations"];
+
+        // block to generate resID
+        string baseID = "R000000";
+        int lastId = singleRes.size();
+        string lastID_string = to_string(lastId);
+        int start = baseID.size() - lastID_string.size();
+        int j = 0;
+        for (int i = start; i < baseID.size(); i++)
+        {
+            baseID[i] = lastID_string[j];
+            j++;
+        }
+        int seatNum = seatNums.at(0);
+        json newResObj;
+        newResObj["busID"] = busID;
+        newResObj["id"] = baseID;
+        newResObj["seatNumber"] = seatNum;
+        newResObj["status"] = "active";
+        newResObj["time"] = time;
+        newResObj["userID"] = this->userID;
+        singleRes.push_back(newResObj);
+        reservations["singleReservations"] = singleRes;
+        this->resID.push_back(baseID);
+    }
+    else
+    {
+        return;
+    }
+}
 
 #endif

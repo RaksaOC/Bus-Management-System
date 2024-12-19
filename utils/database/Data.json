@@ -8,33 +8,21 @@
                 "from": "Phnom Penh",
                 "to": "Siem Reap"
             },
-            "seatCap": 6,
-            "seatLeft": 6,
+            "seatCap": 3,
+            "seatLeft": 0,
             "seatPrice": 10,
             "seats": [
                 {
                     "seatNum": 1,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 2,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 3,
-                    "status": "available"
-                },
-                {
-                    "seatNum": 4,
-                    "status": "available"
-                },
-                {
-                    "seatNum": 5,
-                    "status": "available"
-                },
-                {
-                    "seatNum": 6,
-                    "status": "available"
+                    "status": "reserved"
                 }
             ]
         },
@@ -47,24 +35,24 @@
                 "to": "Battambang"
             },
             "seatCap": 6,
-            "seatLeft": 2,
+            "seatLeft": 6,
             "seatPrice": 15,
             "seats": [
                 {
                     "seatNum": 1,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 2,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 3,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 4,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 5,
@@ -85,28 +73,28 @@
                 "to": "Battambang"
             },
             "seatCap": 6,
-            "seatLeft": 1,
+            "seatLeft": 6,
             "seatPrice": 20,
             "seats": [
                 {
                     "seatNum": 1,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 2,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 3,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 4,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 5,
-                    "status": "reserved"
+                    "status": "available"
                 },
                 {
                     "seatNum": 6,
@@ -382,35 +370,38 @@
         }
     ],
     "reservations": {
-        "bulkReservations": [
+        "bulkReservations": [],
+        "singleReservations": [
             {
-                "busID": "B0003",
-                "id": "RB000000",
-                "seatNumber": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "busID": "B0001",
+                "id": "R000000",
+                "seatNumber": 1,
+                "status": "active",
+                "time": "Thu Dec 19 10:27:06 2024",
                 "userID": "U000001"
             },
             {
-                "busID": "B0002",
-                "id": "RB000001",
-                "seatNumber": [
-                    1,
-                    2,
-                    3
-                ],
+                "busID": "B0001",
+                "id": "R000001",
+                "seatNumber": 2,
+                "status": "active",
+                "time": "Thu Dec 19 10:28:07 2024",
                 "userID": "U000001"
-            }
-        ],
-        "singleReservations": [
+            },
             {
-                "busID": "B0002",
-                "id": "R000000",
-                "seatNumber": 4,
+                "busID": "B0001",
+                "id": "R000002",
+                "seatNumber": 3,
+                "status": "inactive",
+                "time": "Thu Dec 19 10:28:36 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0001",
+                "id": "R000003",
+                "seatNumber": 3,
+                "status": "active",
+                "time": "Thu Dec 19 10:31:35 2024",
                 "userID": "U000001"
             }
         ]
@@ -475,10 +466,36 @@
             },
             "password": "b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8",
             "resID": [
-                "RB000000",
-                "RB000001",
-                "R000000"
+                "R000000",
+                "R000001",
+                "R000002",
+                "R000003"
             ]
         }
-    ]
+    ],
+    "waitList": {
+        "bulkWaitList": [],
+        "singleWaitList": [
+            {
+                "busID": "B0001",
+                "id": "W000000",
+                "seatNumber": 1,
+                "size": 1,
+                "status": "active",
+                "time": "Thu Dec 19 10:29:10 2024",
+                "userID": "U000001",
+                "waitType": "specific"
+            },
+            {
+                "busID": "B0001",
+                "id": "W000000",
+                "seatNumber": null,
+                "size": 1,
+                "status": "inactive",
+                "time": "Thu Dec 19 10:29:36 2024",
+                "userID": "U000001",
+                "waitType": "any"
+            }
+        ]
+    }
 }

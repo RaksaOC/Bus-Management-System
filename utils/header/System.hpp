@@ -65,22 +65,35 @@ User *System::authenticateUser() // Prompts the user to choose between login and
 {
     // LOGIC : navigate user to whether the login page or the signup page
     printBusManagementSystem(); // ref to menu.hpp
-    int choice = this->logInOrSignUp();
-    loadUser();
-    switch (choice)
+    while (true)
     {
-    case 1:
-        return this->logIn();
-        break;
-    case 2:
-        return this->signUp();
-        break;
-    default:
-        // will never get here
-        break;
+        int choice = this->logInOrSignUp();
+        if (choice == 0)
+        {
+            cout << "Press any key to exit..." << endl;
+            getchar();
+            return;
+        }
+
+        loadUser();
+        switch (choice)
+        {
+        case 1:
+            return this->logIn();
+            if (this->logIn() == nullptr)
+            {
+                break;
+            }
+            break;
+        case 2:
+            return this->signUp();
+            break;
+        default:
+            // will never get here
+            break;
+        }
+        return nullptr;
     }
-    User *user;
-    return user;
 }
 
 //  CORE METHODS ==============================================================================
