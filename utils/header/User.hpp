@@ -75,6 +75,9 @@ private:
     void generateTicket(int);
     void showQRCode();
     void storeData();
+    void storeDataAdmin();
+
+    void viewBus();
 
 public:
     User() = default; // Default constructor
@@ -114,12 +117,15 @@ public:
     // Core Admin Methods
     void addAdmin();
     void addBus();
-    void changeBusSettings();
+    void deleteBus();
+    void viewAllBus();
+    void viewBusbyID();
     void getAllUsers();
     void deleteUser();
 
     // Helper Functions
     void printUser();
+    
 };
 
 void User::checkUserType()
@@ -135,14 +141,18 @@ void User::checkUserType()
         case 2:
             this->addBus();
             break;
-        case 3:
-            this->changeBusSettings();
+        case 3: 
+            this->viewBus();
             break;
         case 4:
             this->getAllUsers();
             break;
         case 5:
             this->deleteUser();
+            break;
+        case 6:
+            this->deleteBus();
+            break;
         default:
             break;
         }
@@ -365,7 +375,7 @@ void User::addAdmin()
     cout << "Admin user added successfully!" << endl;
 }
 void User::addBus() {}
-void User::changeBusSettings() {
+void User::deleteBus() {
     //delete bus 
     string busID;
     cout<<"PLease input bus id you want to delete"<<endl;
@@ -800,6 +810,17 @@ void User::generateTicket(int seatNum)
     cout << "\n\n\n";
 }
 
+void User::storeDataAdmin(){
+    ofstream writeData(dataFilePath);
+    if(!writeData.is_open()){
+        cerr << "cannot open file";
+        return;
+    }
+    data["buses"] = buses;
+    writeData << data.dump(4);
+    writeData.close();
+};
+
 void User::storeData()
 {
     int busIdx = 0;
@@ -1011,4 +1032,20 @@ string User::confirmPassword(string pass) // password thats passed is passed as 
 
 // End of helper methods for Reserve =============================================================
 
+
+void User::viewBus(){
+    int option;
+    cout << "Please choose the option\n";
+    cout << "1. View All Buses.\n";
+    cout << "2. View By Bus by ID.\n";
+    cout << "Option> ";
+    cin >> option;
+    if (option == 1) {
+        this->viewAllBus();
+    } else if (option == 2) {
+        this->viewBusbyID();
+    } else {
+        cout << "Please try again.";
+    }   
+}
 #endif

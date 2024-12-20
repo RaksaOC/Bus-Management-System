@@ -12,12 +12,8 @@ using namespace std;
 
 int main()
 {
-    // User user;
-    // user.changeBusSettings();
     System sys;
     User *user = sys.authenticateUser();
     user->checkUserType();
-
-    
     return 0;
 }
