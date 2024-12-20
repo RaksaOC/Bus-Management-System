@@ -8,8 +8,6 @@ using namespace std;
 
 // -----------------------------------------------------------------
 
-// user.reserve // get the user thats reserving for easy operations , user.refund, user.view
-
 int main()
 {
     System sys;
