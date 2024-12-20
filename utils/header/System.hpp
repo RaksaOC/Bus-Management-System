@@ -2,11 +2,17 @@
 #define System_hpp
 
 #include "User.hpp"
-#include "menu.cpp"
+#include "menu.hpp"
+#include "validation.hpp"
 #include "../libs/json.hpp"
+#include "../libs/sha1.hpp"
 
 #include <iostream>
+
+#define dataFilePath "../utils/database/Data.json"
+
 using namespace std;
+using namespace sha1;
 using json = nlohmann::json;
 
 // -------------------------------------------------------
@@ -14,146 +20,515 @@ using json = nlohmann::json;
 class System // Responsibility: Handles user authentication (login/signup)
 {
 private:
+    /*User Data JSON object to use for helper method*/
+    /********************************************/
+    // Core function
+    /********************************************/
     int logInOrSignUp();
-    User logIn();
-    User signUp();
-    User user;
+    User *logIn();
+    User *signUp();
+    bool isAdmin();
+    /********************************************/
+    // Helper Functions for sign up
+    /********************************************/
+    void loadUser();
+    string inputFirstName();
+    string inputLastName();
+    int inputAge();
+    string inputEmail();
+    string inputPassword();
+    string confirmPassword(string);
+    string generateUserID();
+    /********************************************/
+    // Helper Functions for log in
+    /********************************************/
+    string getID(string);
+    int getAge(string);
+    string getFirstName(string);
+    string getLastName(string);
+    bool getAdminStatus(string);
+    vector<string> getResID(string);
+    string getEmail();
+    string getPassword(string);
+    /********************************************/
+    /*User Data JSON object to use for helper methods*/
+    json userData;
+    /********************************************/
 
 public:
-    System() : user(User()) {} // Default-construct `User` object
-    User authenticateUser();
-    // Initiates the user authentication process
+    System() {}               // Default-construct User object
+    User *authenticateUser(); // Initiates the user authentication process (return a user obj)
 };
 
-// Prompts the user to choose between login and signup
-User System::authenticateUser()
+// MAIN METHOD ===============================================================================
+User *System::authenticateUser() // Prompts the user to choose between login and signup
 {
-    // LOGIC : navigate user to wither the login page or the signup page
+    // LOGIC : navigate user to whether the login page or the signup page
+    printBusManagementSystem(); // ref to menu.hpp
 
-    printBusManagementSystem();
-    int choice = this->logInOrSignUp();
-    switch (choice)
+    while (true)
     {
-    case 1:
-        return logIn();
-        break;
-    case 2:
-        return signUp();
-        break;
-    default:
-        break;
+        loadUser();
+        int choice = this->logInOrSignUp();
+        while (true)
+        {
+            if (choice == 1)
+            {
+                simpleBusLoading();
+                    User *userLogIn = this->logIn();
+                if (userLogIn == nullptr)
+                {
+                    break;
+                }
+                return userLogIn;
+            }
+            else if (choice == 2)
+            {
+                simpleBusLoading();
+                User *userSignUp = this->signUp();
+                if (userSignUp == nullptr)
+                {
+                    break;
+                }
+                return userSignUp;
+            }
+        }
     }
-    return user;
+    return nullptr;
 }
+
+//  CORE METHODS ==============================================================================
 
 int System::logInOrSignUp()
 {
-    // [TO DO]
-    // LOGIC:
-    // 1. Display a menu with options:
-    //    "1. Log In"
-    //    "2. Sign Up"
-    // 2. Get the user's choice and return it
-    // 3. Validate the input to ensure it is either 1 or 2
-    // 4. Return the choice
     int choice = logInOrSignUpMenu(); // pre-made menu in menu.cpp
     return choice;
 }
 
-// Handles the login process
-User System::logIn()
+// Handles the signup process
+User *System::signUp()
 {
-    // [TO DO]
-    // LOGIC:
-    // 1. Prompt the user to enter their credentials (username/password)
-    // 2. Validate the credentials against a stored user database/file
-    // 3. If valid, construct a User object with their data
-    // 4. If invalid, prompt the user again or provide an option to exit
-    string email;
-    string pass;
-    cout << "\t\t\t\t LOGGING IN\n";
-    cout << "Email: ";
-    cin >> email;
-    cout << "Password: ";
-    cin >> pass;
+    signupMenu();
+    /*Get attributes*/
+    string fName = inputFirstName();
+    if (fName == "-b")
+    {
+        return nullptr;
+    }
+    string lName = inputLastName();
+    int age = inputAge();
+    string email = inputEmail();
+    string pass = inputPassword();
+    string passCf = confirmPassword(pass);
+    passCf = hashPassword(passCf);
+
+    ifstream readFile(dataFilePath);
+    if (!readFile.is_open())
+    {
+        cerr << openFileFailMessage;
+        cerr << dataFilePath;
+    }
+    json allData;
+    readFile >> allData;
+    readFile.close();
+
+    json newUser;
+    newUser["id"] = generateUserID();
+    newUser["name"]["firstName"] = fName;
+    newUser["name"]["lastName"] = lName;
+    newUser["age"] = age;
+    newUser["email"] = email;
+    newUser["password"] = passCf;
+    newUser["isAdmin"] = false;
+    newUser["resID"] = json::array();
+    allData["users"].push_back(newUser);
+
+    ofstream writeFile(dataFilePath);
+    if (!writeFile.is_open())
+    {
+        cerr << openFileFailMessage;
+        cerr << dataFilePath;
+    }
+    writeFile << allData.dump(4);
+    writeFile.close();
+
+    vector<string> emptyResID;
+    User *user = new User(generateUserID(), fName, lName, fName + " " + lName, age, email, pass, false, emptyResID);
+    return user;
+}
+// Handles the login process
+User *System::logIn()
+{
+    LoginMenu();
+    /*Get attributes*/
+    string email = getEmail();
+    if (email == "-b")
+    {
+        return nullptr;
+    }
+
+    string password = getPassword(email);
+    string fName = getFirstName(email);
+    string lName = getLastName(email);
+    int age = getAge(email);
+    string ID = getID(email);
+    bool adminStatus = getAdminStatus(email);
+    vector<string> resID = getResID(email);
+
+    User *user = new User(ID, fName, lName, fName + " " + lName, age, email, password, adminStatus, resID);
     return user;
 }
 
-// Handles the signup process
-User System::signUp()
+// HELPER METHODS ===============================================================================
+
+// HELPER FUNCTIONS FOR SIGN UP ===============================================================================
+
+void System::loadUser()
 {
-    // [TO DO]
-    // LOGIC:
-    // 1. Prompt the user for required details (e.g., username, password, etc.)
-    // 2. Validate the input (e.g., check for duplicate usernames)
-    // 3. Save the user information to the database/file
-    // 4. Confirm successful signup and allow login or go to the service selection
-    string email;
-    string pass;
-    string passCf;
-    int age;
+    json allData;
+    ifstream readData(dataFilePath);
+    if (!readData.is_open())
+    {
+        cerr << openFileFailMessage;
+        cerr << dataFilePath;
+        return;
+    }
+    readData >> allData;
+    json userData = allData["users"];
+
+    this->userData = userData;
+}
+
+string System::inputFirstName()
+{
     string fName;
+
+    while (1)
+    {
+        cout << "\033[36mEnter First Name \033[0m \n\n> ";
+        cin >> fName;
+        if (fName == "-b")
+        {
+            return "-b";
+        }
+        if (isNameValid(fName, "")) // ref to valid.cpp
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidNameMessage;
+        }
+    }
+    fName = toLowerInput(fName);
+    fName = capName(fName);
+
+    return fName;
+}
+
+string System::inputLastName()
+{
     string lName;
+
+    while (1)
+    {
+        cout << "\033[36mEnter Last Name \033[0m \n\n> ";
+        cin >> lName;
+        if (isNameValid(lName, ""))
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidNameMessage;
+        }
+    }
+    lName = toLowerInput(lName);
+    lName = capName(lName); // ref to valid.cpp
+
+    return lName;
+}
+
+int System::inputAge()
+{
+    int age;
 
     while (true)
     {
-        cout << "\t\t\t\t SIGN UP\n";
-        cout << "Enter First Name\n> ";
-        cin >> fName;
-        cout << "Enter Last Name\n> ";
-        cin >> lName;
-        while (1)
+        cout << "\033[36mEnter Age \033[0m \n\n> ";
+        cin >> age;
+        if (cin.fail())
         {
-            cout << "Enter Age\n> ";
-            cin >> age;
-            if (age > 3 && age < 120)
-            {
-                break;
-            }
-            else
-            {
-                cout << "\nInvalid...\n";
-            }
-        }
-        while (1)
-        {
-            cout << "Enter Email\n> ";
-            cin >> email;
-            ifstream checkUser("../utils/Database/UserData.json");
-            json userData;
-            checkUser >> userData;
-            checkUser.close();
-            if (userData["Email"] != email)
-            {
-                break;
-            }
-            else
-            {
-                cout << "\nEmail is taken...\n";
-            }
+            clearInput();
+            cout << invalidInputMessage;
+            continue;
         }
 
-        cout << "Enter password\n >";
-        cin >> pass;
-        cout << "Enter password again\n >";
-        cin >> passCf;
+        if (isAgeValid(age))
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidAgeMessage;
+        }
     }
 
-    ofstream writeUser("../utils/Database/UserData.json");
-    if (!writeUser.is_open())
+    return age;
+}
+
+string System::inputEmail()
+{
+    int i = 0;
+    string email;
+
+    while (1)
     {
-        std::cerr << "Failed to open the file for writing!" << std::endl;
-        return user;
+        if (i >= 2)
+        {
+            cout << "\n\033[33mHint: log in instead \033[0m\n";
+        }
+        cout << "\033[36mEnter Email \033[0m \n\n> ";
+        cin >> email;
+        email = toLowerInput(email);                            // ref to valid.cpp
+        if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidEmailFormatMessage;
+        }
+        i++;
     }
-    json userData = {
-        {"Name", name},
-        {"Age", age},
-        {"Email", email},
-        {"Password", pass},
-    };
-    writeUser << userData.dump(4);
-    writeUser.close();
-    return user;
+
+    return email;
+}
+
+string System::inputPassword()
+{
+    string pass;
+
+    while (1)
+    {
+        cout << "\033[36m\nEnter Password \033[0m \n\n> ";
+        cin >> pass;
+        // UNCOMMENT THIS WHEN DONE
+        // if (isPasswordValid(pass))
+        // {
+        //     break;
+        // }else {
+        //    cout<<invalidPasswordMessage;
+        //}
+        break; // [THIS LINE TO CHANGE]
+    }
+    return pass;
+}
+
+string System::confirmPassword(string pass) // password thats passed is passed as a hashed password
+{
+    string passCf;
+
+    while (true)
+    {
+        cout << "\033[36m\nEnter Password Again \033[0m\n\n> ";
+        cin >> passCf;
+        if (isPasswordSame(pass, passCf)) // reference to validation.cpp
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidPasswordMessage;
+        }
+    }
+
+    return passCf;
+}
+
+string System::generateUserID()
+{
+    int lastID = userData.size();
+    string fullID = "U000000";
+    string lastID_string = to_string(lastID);
+    int start = fullID.size() - lastID_string.size();
+
+    for (int i = 0; i < lastID_string.size(); i++)
+    {
+        fullID[start + i] = lastID_string[i];
+    }
+
+    return fullID;
+}
+
+// HELPER FUNCTIONS FOR LOG IN ===============================================================================
+
+vector<string> System::getResID(string em)
+{
+    vector<string> resID;
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            resID = user["resID"].get<vector<string>>();
+        }
+    }
+    return resID;
+}
+
+bool System::getAdminStatus(string em)
+{
+    bool isAdmin = false;
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            isAdmin = user["isAdmin"];
+        }
+    }
+
+    return isAdmin;
+}
+
+string System::getID(string em)
+{
+    string ID;
+
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            ID = user["id"];
+        }
+    }
+
+    return ID;
+}
+
+string System::getEmail()
+{
+    string email;
+    bool foundEmail = false;
+
+    while (1)
+    {
+        cout << "\033[36mEnter Email \033[0m\n\n> ";
+        cin >> email;
+        email = toLowerInput(email); // reference to validation.cpp
+
+        for (const auto &user : userData)
+        {
+            if (user["email"] == email)
+            {
+                foundEmail = true;
+                break;
+            }
+        }
+        if (email == "-b")
+        {
+            return "-b";
+        }
+
+        if (foundEmail)
+        {
+            return email;
+        }
+        else
+        {
+            cout << incorrectEmailMessage;
+        }
+    }
+
+    return "";
+}
+
+string System::getPassword(string email)
+{
+    string pass;
+    bool foundPass = false; // load the user obj
+
+    while (1)
+    {
+        cout << "\033[36m\nEnter Password \033[0m\n\n> ";
+        cin >> pass;
+        pass = hashPassword(pass);
+        for (const auto &user : userData)
+        {
+            if (user["email"] == email && user["password"] == pass)
+            {
+                foundPass = true;
+                break;
+            }
+        }
+        if (foundPass)
+        {
+            return pass;
+        }
+        else
+        {
+            cout << incorrectPasswordMessage;
+        }
+    }
+
+    return "";
+}
+
+int System::getAge(string em)
+{
+    int age;
+
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            age = user["age"];
+        }
+    }
+
+    return age;
+};
+
+string System::getFirstName(string em)
+{
+    json name;
+
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            name = user["name"];
+        }
+    }
+
+    return name["firstName"];
+}
+
+string System::getLastName(string em)
+{
+    json name;
+
+    for (const auto &user : userData)
+    {
+        if (user["email"] == em)
+        {
+            name = user["name"];
+        }
+    }
+
+    return name["lastName"];
+}
+
+bool System::isAdmin()
+{
+    for (const auto &u : userData)
+    {
+        if (u["isAdmin"] == true)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #endif
