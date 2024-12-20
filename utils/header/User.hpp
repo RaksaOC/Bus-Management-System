@@ -301,7 +301,58 @@ void User::printHistory(vector<int> seatNums, string bID)
 
 // ADMIN ACTIONS ===================================================================
 
-void User::addAdmin() {}
+void User::addAdmin()
+{
+    cout << "\t\t\t\tNEW ADMIN\n\n";
+    // [TO DO] Define the functionality to add an admin
+    string fName = inputFirstName();
+    string lName = inputLastName();
+    int age = inputAge();
+    string email = inputEmail();
+    string pass = inputPassword();
+    string passCf = confirmPassword(pass);
+    passCf = hashPassword(passCf);         
+
+    ifstream readFile(dataFile);
+    if (!readFile.is_open()){
+        cerr <<"\n Error cannot open:"<<dataFile;
+    }
+    json allData;
+    readFile >> allData;
+    readFile.close();
+
+    json userData = allData["users"];
+    int lastID = userData.size();
+    string fullID = "U000000";
+    string lastID_string = to_string(lastID);
+    int start = fullID.size() - lastID_string.size();
+
+    for (int i = 0; i < lastID_string.size(); i++)
+    {
+        fullID[start + i] = lastID_string[i];
+    }
+
+    json newUser;
+    newUser["id"] = fullID;
+    newUser["name"]["firstname"] = fName;
+    newUser["name"]["lasttname"] = lName;
+    newUser["age"] = age;
+    newUser["email"] = email;
+    newUser["password"] = passCf;
+    newUser["isAdmin"] = true;
+    newUser["resID"] = json::array();
+    allData["users"].push_back(newUser);
+
+    ofstream writeFile(dataFile);
+    if (!writeFile.is_open())
+    {
+        cerr << "Error: cannot open file" << dataFile;
+    }
+    writeFile << allData.dump(4);
+    writeFile.close();
+
+    cout << "Admin user added successfully!" << endl;
+}
 void User::addBus() {}
 void User::changeBusSettings() {
     //delete bus 
