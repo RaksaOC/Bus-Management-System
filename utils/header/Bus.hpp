@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include "../libs/json.hpp"
-#include "Route.hpp"
+#include "menu.hpp"
 
 using json = nlohmann::json;
 
@@ -25,9 +25,11 @@ private:
     json seats;
 
     bool isSeatAvailable(int seat); // Checks if a specific seat is available
-    vector<int> numOfSeatsChanged;
+    vector<int> seatNumsChanged;
+    vector<int> wantedSeatNums;
 
 public:
+    Bus();
     // Constructor
     Bus(string type, string dpTime, string id, json route, int cap, int rem, int price, json seats)
     {
@@ -42,45 +44,59 @@ public:
     };
 
     // Core Bus Methods
-    void printHistory(vector <string>);
+
+    // For Reservation
     void printBusInfo();
     void showSeatLayout(); // Displays seat layout of the bus
     json reserveSeat();    // Reserves a single seat
     json reserveSeats();   // Reserves multiple seats
+
+    // For Refund
+    json refundSeat(vector<int> seatNumsToRefund);
+    json refundSeats(vector<int> seatNumsToRefund);
+    void setSeatLeft(int s) { this->seatLeft = s; }
+
     int getSeatLeft() { return this->seatLeft; };
-    vector<int> getSeatNumChanges() { return this->numOfSeatsChanged; };
+    vector<int> getWantedSeatNums() { return this->wantedSeatNums; };
+    vector<int> getSeatNumChanges() { return this->seatNumsChanged; };
+
+    void showSeatLayoutBlank();
 };
 
 void Bus::printBusInfo()
 {
-    cout << "\n\n\t\t\t\tCHOSEN BUS INFO\n\n";
-    cout << "*******************************************" << endl;
-    cout << "Bus ID: " << busID << endl;
-    cout << "Bus Type: " << busType << endl;
-    cout << "Departure Time: " << dpTime << endl;
-    cout << "From: " << this->route["from"] << endl;
-    cout << "To: " << this->route["to"] << endl;
-    cout << "Seat Capacity: " << seatCap << endl;
-    cout << "Seats Left: " << seatLeft << endl;
-    cout << "Seat Price: " << seatPrice << endl;
-    cout << "*******************************************" << endl;
+    cout << endl;
+    cout << R"(
+                                                ╔╗ ╦ ╦╔═╗  ╦╔╗╔╔═╗╔═╗
+                                                ╠╩╗║ ║╚═╗  ║║║║╠╣ ║ ║
+                                                ╚═╝╚═╝╚═╝  ╩╝╚╝╚  ╚═╝
+    )";
+    cout << "\033[36m\n\n***************************************** \033[0m" << endl;
+    cout << "\033[36m* Bus ID: \033[0m" << busID << "\t\t\t\t*" << endl;
+    cout << "\033[36m* Bus Type: \033[0m" << busType << "\t\t\t*" << endl;
+    cout << "\033[36m* Departure Time: \033[0m" << dpTime << "\t*" << endl;
+    cout << "\033[36m* From: \033[0m" << this->route["from"] << "\t\t\t*" << endl;
+    cout << "\033[36m* To: \033[0m" << this->route["to"] << "\t\t\t*" << endl;
+    cout << "\033[36m* Seat Capacity: \033[0m" << seatCap << "\t\t\t*" << endl;
+    cout << "\033[36m* Seats Left: \033[0m" << seatLeft << "\t\t\t*" << endl;
+    cout << "\033[36m* Seat Price: \033[0m" << seatPrice << "\t\t\t*" << endl;
+    cout << "\033[36m***************************************** \033[0m" << endl;
     cout << "\n\n";
 }
 
 void Bus::showSeatLayout()
 {
     string avail = "available";
-    cout << "\n\n\t\t\t\tSEAT SELECTION\n\n";
     for (const auto &seat : seats)
     {
         int seatNum = seat["seatNum"];
         if (seat["status"] == avail)
         {
-            cout << "[ " << seatNum << " ]";
+            cout << "\033[36m[\033[0m " << seatNum << " \033[36m]\033[0m";
         }
         else
         {
-            cout << "[ X ]";
+            cout << "\033[31m[ X ]\033[0m";
         }
         if (seatNum % 2 == 0)
         {
@@ -94,13 +110,32 @@ void Bus::showSeatLayout()
     cout << "\n\n";
 }
 
+void Bus::showSeatLayoutBlank()
+{
+    for (const auto &seat : seats)
+    {
+        int seatNum = seat["seatNum"];
+        cout << "\033[36m[ \033[0m " << seatNum << " \033[36m] \033[0m";
+
+        if (seatNum % 2 == 0)
+        {
+            cout << "\t";
+        }
+        if (seatNum % 4 == 0)
+        {
+            cout << "\n";
+        }
+    }
+    cout << "\n";
+}
+
 // Reserves a single seat
 json Bus::reserveSeat()
 {
     int seatNum;
     while (1)
     {
-        cout << "Select a seat\n> ";
+        cout << "\033[36m\nSelect a seat \033[0m\n\n> ";
         cin >> seatNum;
         if (isSeatAvailable(seatNum))
         {
@@ -108,7 +143,7 @@ json Bus::reserveSeat()
         }
         else
         {
-            cout << "Error: Seat unavailable\n";
+            cout << seatUnavailableMessage;
         }
     }
 
@@ -131,14 +166,25 @@ json Bus::reserveSeats()
     vector<int> seatNumberArr;
     vector<json> seatsArr;
     int seatNum;
-    cout << "Enter the number of seats to book\n> ";
     int numberOfSeatToBook;
-    cin >> numberOfSeatToBook;
+    while (1)
+    {
+        cout << "\033[36m\nEnter the number of seats to book \033[0m\n\n> ";
+        cin >> numberOfSeatToBook;
+        if (numberOfSeatToBook <= seatLeft && !(numberOfSeatToBook < 2))
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidInputMessage;
+        }
+    }
     for (int i = 0; i < numberOfSeatToBook; i++)
     {
         while (1)
         {
-            cout << "Seat: " << i + 1 << ": ";
+            cout << "\033[36mSeat \033[0m " << i + 1 << ": ";
             cin >> seatNum;
             if (isSeatAvailable(seatNum))
             {
@@ -147,7 +193,7 @@ json Bus::reserveSeats()
             }
             else
             {
-                cout << "Seat Unavailable\n";
+                cout << "\033[31mSeat Unavailable \033[0m\n";
             }
         }
     }
@@ -164,15 +210,9 @@ json Bus::reserveSeats()
             break;
         }
     }
-    this->numOfSeatsChanged = seatNumberArr;
+    this->seatNumsChanged = seatNumberArr;
     this->seatLeft = this->seatLeft - numberOfSeatToBook;
     return seats;
-
-    // [TO DO]
-    // - Prompt the user to input number of seats to book
-    // - Let user input their seat numbers
-    // - Error handle
-    // - Return back a vector of seats(json obj) or vector of seatNumbers(user class will handle the file writing)
 }
 
 // Checks if a specific seat is available
@@ -186,6 +226,139 @@ bool Bus::isSeatAvailable(int seatNum)
         }
     }
     return false;
+}
+
+json Bus::refundSeat(vector<int> seatNumsToRefund)
+{
+    int seatToRefund = seatNumsToRefund.at(0);
+    for (auto &seat : seats)
+    {
+        if (seat["seatNum"] == seatToRefund)
+        {
+            seat["status"] = "available";
+            seatNumsChanged.push_back(seat["seatNum"]);
+            break;
+        }
+    }
+    return seats;
+}
+
+json Bus::refundSeats(vector<int> seatNumsToRefund)
+{
+    vector<int> wantedSeatNumbers;
+    int numOfSeatsToRefund;
+    int seatNum;
+    bool isSeatNumExist = false;
+    int refundType;
+    while (1)
+    {
+
+        refundTypeMenu();
+        cout << "\033[36m1. \033[0m Refund specific seats\n";
+        cout << "\033[36m2. \033[0m Refund all seats\n\n> ";
+        cin >> refundType;
+        if (!(refundType < 1 || refundType > 2))
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidInputMessage;
+        }
+    }
+
+    if (refundType == 1)
+    {
+        while (1)
+        {
+            cout << "\033[36m\nEnter number of seats to refund \033[0m\n\n> ";
+            cin >> numOfSeatsToRefund;
+            if (numOfSeatsToRefund > seatNumsToRefund.size() || numOfSeatsToRefund <= 0)
+            {
+                cout << invalidInputMessage;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        for (int i = 0; i < numOfSeatsToRefund; i++)
+        {
+            while (1)
+            {
+                cout << "\033[36mSeat: \033[0m ";
+                cin >> seatNum;
+                isSeatNumExist = false;
+                for (int i = 0; i < seatNumsToRefund.size(); i++)
+                {
+                    if (seatNumsToRefund[i] == seatNum)
+                    {
+                        isSeatNumExist = true;
+                        break;
+                    }
+                }
+                if (isSeatNumExist)
+                {
+                    break;
+                }
+                else
+                {
+                    cout << invalidInputMessage;
+                }
+            }
+            wantedSeatNumbers.push_back(seatNum);
+        }
+        this->wantedSeatNums = wantedSeatNumbers;
+        seatNumsChanged = seatNumsToRefund;
+        for (int i = seatNumsChanged.size() - 1; i >= 0; --i) // Iterate backwards
+        {
+            for (int j = 0; j < wantedSeatNumbers.size(); ++j)
+            {
+                if (seatNumsChanged[i] == wantedSeatNumbers[j])
+                {
+                    seatNumsChanged.erase(seatNumsChanged.begin() + i); // Erase safely
+                    break;                                              // Exit inner loop to prevent further comparisons
+                }
+            }
+        }
+        int i = 0;
+        for (auto &seat : seats)
+        {
+            if (i < wantedSeatNumbers.size() && (seat["seatNum"] == wantedSeatNumbers.at(i)))
+            {
+                seat["status"] = "available";
+                i++;
+            }
+            if (i >= wantedSeatNumbers.size())
+            {
+                this->seatLeft += wantedSeatNumbers.size();
+
+                return seats;
+            }
+        }
+    }
+    else
+    {
+        int i = 0;
+        for (auto &seat : seats)
+        {
+            cout << i << " ";
+            if (i < seatNumsToRefund.size() && (seat["seatNum"] == seatNumsToRefund.at(i)))
+            {
+                seat["status"] = "available";
+                i++;
+            }
+            if (i >= seatNumsToRefund.size())
+            {
+                seatNumsChanged.push_back(-1);
+                this->seatLeft += seatNumsToRefund.size();
+                break;
+            }
+        }
+        return seats;
+    }
+    return seats;
 }
 
 #endif

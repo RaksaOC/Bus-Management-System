@@ -13,49 +13,6 @@
 using namespace std;
 using json = nlohmann::json;
 
-void printJSON(const json &j, int indent = 0)
-{
-    string spacing(indent, ' ');
-
-    if (j.is_object())
-    {
-        for (auto it = j.begin(); it != j.end(); ++it)
-        {
-            cout << spacing << it.key() << ": ";
-            if (it.value().is_object() || it.value().is_array())
-            {
-                cout << endl;
-                printJSON(it.value(), indent + 4);
-            }
-            else
-            {
-                cout << it.value() << endl;
-            }
-        }
-    }
-    else if (j.is_array())
-    {
-        for (size_t i = 0; i < j.size(); ++i)
-        {
-            cout << spacing << "- ";
-            if (j[i].is_object() || j[i].is_array())
-            {
-                cout << endl;
-                printJSON(j[i], indent + 4);
-            }
-            else
-            {
-                cout << j[i] << endl;
-            }
-        }
-    }
-    else
-    {
-        // Base case: print primitive values directly
-        cout << spacing << j << endl;
-    }
-}
-
 // VALIDATION FUNCTIONS FOR SIGN UP ====================================
 
 bool isNameValid(string fName, string lName)
@@ -65,7 +22,7 @@ bool isNameValid(string fName, string lName)
     {
         if (isdigit(fullName[i]) || ispunct(fullName[i]))
         {
-            cout << "\nError: Name cannot contain numbers or punctuations\n";
+            cout << invalidNameFormatMessage;
             return false;
         }
     }
@@ -78,11 +35,11 @@ bool isAgeValid(int age)
     {
         if (age < 13)
         {
-            cout << "\nError: User must be older than 13 years old\n";
+            cout << tooYoungMessage;
         }
         else if (age > 110)
         {
-            cout << "\nError: User is too old\n";
+            cout << tooOldMessage;
         }
         return false;
     }
@@ -94,7 +51,8 @@ bool isEmailAvailable(string email)
     ifstream readData(dataFile);
     if (!readData.is_open())
     {
-        cerr << "\nError: Failed to open file, Path: " << dataFile << " \n";
+        cerr << openFileFailMessage;
+        cerr << dataFile;
         return false;
     }
 
@@ -108,7 +66,7 @@ bool isEmailAvailable(string email)
     {
         if (user.contains("email") && user["email"] == email)
         {
-            cout << "\nError: Email is taken\n";
+            cout << takenEmail;
             return false;
         }
     }
@@ -130,7 +88,7 @@ bool isEmailValid(string email)
             }
             else
             {
-                cout << "\nError: Email is invalid\n";
+                cout << invalidEmailFormatMessage;
                 return false;
             }
         }
@@ -143,7 +101,7 @@ bool isPasswordValid(string pass)
     // check for atleast 6 char long [Implement more requirements in the future]
     if (pass.size() < 6)
     {
-        cout << "\nError: Password must be longer than 6 characters\n";
+        cout << invalidPasswordMessage;
         return false;
     }
     return true;
@@ -153,7 +111,7 @@ bool isPasswordSame(string pass1, string pass2)
 {
     if (pass1 != pass2)
     {
-        cout << "\nError: Re-Entered password is not the same\n";
+        cout << "\n[⚠] \033[31mError: Re-Entered password is not the same\033[0m\n\n";
         return false;
     }
     return true;
@@ -208,14 +166,11 @@ bool isToValid(string f, string t, const json &routes)
     return false;
 }
 
-bool isResIDBulk(string r){
-    for (int i = 0; i < r.size(); i++)
+bool isResIDBulk(string r)
+{
+    if (r[0] == 'R' && r[1] == 'B')
     {
-        if (r[i] == 'R' && r[i+1] == 'B')
-        {
-            return true;
-        }
-        
+        return true;
     }
     return false;
 }
