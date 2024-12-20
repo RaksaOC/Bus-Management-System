@@ -77,7 +77,7 @@ private:
     void storeData();
     void storeDataAdmin();
 
-    void viewBus();
+
 
 public:
     User() = default; // Default constructor
@@ -118,6 +118,7 @@ public:
     void addAdmin();
     void addBus();
     void deleteBus();
+    void viewBus();
     void viewAllBus();
     void viewBusbyID();
     void getAllUsers();
@@ -374,7 +375,61 @@ void User::addAdmin()
 
     cout << "Admin user added successfully!" << endl;
 }
-void User::addBus() {}
+void User::addBus() {
+    loadData();
+    string busType;
+    string busID;
+    string departureTime;
+    string from;
+    string to;
+    int seatCap;
+    int price;
+    cout << "Enter bus type\n> ";
+    cin >> busType;
+    cout << "Enter departure time\n> ";
+    cin >> departureTime;
+    cout << "Enter Route ";
+    cout << "From\n> ";
+    cin >> from;
+    cout << "To\n> ";
+    cin >> to;
+    cout << "Enter seat cap\n> ";
+    cin >> seatCap;
+    cout << "Enter Price\n> ";
+    cin >> price;
+    // generate new busID
+    string baseID = "B0000";
+    int lastID = buses.size();
+    lastID++;
+    string lastID_string = to_string(lastID);
+    int start = baseID.size() - lastID_string.size();
+    int j = 0;
+    for(int i = start; i < baseID.size(); i++){
+        baseID[i] = lastID_string[j];
+        j++;
+    }
+    // base id changed
+    // new busID = baseID
+    json newBus;
+    newBus["busType"] = busType;
+    newBus["departureTime"] = departureTime;
+    newBus["id"] = baseID;
+    newBus["route"]["from"] = from;
+    newBus["route"]["to"] = to;
+    newBus["seatCap"] = seatCap;
+    newBus["seatLeft"] = seatCap;
+    newBus["seatPrice"] = price;
+    newBus["seats"];
+    json seatOfBus;
+    for (int i = 0; i < seatCap; i++)
+    {
+        seatOfBus["seatNum"] = i + 1;
+        seatOfBus["status"] = "available";
+        newBus["seats"].push_back(seatOfBus);
+    }
+    buses.push_back(newBus);
+    storeDataAdmin();
+}
 void User::deleteBus() {
     //delete bus 
     string busID;
@@ -582,6 +637,48 @@ void User::deleteUser() {
 
     if (!isFound) {
         cout << "User does not exist." << endl;
+    }
+}
+
+void User::viewAllBus() {
+    cout<<endl<<endl<<"----------------------All Buses-------------------------"<<endl<<endl;
+    loadData();
+    for (const auto& bus : buses) {
+        cout << "Bus Type: " <<bus["busType"] << endl;
+        cout << "ID: " <<bus["id"] << endl;
+        cout << "Departure Time: " <<bus["departureTime"] << endl;
+        cout << "Route: "<<bus["route"]["from"] <<" to "<< bus["route"]["to"] << endl;
+        cout << "Seat Cap: " << bus["seatCap"] << endl;
+        cout << "Seat Left: " << bus["seatLeft"] << endl;
+        cout << "Seat Price: "<< bus["seatPrice"] << endl;
+        cout<<endl<<endl<<"__________________________________________________"<<endl<<endl;;
+    }
+}
+void User::viewBusbyID() {
+     string busID;
+    cout<<"Please Input the Bus you want to find: ";
+    cin>>busID;
+    bool isFound = false;
+    char confirm;
+    loadData();
+    for (auto it = buses.begin(); it != buses.end(); ++it) {
+        if ((*it)["id"] == busID) {
+            isFound = true; 
+            cout << "Bus found:" << endl;
+            cout << endl << endl << "----------------------Bus-----------------------" << endl << endl;
+            cout << "ID: " << (*it)["id"] << endl;
+            cout << "Bus Type: " << (*it)["busType"] << endl;
+            cout << "DepartureTime: " << (*it)["departureTime"] << endl;
+            cout << "route: " << (*it)["route"]["from"]<<"to " <<(*it)["route"]["to"]<< endl;
+            cout << "Seat Capacity: " << (*it)["seatCap"] << endl;
+            cout << "Seat left: " << (*it)["seatLeft"] << endl;
+            cout << "Seat price: " << (*it)["seatPrice"] << endl;
+            cout << endl << "__________________________________________________" << endl << endl;
+            break;   
+        }
+    }
+    if (!isFound) {
+        cout << "ID is invalid." << endl;
     }
 }
 
