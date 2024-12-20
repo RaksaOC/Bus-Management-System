@@ -535,6 +535,18 @@
             },
             "password": "6367c48dd193d56ea7b0baad25b19455e529f5ee",
             "resID": []
+        },
+        {
+            "age": 18,
+            "email": "dada",
+            "id": "U000005",
+            "isAdmin": true,
+            "name": {
+                "firstname": "La",
+                "lasttname": "La"
+            },
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
+            "resID": []
         }
     ]
 }

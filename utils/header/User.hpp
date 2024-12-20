@@ -8,6 +8,7 @@
 #include "Bus.hpp"
 #include "menu.hpp"
 #include "validation.hpp"
+#include "../libs/sha1.hpp"
 
 #define dataFilePath "../utils/database/Data.json"
 
@@ -29,6 +30,16 @@ private:
     string password;
     bool isAdmin;
     vector<string> resID; // Stores reservation IDs
+
+    //function for supporting the add-admin function
+    string inputFirstName();
+    string inputLastName();
+    int inputAge();
+    string inputEmail();
+    string inputPassword();
+    string confirmPassword(string);
+    string generateUserID();
+
 
     // For initially loading data ==========================================
     json data;
@@ -846,6 +857,158 @@ void User::printUser()
     cout << "Password: " << this->getPassword() << endl;
     cout << "Is Admin: " << this->getAdminStatus() << endl;
 }
+
+//for the input function
+string User::inputFirstName()
+{
+    string fName;
+
+    while (1)
+    {
+        cout << "Enter First Name \n> ";
+        cin >> fName;
+        if (isNameValid(fName, "")) // ref to valid.cpp
+        {
+            break;
+        }
+    }
+    fName = toLowerInput(fName);
+    fName = capName(fName);
+
+    return fName;
+}
+
+string User::inputLastName()
+{
+    string lName;
+
+    while (1)
+    {
+        cout << "Enter Last Name \n> ";
+        cin >> lName;
+        if (isNameValid(lName, ""))
+        {
+            break;
+        }
+    }
+    lName = toLowerInput(lName);
+    lName = capName(lName); // ref to valid.cpp
+
+    return lName;
+}
+
+int User::inputAge()
+{
+    int age;
+
+    while (true)
+    {
+        cout << "Enter Age \n> ";
+        cin >> age;
+        if (cin.fail())
+        {
+            clearInput();
+            cout << "\nPlease enter again...\n\n";
+            continue;
+        }
+
+        if (isAgeValid(age))
+        {
+            break;
+        }
+    }
+
+    return age;
+}
+
+string User::inputEmail()
+{
+    int i = 0;
+    string email;
+
+    while (1)
+    {
+        if (i >= 2)
+        {
+            cout << "\nHint: log in instead\n";
+        }
+        cout << "Enter Email \n> ";
+        cin >> email;
+        email = toLowerInput(email);                            // ref to valid.cpp
+        if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
+        {
+            break;
+        }
+        i++;
+    }
+
+    return email;
+}
+
+string User::inputPassword()
+{
+    string pass;
+
+    while (1)
+    {
+        cout << "Enter Password \n> ";
+        cin >> pass;
+        if (isPasswordValid(pass))
+        {
+            break;
+        }
+    }
+    return pass;
+}
+
+string User::confirmPassword(string pass) // password thats passed is passed as a hashed password
+{
+    string passCf;
+
+    while (true)
+    {
+        cout << "Enter Password Again\n> ";
+        cin >> passCf;
+        if (isPasswordSame(pass, passCf)) // reference to validation.cpp
+        {
+            break;
+        }
+    }
+
+    return passCf;
+}
+
+//input for addBus function
+// string User::inputBusType()
+// {
+//     string busType;
+//         cout<<"Enter bus type:"<<endl;
+//         cin>>busType;
+
+//     return busType;
+// }
+
+// int User::inputSeatCap()
+// {
+//     int seatcap;
+//     const int MIN_CAPACITY = 8;
+//     const int MAX_CAPACITY = 130;
+//     while (1){
+//         cout<<"Enter the bus seat capacity (from 8-130):"<<endl;
+//         cin>>seatcap;
+//         if (seatcap < MIN_CAPACITY || seatcap > MAX_CAPACITY){
+//             cout<<"Invalid seat capacity! Please enter again.";
+//             continue;
+//         }
+//         else{
+//             break;
+//         }
+//     }
+//     return seatcap;
+// }
+
+
+
 // End of helper methods for Reserve =============================================================
 
 #endif
