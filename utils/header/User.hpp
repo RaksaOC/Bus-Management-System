@@ -1276,7 +1276,7 @@ Bus User::selectBus(vector<int> busIdxArr)
     {
         cout << "\033[36m\nSelect a bus \033[0m \n\n> ";
         cin >> choice;
-        if (choice < 0 || choice > busIdxArr.size())
+        if (choice < 1 || choice > busIdxArr.size())
         {
             cout << invalidInputMessage;
             continue;
@@ -1404,7 +1404,6 @@ void User::showQRCode()
 void User::generateTicket(vector<int> seatNum)
 {
     int price = busToModify["seatPrice"];
-    price *= seatNum.size();
     cout << R"(            
                                                 ╔╦╗╦╔═╗╦╔═╔═╗╔╦╗
                                                  ║ ║║  ╠╩╗║╣  ║ 

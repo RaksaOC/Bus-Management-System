@@ -1,86 +1,83 @@
-# Bus Management System
+# Bus Reservation System
 
 ## Overview
+The Bus Reservation System is a command-line application built using C++ that simulates a simplified reservation and refund system for bus bookings. It provides features for making bulk and single reservations, handling refunds, maintaining a waitlist, and viewing booking history.
 
-This project is a simple bus management system that allows users to reserve, refund, and view their bookings. The system involves multiple classes such as **System**, **User**, **Bus**, and **Route** to manage users, buses, routes, and reservations. 
+## Features
+- **Bulk Reservations:** Users can book multiple seats at once and view updates in real-time.
+- **Refund System:** Allows users to refund a reservation while retaining visibility in their booking history.
+- **Waitlist Management:** A queue-based system prioritizes users who booked earlier when seats become available.
+- **Booking History:** Users can view all past bookings, including refunded ones, for record-keeping.
+- **Admin Actions:** Admins can manipulate the database.
 
-It also utilizes the **nlohmann/json** library for handling JSON data.
+## Demo Walkthrough
+1. **Reservation Process:**
+   - Users make a bulk reservation.
+   - The system updates seat availability and the user's booking history.
+2. **Refund Process:**
+   - Users can refund a bulk reservation they made earlier.
+   - Booking history is retained for refunded entries, showing transparency.
+3. **Waitlist System:**
+   - Simulate a scenario where a bus is fully booked.
+   - Add users to the waitlist.
+   - Demonstrate how the queue prioritizes earlier bookings when seats become available.
+4. **Database Interaction:**
+   - Show the JSON database updates for key actions (e.g., reservation, refund, waitlist updates) to highlight real-time data handling.
 
-## How It Works
+## Technical Highlights
+- **Libraries Used:**
+  - [Nlohmann JSON](https://github.com/nlohmann/json): For handling JSON-based database storage.
+  - SHA1: For generating unique reservation identifiers.
+- **Data Structures:**
+  - Queue: For implementing the waitlist system.
+  - Custom Classes: Used for Users, Reservations, and Buses.
+- **Database Design:**
+  - JSON-based storage includes keys for reservation status, user data, and bus schedules.
 
-The system operates as follows:
+## How to Run
+1. **Prerequisites:**
+   - Install a C++ compiler (e.g., GCC).
+   - Ensure [Nlohmann JSON library](https://github.com/nlohmann/json) is included in the project.
+2. **Setup:**
+   - Clone the repository.
+   - Build the project using a C++ compiler.
+3. **Run the Program:**
+   ```bash
+   ./bus_reservation_system
+   ```
 
-1. When the program starts, the user is prompted to either log in or sign up.
-2. After authentication, the user can:
-   - **Reserve** a seat by selecting from available buses.
-   - **Refund** a previously booked reservation.
-   - **View their booking history** to see past reservations.
-
-## Class Structure
-
-The system is designed with the following classes:
-
-- **System Class**: Responsible for adding and authenticating users.
-- **User Class**: Manages user operations like reserving seats, refunding, and viewing booking history.
-- **Bus Class**: Represents bus details such as ID, type, seat count, price, and availability.
-- **Route Class**: Handles route details, such as origin and destination, and can be extended for future functionalities.
-
-### Class Hierarchy
-
+## Sample JSON Database
+Here's a sample of what the JSON database might look like:
+```json
+{
+  "reservations": [
+    {
+      "id": "12345",
+      "user": "JohnDoe",
+      "seats": ["A1", "A2", "A3"],
+      "status": "confirmed"
+    }
+  ],
+  "waitlist": [
+    {
+      "user": "JaneDoe",
+      "seats_requested": 2
+    }
+  ]
+}
 ```
-+System
-| |
-| +-- User
-| |     *-- Reserve
-| |     *-- Refund
-| |     *-- ViewHistory
-| |
-| +-- Bus
-|       *-- setRoute
-|      +-- Route
-|       *-- setGet
-|      +-- Waitlist (Future)
-|       *-- enQueue
-|       *-- deQueue
-```
-###  File Structure
-```
-Bus Mangement System/
-    ├── main/
-        ├──main.cpp             # Entry point of the application
-    ├── utils/
-        ├── Header-Files/
-        │   ├── System.hpp       # Header for the System class
-        │   ├── User.hpp         # Header for the User class
-        │   ├── Bus.hpp          # Header for the Bus class
-        │   ├── Route.hpp        # Header for the Route class
-        │   ├── Ticket.hpp       # Header for the optional Ticket class
-        │   ├── menu.cpp         # Contains decision-making menu and ASCII art 
-        ├── Libs/
-        │   ├── json.hpp         # nlohmann JSON library
-        ├── Database/
-        │   ├── BusData.json     # contains data for Bus
-        │   ├── UserData.json     # contains data for User
-    ├── test/
-        test.cpp             # For testing things
-    ├── README.md            # Project documentation 
-```
-## Steps to Compile and Run
 
-1. Clone this repository:
-   
-   `git clone https://github.com/RaksaOC/Bus-Management-System.git`
+## Future Improvements
+- **System Architecture:** Refactor for modularity by redistributing class responsibilities and adding helper classes.
+- **Algorithm Optimization:** Optimize inefficient methods, such as reducing time complexity for data replacement.
+- **GUI Implementation:** Transition from a command-line interface to a GUI using a library like Qt.
+- **Real-Time Updates:** Enable dynamic, real-time synchronization for bus schedules and seat availability.
 
-2. Make sure you have the necessary dependencies installed. For this project, you will need:
-   - A C++ compiler (e.g., `g++`)
+## Contributing
+Contributions are welcome! Please fork the repository and create a pull request with your improvements.
 
-3. Compile the code:
-   `g++ -std=c++11 main.cpp -o main`
+## License
+This project is open-source and available under the MIT License.
 
-4. Run the program:
-   `./main`
-
-5. Follow the on-screen prompts to interact with the system (user login, bus reservation, etc.).
-
-**Happy Coding!**
-
+---
+Thank you for exploring the Bus Reservation System! If you have questions or feedback, feel free to reach out.

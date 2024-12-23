@@ -8,21 +8,49 @@
                 "from": "Phnom Penh",
                 "to": "Siem Reap"
             },
-            "seatCap": 3,
-            "seatLeft": 3,
+            "seatCap": 10,
+            "seatLeft": 0,
             "seatPrice": 10,
             "seats": [
                 {
                     "seatNum": 1,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 2,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 3,
-                    "status": "available"
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 4,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 5,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 6,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 7,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 8,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 9,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 10,
+                    "status": "reserved"
                 }
             ]
         },
@@ -34,17 +62,17 @@
                 "from": "Phnom Penh",
                 "to": "Battambang"
             },
-            "seatCap": 6,
-            "seatLeft": 6,
+            "seatCap": 20,
+            "seatLeft": 14,
             "seatPrice": 15,
             "seats": [
                 {
                     "seatNum": 1,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 2,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 3,
@@ -61,6 +89,62 @@
                 {
                     "seatNum": 6,
                     "status": "available"
+                },
+                {
+                    "seatNum": 7,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 8,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 9,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 10,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 11,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 12,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 13,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 14,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 15,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 16,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 17,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 18,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 19,
+                    "status": "reserved"
+                },
+                {
+                    "seatNum": 20,
+                    "status": "available"
                 }
             ]
         },
@@ -72,8 +156,8 @@
                 "from": "Phnom Penh",
                 "to": "Battambang"
             },
-            "seatCap": 6,
-            "seatLeft": 6,
+            "seatCap": 20,
+            "seatLeft": 20,
             "seatPrice": 20,
             "seats": [
                 {
@@ -98,6 +182,62 @@
                 },
                 {
                     "seatNum": 6,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 7,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 8,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 9,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 10,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 11,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 12,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 13,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 14,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 15,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 16,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 17,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 18,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 19,
+                    "status": "available"
+                },
+                {
+                    "seatNum": 20,
                     "status": "available"
                 }
             ]
@@ -370,9 +510,64 @@
         }
     ],
     "reservations": {
-        "bulkReservations": [],
+        "bulkReservations": [
+            {
+                "busID": "B0001",
+                "id": "RB000000",
+                "seatNumber": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                ],
+                "status": "active",
+                "time": "Mon Dec 23 11:56:56 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "RB000001",
+                "seatNumber": [
+                    1,
+                    2,
+                    7,
+                    14
+                ],
+                "status": "active",
+                "time": "Mon Dec 23 12:37:57 2024",
+                "userID": "U000003"
+            }
+        ],
         "singleReservations": [
-           
+            {
+                "busID": "B0001",
+                "id": "R000000",
+                "seatNumber": 10,
+                "status": "active",
+                "time": "Mon Dec 23 12:01:42 2024",
+                "userID": "U000001"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000001",
+                "seatNumber": 9,
+                "status": "active",
+                "time": "Mon Dec 23 12:38:51 2024",
+                "userID": "U000003"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000002",
+                "seatNumber": 19,
+                "status": "active",
+                "time": "Mon Dec 23 12:39:19 2024",
+                "userID": "U000003"
+            }
         ]
     },
     "routes": [
@@ -414,7 +609,7 @@
     "users": [
         {
             "age": 18,
-            "email": "dev",
+            "email": "dev@gmail.com",
             "id": "U000000",
             "isAdmin": true,
             "name": {
@@ -426,25 +621,73 @@
         },
         {
             "age": 18,
-            "email": "me",
+            "email": "darong@gmail.com",
             "id": "U000001",
             "isAdmin": false,
             "name": {
                 "firstName": "Me",
                 "lastName": "Me"
             },
-            "password": "b1c1d8736f20db3fb6c1c66bb1455ed43909f0d8",
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
             "resID": [
+                "RB000000",
+                "R000000"
             ]
+        },
+        {
+            "age": 18,
+            "email": "visal@gmail.com",
+            "id": "U000002",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Raksa",
+                "lastName": "Chan"
+            },
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
+            "resID": []
+        },
+        {
+            "age": 18,
+            "email": "raksa@gmail.com",
+            "id": "U000003",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Raksa",
+                "lastName": "Raksa"
+            },
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
+            "resID": [
+                "RB000001",
+                "R000001",
+                "R000002"
+            ]
+        },
+        {
+            "age": 18,
+            "email": "leaphea@gmail.com",
+            "id": "U000004",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Raksa",
+                "lastName": "Chan"
+            },
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
+            "resID": []
         }
     ],
     "waitList": {
         "bulkWaitList": [],
         "singleWaitList": [
+            {
+                "busID": "B0001",
+                "id": "W000000",
+                "seatNumber": 10,
+                "size": 1,
+                "status": "active",
+                "time": "Mon Dec 23 12:07:22 2024",
+                "userID": "U000002",
+                "waitType": "specific"
+            }
         ]
     }
- }
- 
- 
- 
- 
+}

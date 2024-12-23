@@ -7,7 +7,7 @@
 
 #define invalidInputMessage "\n[⚠] \033[31mError: Invalid Input\033[0m\n\n";
 #define invalidPasswordMessage "\n[⚠] \033[31mError: Invalid Password\033[0m\n\n";
-#define invalidEmailFormatMessage "\n[⚠] \033[31mError: Invalid Password\033[0m\n\n";
+#define invalidEmailFormatMessage "\n[⚠] \033[31mError: Invalid Email\033[0m\n\n";
 #define openFileFailMessage "\n[⚠] \033[31mError: Cannot open\033[0m\n\n";
 #define invalidNameMessage "\n[⚠] \033[31mError: Invalid Name Format\033[0m\n\n";
 #define invalidNameFormatMessage "\n[⚠] \033[31mError: Invalid Name Format, Name Cannot Contain numbers\033[0m\n\n";

@@ -75,7 +75,7 @@ User *System::authenticateUser() // Prompts the user to choose between login and
             if (choice == 1)
             {
                 simpleBusLoading();
-                    User *userLogIn = this->logIn();
+                User *userLogIn = this->logIn();
                 if (userLogIn == nullptr)
                 {
                     break;
@@ -232,7 +232,7 @@ string System::inputLastName()
 
     while (1)
     {
-        cout << "\033[36mEnter Last Name \033[0m \n\n> ";
+        cout << "\033[36m\nEnter Last Name \033[0m \n\n> ";
         cin >> lName;
         if (isNameValid(lName, ""))
         {
@@ -255,7 +255,7 @@ int System::inputAge()
 
     while (true)
     {
-        cout << "\033[36mEnter Age \033[0m \n\n> ";
+        cout << "\033[36m\nEnter Age \033[0m \n\n> ";
         cin >> age;
         if (cin.fail())
         {
@@ -288,10 +288,10 @@ string System::inputEmail()
         {
             cout << "\n\033[33mHint: log in instead \033[0m\n";
         }
-        cout << "\033[36mEnter Email \033[0m \n\n> ";
+        cout << "\033[36m\nEnter Email \033[0m \n\n> ";
         cin >> email;
         email = toLowerInput(email);                            // ref to valid.cpp
-        if (isEmailAvailable(email) /*&& isEmailValid(email)*/) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
+        if (isEmailAvailable(email) && isEmailValid(email)) // ref to valid.cpp [WHEN DONE CHANGE TO CHECK FOR VALIDITY]
         {
             break;
         }
@@ -313,14 +313,14 @@ string System::inputPassword()
     {
         cout << "\033[36m\nEnter Password \033[0m \n\n> ";
         cin >> pass;
-        // UNCOMMENT THIS WHEN DONE
-        // if (isPasswordValid(pass))
-        // {
-        //     break;
-        // }else {
-        //    cout<<invalidPasswordMessage;
-        //}
-        break; // [THIS LINE TO CHANGE]
+        if (isPasswordValid(pass))
+        {
+            break;
+        }
+        else
+        {
+            cout << invalidPasswordMessage;
+        }
     }
     return pass;
 }
