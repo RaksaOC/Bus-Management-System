@@ -69,7 +69,8 @@ The **Bus Management System** is a command-line application built with C++ desig
 ### Setup:
 
 1. ```bash
-   git clone <repository-url>
+   git clone https://github.com/RaksaOC
+   Bus-Management-System.git
    ```
 2. ```bash
    cd Bus Management System/main
