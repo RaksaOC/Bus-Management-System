@@ -66,8 +66,8 @@ The header is already included:
 		"id": "U000001",
 		"isAdmin": false,
 		"name": {
-			"firstName": "kdmv",
-			"lastName": "kmjkj"
+			"firstName": "hi",
+			"lastName": "hello"
 		},
 	"password": "34c6fceca75e4s9df7swre99531e2425c6c1de433",
 	"resID": [R00001,R00002,R00103]
@@ -171,8 +171,8 @@ int main(){
 		"id": "U000001",
 		"isAdmin": false,
 		"name": {
-			"firstName": "kdmv",
-			"lastName": "kmjkj"
+			"firstName": "hi",
+			"lastName": "hello"
 		},
 	"password": "34c6fceca75e4s9df7swre99531e2425c6c1de433",
 	"resID": [R00001,R00002,R00103]

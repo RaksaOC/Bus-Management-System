@@ -1,83 +1,100 @@
-# Bus Reservation System
+# Bus Management System
 
 ## Overview
-The Bus Reservation System is a command-line application built using C++ that simulates a simplified reservation and refund system for bus bookings. It provides features for making bulk and single reservations, handling refunds, maintaining a waitlist, and viewing booking history.
 
-## Features
-- **Bulk Reservations:** Users can book multiple seats at once and view updates in real-time.
-- **Refund System:** Allows users to refund a reservation while retaining visibility in their booking history.
-- **Waitlist Management:** A queue-based system prioritizes users who booked earlier when seats become available.
-- **Booking History:** Users can view all past bookings, including refunded ones, for record-keeping.
-- **Admin Actions:** Admins can manipulate the database.
-
-## Demo Walkthrough
-1. **Reservation Process:**
-   - Users make a bulk reservation.
-   - The system updates seat availability and the user's booking history.
-2. **Refund Process:**
-   - Users can refund a bulk reservation they made earlier.
-   - Booking history is retained for refunded entries, showing transparency.
-3. **Waitlist System:**
-   - Simulate a scenario where a bus is fully booked.
-   - Add users to the waitlist.
-   - Demonstrate how the queue prioritizes earlier bookings when seats become available.
-4. **Database Interaction:**
-   - Show the JSON database updates for key actions (e.g., reservation, refund, waitlist updates) to highlight real-time data handling.
-
-## Technical Highlights
-- **Libraries Used:**
-  - [Nlohmann JSON](https://github.com/nlohmann/json): For handling JSON-based database storage.
-  - SHA1: For generating unique reservation identifiers.
-- **Data Structures:**
-  - Queue: For implementing the waitlist system.
-  - Custom Classes: Used for Users, Reservations, and Buses.
-- **Database Design:**
-  - JSON-based storage includes keys for reservation status, user data, and bus schedules.
-
-## How to Run
-1. **Prerequisites:**
-   - Install a C++ compiler (e.g., GCC).
-   - Ensure [Nlohmann JSON library](https://github.com/nlohmann/json) is included in the project.
-2. **Setup:**
-   - Clone the repository.
-   - Build the project using a C++ compiler.
-3. **Run the Program:**
-   ```bash
-   ./bus_reservation_system
-   ```
-
-## Sample JSON Database
-Here's a sample of what the JSON database might look like:
-```json
-{
-  "reservations": [
-    {
-      "id": "12345",
-      "user": "JohnDoe",
-      "seats": ["A1", "A2", "A3"],
-      "status": "confirmed"
-    }
-  ],
-  "waitlist": [
-    {
-      "user": "JaneDoe",
-      "seats_requested": 2
-    }
-  ]
-}
-```
-
-## Future Improvements
-- **System Architecture:** Refactor for modularity by redistributing class responsibilities and adding helper classes.
-- **Algorithm Optimization:** Optimize inefficient methods, such as reducing time complexity for data replacement.
-- **GUI Implementation:** Transition from a command-line interface to a GUI using a library like Qt.
-- **Real-Time Updates:** Enable dynamic, real-time synchronization for bus schedules and seat availability.
-
-## Contributing
-Contributions are welcome! Please fork the repository and create a pull request with your improvements.
-
-## License
-This project is open-source and available under the MIT License.
+The **Bus Management System** is a command-line application built with C++ designed to handle bus bookings, refunds, and waitlist management. It offers seamless user interactions for making reservations, handling refunds, and efficiently managing bus occupancy using a queue-based waitlist. The system uses a JSON-based database for persistent storage, ensuring data consistency and transparency.
 
 ---
-Thank you for exploring the Bus Reservation System! If you have questions or feedback, feel free to reach out.
+
+## Features
+
+- **Bulk Reservations**: Users can book multiple seats at once, with real-time updates to availability and booking history.
+- **Refund System**: Enables users to refund reservations while retaining visibility in the booking history.
+- **Waitlist Management**: Implements a queue system that prioritizes users based on the order of their booking requests when seats become available.
+- **Booking History**: Allows users to access their entire booking history, including refunded bookings, ensuring complete transparency.
+- **Admin Panel**: Empowers admins to directly manage the database, including modifying bus schedules, bookings, and user records.
+
+---
+
+## Demo Walkthrough
+
+### 1. Reservation Process:
+
+- Simulate a bulk booking scenario where the system updates the database and booking history.
+- Show changes to seat availability in real-time.
+
+### 2. Refund Process:
+
+- Demonstrate refunding a bulk reservation.
+- Highlight how the refunded reservation remains visible in the booking history.
+
+### 3. Waitlist System:
+
+- Simulate a fully booked bus.
+- Add users to the waitlist and show how the queue prioritizes earlier bookings when seats become available.
+
+### 4. Database Interaction:
+
+- Present live updates to the JSON database for reservations, refunds, and waitlist operations to emphasize transparency and real-time handling.
+
+---
+
+## Technical Highlights
+
+### Libraries Used:
+
+- **Nlohmann JSON**: Facilitates JSON parsing and storage for the database.
+- **SHA1**: Generates unique identifiers for each reservation.
+
+### Data Structures:
+
+- **Queue**: Manages the waitlist to ensure fair prioritization.
+- **Custom Classes**: Encapsulates logic for buses, reservations, and user data. and more.
+
+### Database Design:
+
+- JSON-based storage schema includes:
+  - **Reservations**: Tracks booking details and statuses.
+  - **Waitlist**: Manages users awaiting seat availability.
+  - **Bus Schedules**: Contains bus details, including routes, seats, and availability.
+
+---
+
+## How to Run
+
+### Prerequisites:
+
+1. Install a C++ compiler (e.g., GCC or Clang).
+
+### Setup:
+
+1. ```bash
+   git clone <repository-url>
+   ```
+2. ```bash
+   cd Bus Management System/main
+   ```
+3. ```bash
+   g++ -std=c++17 main.cpp -o main
+   ```
+
+4. ```bash
+   ./main
+   ```
+
+---
+
+## Future Improvements
+
+- System Architecture: Improve modularity by redistributing class responsibilities and introducing helper classes.
+- Algorithm Optimization: Reduce time complexity in operations such as seat allocation and data retrieval.
+- Graphical Interface: Transition from CLI to a graphical user interface (GUI) using a library like Qt for enhanced usability.
+- Real-Time Synchronization: Enable real-time synchronization for bus schedules and availability across multiple systems.
+
+---
+
+## Thank You
+
+Thank you for exploring the Bus Management System! If you have questions, feedback, or ideas for improvement, feel free to reach out.
+
+---
