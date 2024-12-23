@@ -678,16 +678,6 @@
     "waitList": {
         "bulkWaitList": [],
         "singleWaitList": [
-            {
-                "busID": "B0001",
-                "id": "W000000",
-                "seatNumber": 10,
-                "size": 1,
-                "status": "active",
-                "time": "Mon Dec 23 12:07:22 2024",
-                "userID": "U000002",
-                "waitType": "specific"
-            }
         ]
     }
 }
