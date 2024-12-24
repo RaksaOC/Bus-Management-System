@@ -369,6 +369,7 @@ bool Waitlist::processWaitlistSingle(string busID, int seatRefunded)
         else if (sW["status"] == "active" && sW["busID"] == busID && sW["waitType"] == "specific")
         {
             int specificSeatNum = sW["seatNumber"];
+            string userID = sW["userID"];
             for (auto &bus : buses)
             {
                 if (bus["id"] == busID && bus["seats"][specificSeatNum - 1]["status"] == "available")

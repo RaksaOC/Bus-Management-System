@@ -220,7 +220,7 @@ void User::checkUserType()
 
 string User::reserve()
 {
-    loadData(); 
+    loadData();
     simpleBusLoading();
     destinationMenu();
     string from = inputFrom();
@@ -238,7 +238,7 @@ string User::reserve()
     {
         return ""; // this is to check that its been waitListed
     }
-    
+
     // asciiArt
     seatsMenu();
 
@@ -280,7 +280,7 @@ string User::reserve()
     // changes the status of seat for the selected bus
 
     // finalizing file writing and reservation
-    generateResID(chosenSeat["seatNum"], seatsOfBus, seatsChangedArr, bType);   
+    generateResID(chosenSeat["seatNum"], seatsOfBus, seatsChangedArr, bType);
     showQRCode();
     storeData();
     simpleBusLoading();
@@ -316,7 +316,7 @@ string User::refund()
         int choice = inputRefund();
         if (choice == -1)
         {
-            return "-b"; 
+            return "-b";
         }
 
         string resIDToRefund = refundableResID.at(choice - 1);
@@ -527,6 +527,7 @@ string User::printRefund(string resID)
 {
     if (!isResIDRefunded(resID))
     {
+        correctCount++;
         if (isResIDBulk(resID))
         {
             json bulkRes = reservations["bulkReservations"];
@@ -540,8 +541,9 @@ string User::printRefund(string resID)
                     {
                         if (bus["id"] == busIDToCheck)
                         {
-                            correctCount++;
-                            cout << "\033[36m* Ticket: \033[0m" << correctCount << endl;
+
+                            cout << "\033[36mTicket: \033[0m" << correctCount << endl
+                                 << endl;
                             cout << "Time: " << bR["time"] << "\n";
                             cout << "\033[36m***************************************** \033[0m" << endl;
                             cout << "\033[36m* Reservation ID: \033[0m" << resID << "\t\t\033[36m*\033[0m" << endl;
@@ -577,6 +579,8 @@ string User::printRefund(string resID)
                     {
                         if (bus["id"] == busIDToCheck)
                         {
+                            cout << "\033[36mTicket: \033[0m" << correctCount << endl
+                                 << endl;
                             cout << "Time: " << sR["time"] << "\n";
                             cout << "\033[36m***************************************** \033[0m" << endl;
                             cout << "\033[36m* \033[0m\033[36mReservation ID:\033[0m " << resID << "\t\t\033[36m*\033[0m" << endl;
@@ -869,7 +873,7 @@ void User::deleteBus()
                 break;
             }
 
-            cout << "Are you sure you want to delete this user with ID " << userID << " (y/n)? ";
+            cout << "Are you sure you want to delete this user with ID " << busID << " (y/n)? ";
             cin >> confirm;
 
             if (confirm == 'y' || confirm == 'Y')
@@ -1224,7 +1228,7 @@ string User::inputTo(string from)
 }
 vector<int> User::showAvailableBuses(string f, string t)
 {
-    //ascii art
+    // ascii art
     availableBusMenu();
 
     vector<int> allIndex;

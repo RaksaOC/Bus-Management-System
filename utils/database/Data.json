@@ -63,7 +63,7 @@
                 "to": "Battambang"
             },
             "seatCap": 20,
-            "seatLeft": 14,
+            "seatLeft": 13,
             "seatPrice": 15,
             "seats": [
                 {
@@ -84,7 +84,7 @@
                 },
                 {
                     "seatNum": 5,
-                    "status": "available"
+                    "status": "reserved"
                 },
                 {
                     "seatNum": 6,
@@ -541,6 +541,18 @@
                 "status": "active",
                 "time": "Mon Dec 23 12:37:57 2024",
                 "userID": "U000003"
+            },
+            {
+                "busID": "B0002",
+                "id": "RB000002",
+                "seatNumber": [
+                    3,
+                    4,
+                    5
+                ],
+                "status": "inactive",
+                "time": "Tue Dec 24 13:45:06 2024",
+                "userID": "U000003"
             }
         ],
         "singleReservations": [
@@ -548,7 +560,7 @@
                 "busID": "B0001",
                 "id": "R000000",
                 "seatNumber": 10,
-                "status": "active",
+                "status": "inactive",
                 "time": "Mon Dec 23 12:01:42 2024",
                 "userID": "U000001"
             },
@@ -567,6 +579,22 @@
                 "status": "active",
                 "time": "Mon Dec 23 12:39:19 2024",
                 "userID": "U000003"
+            },
+            {
+                "busID": "B0002",
+                "id": "R000003",
+                "seatNumber": 5,
+                "status": "active",
+                "time": "Tue Dec 24 13:45:54 2024",
+                "userID": "U000003"
+            },
+            {
+                "busID": "B0001",
+                "id": "R000004",
+                "seatNumber": 10,
+                "status": "active",
+                "time": "Tue Dec 24 13:48:14 2024",
+                "userID": "U000002"
             }
         ]
     },
@@ -644,7 +672,9 @@
                 "lastName": "Chan"
             },
             "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
-            "resID": []
+            "resID": [
+                "R000004"
+            ]
         },
         {
             "age": 18,
@@ -659,7 +689,9 @@
             "resID": [
                 "RB000001",
                 "R000001",
-                "R000002"
+                "R000002",
+                "RB000002",
+                "R000003"
             ]
         },
         {
@@ -673,11 +705,33 @@
             },
             "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
             "resID": []
+        },
+        {
+            "age": 12,
+            "email": "ocraksa@gmail.com",
+            "id": "U000005",
+            "isAdmin": false,
+            "name": {
+                "firstName": "Raksa",
+                "lastName": "Chan"
+            },
+            "password": "7c4a8d09ca3762af61e59520943dc26494f8941b",
+            "resID": []
         }
     ],
     "waitList": {
         "bulkWaitList": [],
         "singleWaitList": [
+            {
+                "busID": "B0001",
+                "id": "W000000",
+                "seatNumber": 10,
+                "size": 1,
+                "status": "inactive",
+                "time": "Tue Dec 24 13:47:45 2024",
+                "userID": "U000002",
+                "waitType": "specific"
+            }
         ]
     }
 }
