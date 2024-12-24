@@ -781,15 +781,16 @@ void User::addBus()
     string to;
     int seatCap;
     int price;
+    cin.ignore();
     cout << "Enter bus type\n> ";
-    cin >> busType;
+    getline(cin, busType);
     cout << "Enter departure time\n> ";
-    cin >> departureTime;
-    cout << "Enter Route ";
+    getline(cin, departureTime);
+    cout << "Enter Route\n>";
     cout << "From\n> ";
-    cin >> from;
+    getline(cin, from);
     cout << "To\n> ";
-    cin >> to;
+    getline(cin, to);
     cout << "Enter seat cap\n> ";
     cin >> seatCap;
     cout << "Enter Price\n> ";
@@ -827,6 +828,7 @@ void User::addBus()
     }
     buses.push_back(newBus);
     storeDataAdmin();
+    cout << "Bus added successfully!";
 }
 void User::deleteBus()
 {
